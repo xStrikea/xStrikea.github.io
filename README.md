@@ -7,7 +7,7 @@ pkg install git
 pkg install python
 pkg install aria2
 git clone https://github.com/xStrikea/xSpecter.github.io.git
-chmod +x index.sh
+chmod +x /data/data/com.termux/files/home/xSpecter.github.io/xTitanium/index.sh
 ```
 Set Auto Standby
 Paste this command in ~/.bashrc or ~/.zshrc :
