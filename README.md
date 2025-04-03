@@ -1,20 +1,64 @@
 ![logo](image/logo-readme.png)
-Welcome to xtitanium downloader. We are a new version of file downloader designed specifically for termux. Welcome to xtitanium downloader. We are a new version of file downloader designed specifically for termux.
-# How to use
+
+# Overview
+
+x is a custom shell command system that provides multiple utilities for downloading, installing, and managing files efficiently in Termux.
+
+# Command List
+
+1. x install <URL>
+
+Description: Downloads a file from the specified URL and installs it. Usage:
 ```
-pkg update && pkg upgrade
-pkg install git
-pkg install python
-pkg install aria2
+x install https://example.com/file.sh
+```
+2. x upgrade
+
+Description: Updates the xSpecter.github.io repository. Usage:
+```
+x upgrade
+```
+3. x list
+
+Description: Displays a list of all available x commands. Usage:
+```
+x list
+```
+4. x clean
+
+Description: Clears the downloads directory to free up space. Usage:
+```
+x clean
+```
+5. x info
+
+Description: Shows system information, including storage, memory, and installed dependencies. Usage:
+```
+x info
+```
+6. x help
+
+Description: Displays help information for all x commands. Usage:
+```
+x help
+```
+
+# Installation
+
+To install x, follow these steps:
+```
 git clone https://github.com/xStrikea/xSpecter.github.io.git
-chmod +x /data/data/com.termux/files/home/xSpecter.github.io/xTitanium/index.sh
+cd xSpecter.github.io
+chmod +x xTitanium.sh
+mv xTitanium.sh $PREFIX/bin/x
 ```
-Set Auto Standby
-Paste this command in ~/.bashrc or ~/.zshrc :
-```
-alias x='/data/data/com.termux/files/home/xSpecter.github.io/xTitanium/index.sh'
-```
-Then run this command:
-```
-source ~/.bashrc  # or source ~/.zshrc
-```
+Now you can use x commands from anywhere in Termux.
+
+# License
+This repository is licensed under the MIT license. Please be careful not to change the content.
+
+
+# Contribution
+
+Feel free to suggest new commands or improvements by creating an issue on GitHub!
+
