@@ -49,8 +49,8 @@ To install x, follow these steps:
 ```
 git clone https://github.com/xStrikea/xSpecter.github.io.git
 cd xSpecter.github.io
-chmod +x xTitanium.sh
-mv xTitanium.sh $PREFIX/bin/x
+chmod +x xinstall.sh
+./xinstall.sh
 ```
 Now you can use x commands from anywhere in Termux.
 
