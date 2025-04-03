@@ -12,7 +12,7 @@ chmod +x index.sh
 Set Auto Standby
 Paste this command in ~/.bashrc or ~/.zshrc :
 ```
-alias x='/data/data/com.termux/files/home/xSpecter.github.io/index.sh'
+alias x='/data/data/com.termux/files/home/xSpecter.github.io/xTitanium/index.sh'
 ```
 Then run this command:
 ```
