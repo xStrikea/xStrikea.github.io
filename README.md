@@ -50,6 +50,7 @@ To install x, follow these steps:
 rm -rf xSpecter.github.io
 git clone https://github.com/xStrikea/xSpecter.github.io.git
 cd xSpecter.github.io
+cd xTitanium
 chmod +x xTitanium.sh
 ./xTitanium.sh
 ```
