@@ -1,38 +1,45 @@
 #!/bin/bash
 
-if [[ -z "$1" ]]; then
-    echo -e "\e[1;31m[ERROR]\e[0m Usage: x install <URL>"
-    exit 1
+INSTALL_DIR="$PREFIX/bin/x"
+
+# 檢查是否存在目錄，如果不存在就創建它
+if [ ! -d "$PREFIX/bin" ]; then
+    echo -e "\e[1;34m[INFO]\e[0m Directory $PREFIX/bin does not exist. Creating it now..."
+    mkdir -p "$PREFIX/bin"
 fi
 
-URL="$1"
-FILENAME="downloads/$(basename "$URL")"
+# 確保 xinstall.sh 可執行
+chmod +x x-install.sh
 
-echo -e "\e[1;34m[INFO]\e[0m Downloading: $FILENAME"
+# 移動到正確的安裝位置
+mv x-install.sh "$INSTALL_DIR"
 
-python3 - <<EOF
-import requests
-from tqdm import tqdm
+# 確認安裝完成
+echo -e "\e[1;32m[✔] x-install.sh has been moved to $INSTALL_DIR.\e[0m"
 
-url = "$URL"
-filename = "$FILENAME"
+# 下載文件確認
+echo -e "\e[1;34m[INFO]\e[0m Do you want to send a notification email? (Y/N)"
+read -r user_response
 
-response = requests.get(url, stream=True)
-total_size = int(response.headers.get('content-length', 0))
+if [[ "$user_response" == "Y" || "$user_response" == "y" ]]; then
+    # 如果用戶選擇發送郵件，詢問郵件地址
+    echo -e "\e[1;34m[INFO]\e[0m Please enter your email address:"
+    read -r user_email
+    
+    # 檢查是否已經安裝郵件工具
+    if ! command -v msmtp &>/dev/null; then
+        echo -e "\e[1;31m[ERROR]\e[0m msmtp is not installed. Please install it first."
+        echo -e "You can install msmtp with: \`pkg install msmtp\`"
+        exit 1
+    fi
 
-with open(filename, 'wb') as file, tqdm(
-    desc=filename,
-    total=total_size,
-    unit='B',
-    unit_scale=True,
-    unit_divisor=1024,
-) as bar:
-    for chunk in response.iter_content(chunk_size=1024):
-        file.write(chunk)
-        bar.update(len(chunk))
+    # 設置郵件主題和內容
+    subject="Termux x Download the file"
+    body="The file has been downloaded successfully on Termux."
 
-print("\033[1;32m[✔] Download complete: " + filename + "\033[0m")
-EOF
-
-chmod +x "$FILENAME"
-"$FILENAME"
+    # 發送郵件
+    echo "$body" | msmtp --subject="$subject" "$user_email"
+    echo -e "\e[1;32m[✔] Email sent to $user_email.\e[0m"
+else
+    echo -e "\e[1;33m[INFO]\e[0m Email notification skipped."
+fi
