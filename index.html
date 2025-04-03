@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xSpecter</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #logo {
+            width: 200px;
+            height: auto;
+            opacity: 0;
+            animation: fadeInOut 4s forwards;
+        }
+        #license-container {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        #mit {
+            width: 16px;
+            height: auto;
+            opacity: 0;
+            animation: fadeIn 0.9s 1s forwards;
+            margin-right: 10px;
+        }
+        #license-text {
+            font-size: 16px;
+            color: white;
+            opacity: 0;
+            animation: fadeIn 0.9s 1s forwards;
+        }
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+    <link rel="icon" href="image/logo.ico" type="image/x-icon">
+</head>
+<body>
+    <img src="image/logo.png" alt="Logo" id="logo">
+    <div id="license-container">
+        <img src="image/MIT-logo.png" alt="MIT License" id="mit">
+        <span id="license-text">MIT License</span>
+    </div>
+    <script>
+        setTimeout(() => {
+            window.location.href = "home.html";
+        }, 4000); 
+    </script>
+</body>
+</html>
