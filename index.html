@@ -1,74 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>xSpecter</title>
-    <style>
-        body {
-            margin: 0;
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        #logo {
-            width: 200px;
-            height: auto;
-            opacity: 0;
-            animation: fadeInOut 4s forwards;
-        }
-        #license-container {
-            position: absolute;
-            bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
-        #mit {
-            width: 16px;
-            height: auto;
-            opacity: 0;
-            animation: fadeIn 0.9s 1s forwards;
-            margin-right: 10px;
-        }
-        #license-text {
-            font-size: 16px;
-            color: white;
-            opacity: 0;
-            animation: fadeIn 0.9s 1s forwards;
-        }
-        @keyframes fadeInOut {
-            0% {
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                opacity: 0;
-            }
-        }
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
     <link rel="icon" href="image/logo.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <img src="image/logo.png" alt="Logo" id="logo">
-    <div id="license-container">
-        <img src="image/MIT-logo.png" alt="MIT License" id="mit">
-        <span id="license-text">MIT License</span>
+    <div class="profile fade-in">
+        <img src="/image/avatar.png" alt="Avatar">
+        <h1>xSpecter</h1>
+        <p>Can create Lua scripts.</p>
     </div>
-    <script>
-        setTimeout(() => {
-            window.location.href = "home.html";
-        }, 4000); 
-    </script>
+    <div class="buttons fade-in">
+        <a href="https://www.roblox.com/users/7313173302/profile">
+            <img src="/image/roblox.png" alt="Roblox Logo">
+            roblox
+        </a>
+        <a href="https://github.com/xStrikea">
+            <img src="/image/github.png" alt="GitHub Logo">
+            github
+        </a>
+        <a href="mailto:coder4819@gmail.com">
+            <img src="/image/gmail.png" alt="Gmail Logo">
+            gmail
+        </a>
+        <a href="https://scriptblox.com/u/Tektronix">
+            <img src="/image/scriptblox.png" alt="Scriptblox Logo">
+            Scriptblox
+        </a>
+    </div>
 </body>
 </html>

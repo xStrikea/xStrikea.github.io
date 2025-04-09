@@ -1,0 +1,107 @@
+@font-face {
+    font-family: 'MonainnRegular';
+    src: url('/fonts/Bandar-RpdqW.otf') format('opentype');
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom, rgb(178, 187, 187), rgb(63, 83, 83));
+    font-family: 'MonainnRegular', Arial, sans-serif;
+    color: white;
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+}
+
+.buttons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px;
+    padding: 15px;
+    width: 300px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 16px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.buttons a img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.buttons a:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fadeIn 0.6s ease-in forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (min-width: 1024px) {
+    .profile img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .buttons a {
+        width: 400px;
+        font-size: 18px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .profile img {
+        width: 130px;
+        height: 130px;
+    }
+
+    .buttons a {
+        width: 350px;
+    }
+}
+
+@media (max-width: 767px) {
+    .profile img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .buttons a {
+        width: 250px;
+        font-size: 14px;
+    }
+}
