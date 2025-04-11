@@ -1,8 +1,10 @@
 @font-face {
+    /* Custom font definition */
     font-family: 'MonainnRegular';
     src: url('/fonts/Bandar-RpdqW.otf') format('opentype');
 }
 
+/* Global styles */
 body {
     margin: 0;
     padding: 0;
@@ -11,71 +13,108 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(to bottom, rgb(178, 187, 187), rgb(63, 83, 83));
+    background: linear-gradient(135deg, #a9b1b6, #475c6b); /* Modern gray tones */
     font-family: 'MonainnRegular', Arial, sans-serif;
-    color: white;
+    color: #f0f0f0;
+    overflow: hidden;
 }
 
-.profile {
+/* Main content */
+#content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    margin-bottom: 20px;
+    animation: fadeIn 1s ease-in forwards; /* Fade-in animation for smooth display */
+}
+
+/* Profile section */
+.profile {
+    margin-bottom: 30px;
 }
 
 .profile img {
-    width: 120px;
-    height: 120px;
+    /* Avatar styling */
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
+    margin-bottom: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile img:hover {
+    /* Enlarge avatar slightly on hover */
+    transform: scale(1.1);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Title (h1) */
+.profile h1 {
+    font-size: 28px;
     margin-bottom: 10px;
+    color: #ffffff;
 }
 
-.buttons a {
+/* Description (p) */
+.profile p {
+    font-size: 18px;
+    color: #F7F7F7; /* Softer pale blue for a complementary look */
+}
+
+/* Buttons container */
+.buttons {
+    width: 100%; /* Full-width container */
+    max-width: 450px; /* Longer buttons */
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin: 10px;
-    padding: 15px;
-    width: 300px;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    text-decoration: none;
-    border-radius: 50px;
+    flex-direction: column; /* Stack buttons vertically */
+}
+
+/* Buttons styling */
+.buttons a {
+    display: flex; /* Flexbox layout for button content */
+    align-items: center; /* Vertically align icon and text */
+    justify-content: center; /* Center-align content */
+    gap: 10px; /* Space between icon and text */
+
+    margin: 1px 0; /* Reduced button spacing */
+    padding: 15px 140px; /* Increase padding for a larger clickable area */
+
+    /* Neutral background and light text */
+    background-color: rgba(52, 58, 64, 0.7);
+    color: #e8e8e8;
+    border-radius: 30px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
     font-size: 16px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+
+    /* Subtle shadow and hover transitions */
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Button icons */
 .buttons a img {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; /* Circular icons */
 }
 
+/* Hover effect for buttons */
 .buttons a:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(70, 80, 90, 0.9); /* Darker hover background */
+    transform: translateY(-5px); /* Slight lift effect */
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
 }
 
-/* 響應式調整 */
-@media (min-width: 1024px) {
-    .profile img {
-        width: 150px;
-        height: 150px;
+/* Fade-in animation for content */
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start fully transparent */
+        transform: translateY(20px); /* Slide in from below */
     }
-
-    .buttons a {
-        width: 400px;
-        font-size: 18px;
-    }
-}
-
-@media (max-width: 767px) {
-    .profile img {
-        width: 100px;
-        height: 100px;
-    }
-
-    .buttons a {
-        width: 250px;
-        font-size: 14px;
+    to {
+        opacity: 1; /* Fully visible */
+        transform: translateY(0); /* Settle at final position */
     }
 }
