@@ -26,7 +26,6 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    animation: fadeIn 1s ease-in forwards; /* Fade-in animation for smooth display */
 }
 
 /* Profile section */
@@ -105,16 +104,4 @@ body {
     background-color: rgba(70, 80, 90, 0.9); /* Darker hover background */
     transform: translateY(-5px); /* Slight lift effect */
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5); /* Enhanced shadow */
-}
-
-/* Fade-in animation for content */
-@keyframes fadeIn {
-    from {
-        opacity: 0; /* Start fully transparent */
-        transform: translateY(20px); /* Slide in from below */
-    }
-    to {
-        opacity: 1; /* Fully visible */
-        transform: translateY(0); /* Settle at final position */
-    }
 }
