@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const content = document.getElementById("content");
 
-    // 移除加載屏幕，直接顯示主要內容
     content.style.display = "block";
 
     const tl = gsap.timeline({
