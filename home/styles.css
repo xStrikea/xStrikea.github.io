@@ -1,7 +1,7 @@
 @font-face {
     /* Custom font definition */
     font-family: 'MonainnRegular';
-    src: url('/fonts/Bandar-RpdqW.otf') format('opentype');
+    src: url('fonts/Bandar-RpdqW.otf') format('opentype');
 }
 
 /* Global styles */
