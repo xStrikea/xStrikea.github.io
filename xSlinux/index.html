@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>xSlinux</title>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+      white-space: pre-wrap;
+      overflow: hidden;
+    }
+
+    #console {
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .ok {
+      color: #00ff00;
+    }
+  </style>
+</head>
+<body>
+<div id="console"></div>
+
+<script>
+  const lines = [
+    "Welcome to xSlinux LTS (GNU/Linux 5.15.0-75-generic x86_64)",
+    "Starting version 0.3.8 Box86...",
+    "Starting version 10.0.0 QEMU...",
+    "",
+    "[ \x1b[32mOK\x1b[0m ] Created slice system-systemd\\x2dfsck.slice.",
+    "[ \x1b[32mOK\x1b[0m ] Listening on Syslog Socket.",
+    "[ \x1b[32mOK\x1b[0m ] Listening on Journal Socket (/dev/log).",
+    "[ \x1b[32mOK\x1b[0m ] Reached target Swap.",
+    "[ \x1b[32mOK\x1b[0m ] Mounted /boot/efi.",
+    "[ \x1b[32mOK\x1b[0m ] Mounted /tmp.",
+    "[ \x1b[32mOK\x1b[0m ] Mounted /var.",
+    "[ \x1b[32mOK\x1b[0m ] Started udev Coldplug all Devices.",
+    "[ \x1b[32mOK\x1b[0m ] Reached target Local File Systems.",
+    "[ \x1b[32mOK\x1b[0m ] Reached target System Time Set.",
+    "[ \x1b[32mOK\x1b[0m ] Reached target Sound Card.",
+    "[ \x1b[32mOK\x1b[0m ] Started Flush Journal to Persistent Storage.",
+    "[ \x1b[32mOK\x1b[0m ] Started Load Kernel Modules.",
+    "[ \x1b[32mOK\x1b[0m ] Started Network Service.",
+    "[ \x1b[32mOK\x1b[0m ] Reached target Network is Online.",
+    "[ \x1b[32mOK\x1b[0m ] Started OpenSSH server daemon.",
+    "[ \x1b[32mOK\x1b[0m ] Started CUPS Scheduler.",
+    "[ \x1b[32mOK\x1b[0m ] Started Authorization Manager.",
+    "[ \x1b[32mOK\x1b[0m ] Started Hostname Service.",
+    "[ \x1b[32mOK\x1b[0m ] Started Accounts Service.",
+    "[ \x1b[32mOK\x1b[0m ] Started Login Service.",
+    "[ \x1b[32mOK\x1b[0m ] Started User Runtime Directory /run/user/1000.",
+    "[ \x1b[32mOK\x1b[0m ] Started User Manager for UID 1000.",
+    "[ \x1b[32mOK\x1b[0m ] Reached target Multi-User System.",
+    "[ \x1b[32mOK\x1b[0m ] Reached target Graphical Interface.",
+    "[ \x1b[32mOK\x1b[0m ] Prepare the discord invite link",
+    "xSlinux 1.0.0 LTS localhost tty1",
+    "login: admin"
+  ];
+
+  const consoleEl = document.getElementById("console");
+  let lineIndex = 0;
+
+  function parseANSILine(line) {
+    const ESC = '\x1b';
+    const parts = [];
+    let i = 0;
+    let colorClass = null;
+
+    while (i < line.length) {
+      if (line[i] === ESC && line[i + 1] === '[') {
+        let code = '';
+        i += 2;
+        while (i < line.length && line[i] !== 'm') {
+          code += line[i++];
+        }
+        i++;
+        if (code === '32') colorClass = 'ok';
+        else if (code === '0') colorClass = null;
+      } else {
+        const span = document.createElement('span');
+        if (colorClass) span.classList.add(colorClass);
+        span.textContent = line[i++];
+        parts.push(span);
+      }
+    }
+    return parts;
+  }
+
+  function showNextLine() {
+    if (lineIndex >= lines.length) return;
+
+    const line = lines[lineIndex++];
+    const elements = parseANSILine(line);
+    const lineSpan = document.createElement('div');
+    elements.forEach(el => lineSpan.appendChild(el));
+    consoleEl.appendChild(lineSpan);
+
+    // 使用 smooth 滑動效果
+    consoleEl.scrollTo({
+      top: consoleEl.scrollHeight,
+      behavior: 'smooth'
+    });
+
+    // If the current line is "login:", wait 3 seconds then redirect
+    if (line.includes('login:')) {
+      setTimeout(() => {
+        window.location.href = "https://discord.gg/GHtYPSk7KH"; // Replace with the URL you want
+      }, 3000); // Delay for 3 seconds before redirecting
+    }
+
+    const delay = 1 + Math.random() * 200;
+    setTimeout(showNextLine, delay);
+  }
+
+  showNextLine();
+</script>
+</body>
+</html>
