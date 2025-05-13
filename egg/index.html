@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉2025最新蛋仔代碼🎊</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .accept-btn {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .accept-btn:hover {
+            background-color: #444;
+            transform: translateY(-2px);
+        }
+        
+        .accept-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <button class="accept-btn" id="acceptBtn">2025最新蛋仔代碼</button>
+    </div>
+    
+    <div class="video-container" id="videoContainer">
+        <video id="bgVideo" loop muted>
+            <source src="video.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() 
+            function createParticles() {
+                const particlesContainer = document.getElementById('particles');
+                const particleCount = 50;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                   
+                    const size = Math.random() * 5 + 1;
+                    const posX = Math.random() * 100;
+                    const posY = Math.random() * 100;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${posX}%`;
+                    particle.style.top = `${posY}%`;
+                    particle.style.opacity = Math.random() * 0.5 + 0.1;
+                    
+                    particlesContainer.appendChild(particle);
+                    
+                    animateParticle(particle);
+                }
+            }
+            
+            function animateParticle(particle) {
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                const xMovement = (Math.random() - 0.5) * 100;
+                const yMovement = (Math.random() - 0.5) * 100;
+                
+                gsap.to(particle, {
+                    x: xMovement,
+                    y: yMovement,
+                    duration: duration,
+                    delay: delay,
+                    ease: "sine.inOut",
+                    repeat: -1,
+                    yoyo: true
+                });
+            }
+          
+            const acceptBtn = document.getElementById('acceptBtn');
+            
+            gsap.from(acceptBtn, {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                ease: "back.out(1.7)"
+            });
+            
+            gsap.to(acceptBtn, {
+                scale: 1.05,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+           
+            acceptBtn.addEventListener('click', function() {
+                const videoContainer = document.getElementById('videoContainer');
+                const video = document.getElementById('bgVideo');
+                
+                gsap.to(acceptBtn, {
+                    scale: 0.8,
+                    duration: 0.2,
+                    yoyo: true,
+                    repeat: 1,
+                    onComplete: function() {
+                        acceptBtn.style.display = 'none';
+                       
+                        gsap.to(videoContainer, {
+                            opacity: 1,
+                            duration: 1,
+                            onStart: function() {
+                                video.play();
+                            }
+                        });
+                        
+                        createClickEffect();
+                    }
+                });
+            });
+            
+            function createClickEffect() {
+                const particlesContainer = document.getElementById('particles');
+                particlesContainer.innerHTML = '';
+                
+                const particleCount = 100;
+                const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    const size = Math.random() * 8 + 2;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.backgroundColor = color;
+                    particle.style.left = '50%';
+                    particle.style.top = '50%';
+                    particle.style.opacity = 1;
+                    
+                    particlesContainer.appendChild(particle);
+                   
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * 300 + 100;
+                    const duration = Math.random() * 2 + 1;
+                    
+                    gsap.to(particle, {
+                        x: Math.cos(angle) * distance,
+                        y: Math.sin(angle) * distance,
+                        opacity: 0,
+                        duration: duration,
+                        ease: "power2.out",
+                        onComplete: function() {
+                            particle.remove();
+                        }
+                    });
+                }
+            }
+            
+            createParticles();
+        });
+    </script>
+</body>
+</html>
