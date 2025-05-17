@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>xSpecter - Roblox Personal Information</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-8AAA75F6F07D026E070279C5549C60B7-Png/150/150/AvatarHeadshot/Webp/noFilter" type="image/x-icon"/>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Rubik', sans-serif;
+      background: radial-gradient(circle at center, #0a0a0a 0%, #000000 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.2s; }
+    .delay-2 { animation-delay: 0.4s; }
+    .delay-3 { animation-delay: 0.6s; }
+    .delay-4 { animation-delay: 0.8s; }
+    .delay-5 { animation-delay: 1s; }
+
+    .profile-card {
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 30px;
+      width: 340px;
+      box-shadow: 0 0 25px rgba(255, 0, 60, 0.15);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 40px rgba(255, 0, 60, 0.4);
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 20%;
+      object-fit: cover;
+      border: 3px solid #e60013;
+      box-shadow: 0 0 12px rgba(230, 0, 19, 0.5);
+      margin-bottom: 16px;
+    }
+
+    .username {
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .introduce {
+      font-size: 14px;
+      color: #cccccc;
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+
+    .stat {
+      text-align: center;
+      flex: 1;
+    }
+
+    .stat-number {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ff3d57;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+    }
+
+    .button {
+      margin-top: 24px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #e60013, #ff2a45);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+      width: 100%;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .button:hover {
+      background: linear-gradient(135deg, #ff2a45, #ff5169);
+      transform: scale(1.03);
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-card fade delay-1">
+    <img class="avatar fade delay-2" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-8AAA75F6F07D026E070279C5549C60B7-Png/150/150/AvatarHeadshot/Webp/noFilter" alt="xSpecter Avatar"/>
+    <div class="username fade delay-3">xSpecter</div>
+    <div class="introduce fade delay-4">Hi, I am xSpecter👋<br>I love making Luau scripts.💻<br>Because I can play pranks on people.😎</div>
+
+    <div class="stats fade delay-4">
+      <div class="stat">
+        <div class="stat-number">13</div>
+        <div class="stat-label">Friends</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Followers</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">1</div>
+        <div class="stat-label">Following</div>
+      </div>
+    </div>
+
+    <a class="button fade delay-5" href="https://www.roblox.com/share?code=14be6e644a7f2a4fad7dd0c60abd355d&type=Profile" target="_blank">More Information</a>
+  </div>
+</body>
+</html>
