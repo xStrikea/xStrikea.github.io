@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Android Info</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #111;
+      color: #eee;
+      font-family: sans-serif;
+    }
+    h1 {
+      color: #0ff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .info-box {
+      background: #1a1a1a;
+      border-left: 4px solid #0ff;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .label {
+      font-weight: bold;
+      color: #0ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Android Info</h1>
+  <div class="info-box"><span class="label">User Agent:</span> <span id="userAgent"></span></div>
+  <div class="info-box"><span class="label">Detected Android Version:</span> <span id="androidVersion"></span></div>
+  <div class="info-box"><span class="label">Screen Size:</span> <span id="screenSize"></span></div>
+  <div class="info-box"><span class="label">Orientation:</span> <span id="orientation"></span></div>
+  <div class="info-box"><span class="label">Accelerometer:</span> <span id="acceleration">Waiting...</span></div>
+  <div class="info-box"><span class="label">Gyroscope:</span> <span id="rotation">Waiting...</span></div>
+  <div class="info-box"><span class="label">Network Status:</span> <span id="networkStatus">Waiting...</span></div>
+  <div class="info-box"><span class="label">Battery Status:</span> <span id="batteryStatus">Waiting...</span></div>
+  <div class="info-box"><span class="label">Device Language:</span> <span id="deviceLanguage"></span></div>
+  <div class="info-box"><span class="label">Page Visibility:</span> <span id="visibilityStatus"></span></div>
+  <div class="info-box"><span class="label">Browser Info:</span> <span id="browserInfo"></span></div>
+
+  <script>
+    document.getElementById("userAgent").textContent = navigator.userAgent;
+    document.getElementById("deviceLanguage").textContent = navigator.language;
+
+    const match = navigator.userAgent.match(/Android\s([\d\.]+)/);
+    let version = match ? match[1] : "Unknown";
+    let note = version === "10" ? " (may be spoofed)" : "";
+    document.getElementById("androidVersion").textContent = version + note;
+
+    function updateScreenSize() {
+      document.getElementById("screenSize").textContent = window.innerWidth + " x " + window.innerHeight;
+    }
+    function updateOrientation() {
+      document.getElementById("orientation").textContent = window.matchMedia("(orientation: portrait)").matches ? "Portrait" : "Landscape";
+    }
+    window.addEventListener("resize", () => {
+      updateScreenSize();
+      updateOrientation();
+    });
+    updateScreenSize();
+    updateOrientation();
+
+    window.addEventListener("devicemotion", (e) => {
+      const a = e.accelerationIncludingGravity;
+      if (a) {
+        document.getElementById("acceleration").textContent = `${a.x?.toFixed(2)}, ${a.y?.toFixed(2)}, ${a.z?.toFixed(2)}`;
+      }
+    });
+
+    window.addEventListener("deviceorientation", (e) => {
+      document.getElementById("rotation").textContent = `${e.alpha?.toFixed(2)}, ${e.beta?.toFixed(2)}, ${e.gamma?.toFixed(2)}`;
+    });
+
+    function updateNetworkStatus() {
+      const conn = navigator.connection || {};
+      const type = conn.effectiveType || conn.type || "Unknown";
+      const online = navigator.onLine ? "Online" : "Offline";
+      document.getElementById("networkStatus").textContent = `${online} - Type: ${type}`;
+    }
+    window.addEventListener("online", updateNetworkStatus);
+    window.addEventListener("offline", updateNetworkStatus);
+    updateNetworkStatus();
+
+    if (navigator.getBattery) {
+      navigator.getBattery().then(b => {
+        function updateBattery() {
+          document.getElementById("batteryStatus").textContent = `Level: ${(b.level * 100).toFixed(0)}% - ${b.charging ? "Charging" : "Not Charging"}`;
+        }
+        updateBattery();
+        b.addEventListener("levelchange", updateBattery);
+        b.addEventListener("chargingchange", updateBattery);
+      });
+    }
+
+    function updateVisibility() {
+      document.getElementById("visibilityStatus").textContent = document.visibilityState === "visible" ? "Visible" : "Hidden";
+    }
+    document.addEventListener("visibilitychange", updateVisibility);
+    updateVisibility();
+
+    const ua = navigator.userAgent;
+    let name = "Unknown", ver = "Unknown";
+    if (ua.includes("Chrome")) {
+      name = "Chrome";
+      ver = ua.match(/Chrome\/([\d\.]+)/)?.[1] || ver;
+    } else if (ua.includes("Firefox")) {
+      name = "Firefox";
+      ver = ua.match(/Firefox\/([\d\.]+)/)?.[1] || ver;
+    } else if (ua.includes("Safari") && !ua.includes("Chrome")) {
+      name = "Safari";
+      ver = ua.match(/Version\/([\d\.]+)/)?.[1] || ver;
+    }
+    document.getElementById("browserInfo").textContent = `${name} ${ver}`;
+  </script>
+</body>
+</html>
