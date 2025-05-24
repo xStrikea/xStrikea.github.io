@@ -2,17 +2,11 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>ubuntu 3D test</title>
-  <link rel="icon" href="image.png" type="image/x-icon" />
+  <title>opengl 3D test</title>
+  <link rel="icon" href="image.png" type="image/x-icon"/>
   <style>
-    body {
-      margin: 0;
-      background-color: black;
-      overflow: hidden;
-    }
-    canvas {
-      display: block;
-    }
+    body { margin: 0; background: black; overflow: hidden; }
+    canvas { display: block; }
     #loading {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -29,32 +23,19 @@
       transition: opacity 1s;
     }
     #info {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-family: monospace;
-      font-size: 16px;
-      color: white;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 8px 12px;
-      border-radius: 8px;
-      line-height: 1.5;
+      position: absolute; top: 10px; left: 10px;
+      font-family: monospace; font-size: 16px; color: white;
+      background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 8px;
+      user-select: none; width: 140px; line-height: 1.5;
       z-index: 10;
-      user-select: none;
-      width: 130px;
     }
     .x { color: red; }
     .y { color: limegreen; }
     .z { color: deepskyblue; }
-    #fpsText {
-      font-weight: normal;
-      font-size: 16px;
-      color: white;
-    }
   </style>
 </head>
 <body>
-  <div id="loading">Prepare...</div>
+  <div id="loading">loading...</div>
 
   <div id="info">
     <div class="x">X: 0°</div>
@@ -64,7 +45,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/stats.js@0.17.0/build/stats.min.js"></script>
   <script>
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
@@ -74,75 +54,51 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    const stats = new Stats();
-    stats.showPanel(0);
-    stats.dom.style.display = 'none'; // 隱藏 stats.js 預設畫面
-
-    const fpsText = document.getElementById('fpsText');
+    const loadingOverlay = document.getElementById('loading');
 
     const loader = new THREE.TextureLoader();
+
     loader.load('image.png', (texture) => {
       const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-      const material = new THREE.MeshStandardMaterial({
-        map: texture,
-        roughness: 0.5,
-        metalness: 0.2
-      });
+      const material = new THREE.MeshBasicMaterial({ map: texture });
+
       const cube = new THREE.Mesh(geometry, material);
       scene.add(cube);
-
-      const ambientLight = new THREE.AmbientLight(0xffffff, 5);
-      scene.add(ambientLight);
-
-      const pointLight = new THREE.PointLight(0xffffff, 1);
-      pointLight.position.set(3, 3, 3);
-      scene.add(pointLight);
 
       const infoX = document.querySelector('.x');
       const infoY = document.querySelector('.y');
       const infoZ = document.querySelector('.z');
+      const fpsText = document.getElementById('fpsText');
 
-      const loadingOverlay = document.getElementById('loading');
-      loadingOverlay.style.opacity = '0.7';
-
+      // 載入完成後淡出loading畫面
+      loadingOverlay.style.opacity = '0';
       setTimeout(() => {
-        loadingOverlay.style.opacity = '0';
-        setTimeout(() => {
-          loadingOverlay.style.display = 'none';
-        }, 1000);
+        loadingOverlay.style.display = 'none';
       }, 1000);
 
       let lastTime = performance.now();
       let frameCount = 0;
-      let fps = 0;
 
       function animate() {
         requestAnimationFrame(animate);
-        stats.begin();
 
-        cube.rotation.x += 0.003;
-        cube.rotation.y += 0.004;
-        cube.rotation.z += 0.005;
-        cube.rotation.x -= 0.002;
-        cube.rotation.y -= 0.001;
-        cube.rotation.z -= 0.001;
+        cube.rotation.x += 0.002;
+        cube.rotation.y += 0.003;
+        cube.rotation.z += 0.004;
 
         infoX.textContent = `X: ${(cube.rotation.x * 180 / Math.PI).toFixed(1)}°`;
         infoY.textContent = `Y: ${(cube.rotation.y * 180 / Math.PI).toFixed(1)}°`;
         infoZ.textContent = `Z: ${(cube.rotation.z * 180 / Math.PI).toFixed(1)}°`;
 
-        // 每秒計算fps一次
         frameCount++;
         const now = performance.now();
         if (now - lastTime >= 1000) {
-          fps = frameCount;
+          fpsText.textContent = `FPS: ${frameCount}`;
           frameCount = 0;
           lastTime = now;
-          fpsText.textContent = `FPS: ${fps}`;
         }
 
         renderer.render(scene, camera);
-        stats.end();
       }
 
       animate();
