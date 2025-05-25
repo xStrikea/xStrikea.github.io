@@ -2,64 +2,70 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <title>opengl 3D test</title>
+  <title>opengl 3D</title>
   <link rel="icon" href="image.png" type="image/x-icon" />
   <style>
     body { margin: 0; background: black; overflow: hidden; }
     canvas { display: block; }
-    #loading {
+
+    #intro {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
-      color: white;
-      font-family: monospace;
-      font-size: 28px;
+      background: black;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      user-select: none;
-      z-index: 1000;
+      z-index: 9999;
       opacity: 1;
-      transition: opacity 1s;
+      transition: opacity 1s ease-in-out;
     }
-    #info {
-      position: absolute; top: 10px; left: 10px;
-      font-family: monospace; font-size: 16px; color: white;
-      background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 8px;
-      user-select: none; width: 140px; line-height: 1.5;
-      z-index: 10;
+    #intro img {
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
     }
-    .x { color: red; }
-    .y { color: limegreen; }
-    .z { color: deepskyblue; }
-    #exportBtn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 14px;
-      padding: 6px 12px;
-      background: #222;
+    #introText {
+      margin-top: 16px;
+      font-family: monospace;
+      font-size: 24px;
       color: white;
-      border: 1px solid #444;
-      border-radius: 50px;
-      cursor: pointer;
-      opacity: 1;
-      transition: opacity 1s;
-      z-index: 15;
+      opacity: 0;
+      animation: fadeIn 1s 0.5s forwards;
+    }
+    #creator {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-family: monospace;
+      font-size: 16px;
+      color: white;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      z-index: 9998;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div id="loading">loading...</div>
+  <div id="intro">
+    <img src="image.png" alt="Logo" />
+    <div id="introText">OpenGL 3D</div>
+  </div>
+  <div id="creator" style="opacity: 0.3;">Protected under the MIT License</div>
 
-  <div id="info">
-    <div class="x">X: 0°</div>
-    <div class="y">Y: 0°</div>
-    <div class="z">Z: 0°</div>
+  <div id="info" style="position:absolute;top:10px;left:10px;font-family:monospace;font-size:16px;color:white;background:rgba(0,0,0,0.4);padding:8px 12px;border-radius:8px;user-select:none;width:140px;line-height:1.5;z-index:10;">
+    <div class="x" style="color:red;">X: 0°</div>
+    <div class="y" style="color:limegreen;">Y: 0°</div>
+    <div class="z" style="color:deepskyblue;">Z: 0°</div>
     <div id="fpsText">FPS: 0</div>
   </div>
-
-  <button id="exportBtn">CSV data</button>
 
   <script type="module">
     import * as THREE from 'https://unpkg.com/three@0.158.0/build/three.module.js';
@@ -71,8 +77,6 @@
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-
-    const loadingOverlay = document.getElementById('loading');
 
     const loader = new THREE.TextureLoader();
 
@@ -86,29 +90,19 @@
       const infoY = document.querySelector('.y');
       const infoZ = document.querySelector('.z');
       const fpsText = document.getElementById('fpsText');
-      const exportBtn = document.getElementById('exportBtn');
+      const creatorText = document.getElementById('creator');
+      const intro = document.getElementById('intro');
 
-      loadingOverlay.style.opacity = '0';
-      setTimeout(() => {
-        loadingOverlay.style.display = 'none';
-      }, 1000);
-
-      let lastTime = performance.now();
       let frameCount = 0;
-      let elapsedSeconds = 0;
-      const fpsHistory = [];
-      let hasShownExport = false;
+      let lastTime = performance.now();
 
-      exportBtn.addEventListener('click', () => {
-        const csv = fpsHistory.map(e => `${e.second},${e.fps}`).join('\n');
-        const blob = new Blob([`Second,FPS\n${csv}`], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'fps_data.csv';
-        a.click();
-        URL.revokeObjectURL(url);
-      });
+      setTimeout(() => {
+        intro.style.opacity = '0';
+        setTimeout(() => {
+          intro.style.display = 'none';
+          creatorText.style.opacity = '0.3'; // already set inline, optional
+        }, 1000);
+      }, 2000);
 
       function animate() {
         requestAnimationFrame(animate);
@@ -121,19 +115,15 @@
         infoY.textContent = `Y: ${(cube.rotation.y * 180 / Math.PI).toFixed(1)}°`;
         infoZ.textContent = `Z: ${(cube.rotation.z * 180 / Math.PI).toFixed(1)}°`;
 
-        frameCount++;
         const now = performance.now();
-        if (now - lastTime >= 1000) {
-          const fps = frameCount;
+        const elapsed = now - lastTime;
+
+        frameCount++;
+        if (elapsed >= 100) {
+          const fps = Math.round((frameCount * 1000) / elapsed);
           fpsText.textContent = `FPS: ${fps}`;
-          fpsHistory.push({ second: elapsedSeconds++, fps });
           frameCount = 0;
           lastTime = now;
-
-          if (!hasShownExport) {
-            exportBtn.style.opacity = '0.3';
-            hasShownExport = true;
-          }
         }
 
         renderer.render(scene, camera);
