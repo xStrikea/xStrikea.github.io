@@ -48,6 +48,39 @@
       z-index: 9998;
     }
 
+    #info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-family: monospace;
+      font-size: 16px;
+      color: white;
+      background: rgba(0,0,0,0.4);
+      padding: 8px 12px;
+      border-radius: 8px;
+      user-select: none;
+      width: 140px;
+      line-height: 1.5;
+      z-index: 10;
+    }
+
+    #fpsDots {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #44465F8F;
+      transition: background 0.3s ease;
+      cursor: default;
+    }
+
     @keyframes fadeIn {
       to { opacity: 1; }
     }
@@ -67,11 +100,19 @@
   </div>
   <div id="creator">Protected under the MIT License</div>
 
-  <div id="info" style="position:absolute;top:10px;left:10px;font-family:monospace;font-size:16px;color:white;background:rgba(0,0,0,0.4);padding:8px 12px;border-radius:8px;user-select:none;width:140px;line-height:1.5;z-index:10;">
+  <!-- 左上角資訊顯示 -->
+  <div id="info">
     <div class="x" style="color:red;">X: 0°</div>
     <div class="y" style="color:limegreen;">Y: 0°</div>
     <div class="z" style="color:deepskyblue;">Z: 0°</div>
     <div id="fpsText">FPS: 0</div>
+  </div>
+
+  <!-- 右上角效能評估圓點 -->
+  <div id="fpsDots">
+    <div class="dot" title="低效能"></div>
+    <div class="dot" title="中效能"></div>
+    <div class="dot" title="高效能"></div>
   </div>
 
   <script type="module">
@@ -99,6 +140,7 @@
       const fpsText = document.getElementById('fpsText');
       const creatorText = document.getElementById('creator');
       const intro = document.getElementById('intro');
+      const fpsDots = document.querySelectorAll('#fpsDots .dot');
 
       let frameCount = 0;
       let lastTime = performance.now();
@@ -126,9 +168,22 @@
         const elapsed = now - lastTime;
 
         frameCount++;
-        if (elapsed >= 100) {
+        if (elapsed >= 1000) {
           const fps = Math.round((frameCount * 1000) / elapsed);
           fpsText.textContent = `FPS: ${fps}`;
+
+          // 重設顏色
+          fpsDots.forEach(dot => dot.style.background = 'gray');
+
+          // 根據 FPS 評估
+          if (fps >= 50) {
+            fpsDots[2].style.background = 'lime';
+          } else if (fps >= 30) {
+            fpsDots[1].style.background = 'gold';
+          } else {
+            fpsDots[0].style.background = 'red';
+          }
+
           frameCount = 0;
           lastTime = now;
         }
