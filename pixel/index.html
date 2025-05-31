@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="description" content="Convert images into animated pixel art using HTML5 Canvas and GSAP. Upload any image and see it beautifully recreated in pixel blocks.">
+<meta name="keywords" content="pixel art, pixel image converter, image to pixels, GSAP animation, canvas pixel effect, HTML5 pixel art, JavaScript image processing, pixel block animation">
+<meta name="author" content="xSpecter">
+<meta property="og:title" content="Pixel Art Generator with Animation"/>
+<meta property="og:description" content="Upload your image and watch it transform into pixel art with smooth GSAP animations."/>
+<meta property="og:type" content="website"/>
+<meta property="og:image" content="https://https://xStrikea.github.io pixel/preview.png"/> 
+<title>Pixel Art</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap');
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 20px;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #eee;
+    font-family: 'Nunito Sans', sans-serif;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+  }
+  h1 {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3em;
+    text-shadow: 0 0 10px #00b4d8;
+  }
+  #controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+  }
+  /* Hide original file input */
+  input[type="file"] {
+    display: none;
+  }
+  /* Custom file button */
+  .custom-file-btn {
+    display: inline-block;
+    background: #264653;
+    color: #fff;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 10px transparent;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    outline-offset: 3px;
+    outline: none;
+  }
+  .custom-file-btn:hover,
+  .custom-file-btn:focus {
+    background: #2a9d8f;
+    box-shadow: 0 0 15px #2a9d8f;
+    outline: none;
+  }
+  select, button {
+    background: #264653;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 10px transparent;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    min-width: 110px;
+  }
+  select:hover, button:hover {
+    background: #2a9d8f;
+    box-shadow: 0 0 15px #2a9d8f;
+  }
+  button {
+    min-width: 140px;
+  }
+  #info {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #aad8d3;
+    min-height: 24px;
+    text-align: center;
+  }
+  #progressContainer {
+    width: 100%;
+    max-width: 600px;
+    height: 14px;
+    background: #264653;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    box-shadow: inset 0 0 5px #1b3a45;
+    transition: opacity 0.3s ease;
+  }
+  #progressBar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #00f5d4, #48cae4);
+    transition: width 0.3s ease;
+    border-radius: 10px 0 0 10px;
+  }
+  #canvasDisplay {
+    display: block;
+    margin: 0 auto 40px auto;
+    border-radius: 12px;
+    box-shadow: 0 0 30px #00b4d8aa;
+    border: 2px solid #0077b6;
+    max-width: 95vw;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    background: #0a192f;
+    image-rendering: pixelated;
+  }
+  #canvasFull {
+    display: none;
+  }
+  @media (max-width: 420px) {
+    #controls {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .custom-file-btn, select, button {
+      width: 100%;
+      min-width: unset;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>Pixel Art</h1>
+
+  <div id="controls">
+    <label for="imageUploader" class="custom-file-btn" tabindex="0">Choose Image</label>
+    <input type="file" id="imageUploader" accept="image/*" />
+    <select id="qualitySelector" aria-label="Select Quality">
+      <option value="0.05">Low (Fast)</option>
+      <option value="0.1" selected>Medium (Recommended)</option>
+      <option value="0.2">High (Clear)</option>
+    </select>
+    <button id="downloadBtn" aria-label="Download Image" disabled>Download High-Res</button>
+  </div>
+
+  <div id="info" role="status" aria-live="polite"></div>
+
+  <div id="progressContainer" aria-label="Progress bar">
+    <div id="progressBar"></div>
+  </div>
+
+  <canvas id="canvasDisplay"></canvas>
+  <canvas id="canvasFull"></canvas>
+
+<script>
+  const fileInput = document.getElementById("imageUploader");
+  const qualitySelector = document.getElementById("qualitySelector");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const info = document.getElementById("info");
+  const progressBar = document.getElementById("progressBar");
+  const progressContainer = document.getElementById("progressContainer");
+
+  const canvasDisplay = document.getElementById("canvasDisplay");
+  const ctxDisplay = canvasDisplay.getContext("2d");
+
+  const canvasFull = document.getElementById("canvasFull");
+  const ctxFull = canvasFull.getContext("2d", { willReadFrequently: true });
+  
+  let animPixels = [];
+  let pixelSize = 12;
+  let animationFrameId;
+
+  fileInput.addEventListener("change", e => {
+    if (e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+    loadImage(url);
+    downloadBtn.disabled = true;
+    progressBar.style.width = "0%";
+    progressContainer.style.display = "block";
+    info.textContent = "";
+  });
+
+  qualitySelector.addEventListener("change", () => {
+    if (img) {
+      preparePixels(img, parseFloat(qualitySelector.value));
+    }
+  });
+
+  downloadBtn.addEventListener("click", () => {
+    if (!canvasFull) return;
+    const link = document.createElement("a");
+    link.download = "pixel-art.png";
+    link.href = canvasFull.toDataURL("image/png");
+    link.click();
+  });
+
+  let img = null;
+  function loadImage(src) {
+    img = new Image();
+    img.onload = () => {
+      preparePixels(img, parseFloat(qualitySelector.value));
+    };
+    img.src = src;
+  }
+
+  function preparePixels(image, quality) {
+    cancelAnimationFrame(animationFrameId);
+    animPixels = [];
+    info.style.color = '#aad8d3';
+    info.textContent = "Processing image...";
+    progressBar.style.width = "0%";
+    progressContainer.style.display = "block";
+
+    const maxDisplayWidth = window.innerWidth * 0.95;
+    const maxDisplayHeight = window.innerHeight * 0.8;
+
+    // 計算像素化尺寸
+    const w = Math.floor(image.width * quality);
+    const h = Math.floor(image.height * quality);
+
+    // 設定離線 canvasFull 尺寸 (下載用，固定大小)
+    canvasFull.width = w;
+    canvasFull.height = h;
+
+    // 先畫原圖縮小至 canvasFull (用來取像素)
+    ctxFull.clearRect(0, 0, w, h);
+    ctxFull.drawImage(image, 0, 0, w, h);
+
+    // 取得像素資料
+    const imageData = ctxFull.getImageData(0, 0, w, h).data;
+
+    // 收集色塊資料
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const idx = (y * w + x) * 4;
+        const r = imageData[idx];
+        const g = imageData[idx + 1];
+        const b = imageData[idx + 2];
+        const a = imageData[idx + 3];
+        if (a > 10) {
+          const color = `rgba(${r},${g},${b},${a / 255})`;
+          animPixels.push({
+            x, y,
+            color,
+            alpha: 0,
+            scale: 0
+          });
+        }
+      }
+    }
+
+    // 計算 pixelSize 縮放顯示，確保拼圖不超出螢幕大小
+    let sizeX = maxDisplayWidth / w;
+    let sizeY = maxDisplayHeight / h;
+    pixelSize = Math.floor(Math.min(sizeX, sizeY));
+    if (pixelSize < 3) pixelSize = 3; // 最小尺寸3，避免看不見
+
+    // 設定 canvasDisplay 尺寸（會依螢幕縮放）
+    canvasDisplay.width = w * pixelSize;
+    canvasDisplay.height = h * pixelSize;
+
+    info.textContent = `Image: ${image.width}×${image.height} | Pixels: ${w}×${h} | Pixel Size: ${pixelSize}`;
+
+    animateInBatches(w, h);
+
+    downloadBtn.disabled = false;
+  }
+
+  function animateInBatches(w, h) {
+    let i = 0;
+    const batchSize = 200;
+    const delay = 16;
+
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+
+    progressBar.style.width = "0%";
+    info.style.color = '#aad8d3';
+
+    function renderFrame() {
+      ctxDisplay.clearRect(0, 0, canvasDisplay.width, canvasDisplay.height);
+      ctxFull.clearRect(0, 0, canvasFull.width, canvasFull.height);
+
+      for (const p of animPixels) {
+        if (p.alpha > 0) {
+          const s = p.scale * pixelSize;
+          const offset = (pixelSize - s) / 2;
+          ctxDisplay.globalAlpha = p.alpha;
+          ctxDisplay.fillStyle = p.color;
+          ctxDisplay.fillRect(p.x * pixelSize + offset, p.y * pixelSize + offset, s, s);
+
+          ctxFull.globalAlpha = p.alpha;
+          ctxFull.fillStyle = p.color;
+          ctxFull.fillRect(p.x, p.y, 1, 1);
+        }
+      }
+      animationFrameId = requestAnimationFrame(renderFrame);
+    }
+    renderFrame();
+
+    function animateBatch() {
+      const batch = animPixels.slice(i, i + batchSize);
+      for (const p of batch) {
+        gsap.to(p, {
+          alpha: 1,
+          scale: 1,
+          duration: 0.6,
+          ease: "elastic.out(1, 0.5)"
+        });
+      }
+      i += batchSize;
+      progressBar.style.width = Math.min(100, (i / animPixels.length) * 100) + "%";
+
+      if (i < animPixels.length) {
+        setTimeout(animateBatch, delay);
+      } else {
+        // 動畫完成，隱藏 info 和進度條，只顯示 Done!
+        info.textContent = "Done!";
+        info.style.color = "#00ff99";
+        progressContainer.style.display = "none";
+      }
+    }
+    animateBatch();
+  }
+</script>
+</body>
+</html>
