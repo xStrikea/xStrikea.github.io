@@ -12,6 +12,7 @@
 <meta property="og:image" content="https://xStrikea.github.io pixel/preview.png"/> 
 <title>Pixel Art</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap');
   * { box-sizing: border-box; }
@@ -127,6 +128,50 @@
   #canvasFull {
     display: none;
   }
+  /* Turnstile overlay card */
+  /* 初始隱藏狀態：透明且縮小 */
+  #turnstileCard {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  /* 其他原本樣式保持不變 */
+  position: fixed;
+  top: 50%; left: 50%;
+  background: #264653;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px #2a9d8faa;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 320px;
+}
+  #turnstileCard.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+  #turnstileCard h2 {
+    color: #00ff99;
+    margin-bottom: 12px;
+  }
+  #turnstileCard button {
+    margin-top: 15px;
+    background: #e76f51;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 0 10px #e76f51bb;
+    transition: background 0.3s ease;
+  }
+  #turnstileCard button:hover {
+    background: #f4a261;
+  }
   @media (max-width: 420px) {
     #controls {
       flex-direction: column;
@@ -136,6 +181,9 @@
       width: 100%;
       min-width: unset;
     }
+    #turnstileCard {
+      width: 90vw;
+    }
   }
 </style>
 </head>
@@ -143,7 +191,7 @@
   <h1>Pixel Art</h1>
 
   <div id="controls">
-    <label for="imageUploader" class="custom-file-btn" tabindex="0">Choose Image</label>
+    <label for="imageUploader" class="custom-file-btn" tabindex="0" id="uploadLabel">Choose Image</label>
     <input type="file" id="imageUploader" accept="image/*" />
     <select id="qualitySelector" aria-label="Select Quality">
       <option value="0.05">Low (Fast)</option>
@@ -162,6 +210,13 @@
   <canvas id="canvasDisplay"></canvas>
   <canvas id="canvasFull"></canvas>
 
+  <!-- Turnstile overlay card -->
+  <div id="turnstileCard" role="dialog" aria-modal="true" aria-labelledby="turnstileTitle">
+    <h2 id="turnstileTitle">Robot Verification</h2>
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAABgDaR9YDQeS-ECl" data-callback="onTurnstileSuccess"></div>
+    <button id="cancelTurnstile">Cancel</button>
+  </div>
+
 <script>
   const fileInput = document.getElementById("imageUploader");
   const qualitySelector = document.getElementById("qualitySelector");
@@ -175,10 +230,37 @@
 
   const canvasFull = document.getElementById("canvasFull");
   const ctxFull = canvasFull.getContext("2d", { willReadFrequently: true });
-  
+
+  const turnstileCard = document.getElementById("turnstileCard");
+  const cancelTurnstileBtn = document.getElementById("cancelTurnstile");
+  const uploadLabel = document.getElementById("uploadLabel");
+
   let animPixels = [];
   let pixelSize = 12;
   let animationFrameId;
+  let img = null;
+
+  // 當使用者點選「Choose Image」按鈕時，攔截行為，先顯示 Turnstile 卡片，等驗證成功後再觸發上傳框
+  uploadLabel.addEventListener("click", (e) => {
+    e.preventDefault();
+    showTurnstile();
+  });
+
+  // 取消 Turnstile 按鈕
+  cancelTurnstileBtn.addEventListener("click", () => {
+    hideTurnstile();
+  });
+
+  // Turnstile 驗證成功回調
+  function onTurnstileSuccess(token) {
+    hideTurnstile();
+    // 驗證成功後觸發隱藏的 file input 點擊，開啟檔案選擇視窗
+    fileInput.click();
+    // Reset Turnstile for next time
+    if(window.turnstile) {
+      window.turnstile.reset();
+    }
+  }
 
   fileInput.addEventListener("change", e => {
     if (e.target.files.length === 0) return;
@@ -205,7 +287,18 @@
     link.click();
   });
 
-  let img = null;
+  function showTurnstile() {
+  turnstileCard.classList.add('show');
+  turnstileCard.style.display = "flex"; // 確保顯示，讓動畫有機會播放
+}
+
+function hideTurnstile() {
+  turnstileCard.classList.remove('show');
+  // 等動畫結束後才隱藏 display
+  setTimeout(() => {
+    turnstileCard.style.display = "none";
+  }, 300); // 跟 CSS transition 時間同步
+}
   function loadImage(src) {
     img = new Image();
     img.onload = () => {
@@ -225,22 +318,17 @@
     const maxDisplayWidth = window.innerWidth * 0.95;
     const maxDisplayHeight = window.innerHeight * 0.8;
 
-    // 計算像素化尺寸
     const w = Math.floor(image.width * quality);
     const h = Math.floor(image.height * quality);
 
-    // 設定離線 canvasFull 尺寸 (下載用，固定大小)
     canvasFull.width = w;
     canvasFull.height = h;
 
-    // 先畫原圖縮小至 canvasFull (用來取像素)
     ctxFull.clearRect(0, 0, w, h);
     ctxFull.drawImage(image, 0, 0, w, h);
 
-    // 取得像素資料
     const imageData = ctxFull.getImageData(0, 0, w, h).data;
 
-    // 收集色塊資料
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         const idx = (y * w + x) * 4;
@@ -260,13 +348,11 @@
       }
     }
 
-    // 計算 pixelSize 縮放顯示，確保拼圖不超出螢幕大小
     let sizeX = maxDisplayWidth / w;
     let sizeY = maxDisplayHeight / h;
     pixelSize = Math.floor(Math.min(sizeX, sizeY));
-    if (pixelSize < 3) pixelSize = 3; // 最小尺寸3，避免看不見
+    if (pixelSize < 3) pixelSize = 3;
 
-    // 設定 canvasDisplay 尺寸（會依螢幕縮放）
     canvasDisplay.width = w * pixelSize;
     canvasDisplay.height = h * pixelSize;
 
@@ -327,7 +413,6 @@
       if (i < animPixels.length) {
         setTimeout(animateBatch, delay);
       } else {
-        // 動畫完成，隱藏 info 和進度條，只顯示 Done!
         info.textContent = "Done!";
         info.style.color = "#00ff99";
         progressContainer.style.display = "none";
