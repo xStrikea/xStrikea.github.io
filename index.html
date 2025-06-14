@@ -1,84 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Loader</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      background: linear-gradient(135deg, #a9b1b6, #475c6b);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .container {
-      --uib-size: 80px;
-      --uib-stroke: 3px;
-      width: var(--uib-size);
-      height: var(--uib-size);
-      position: relative;
-    }
-
-    .line {
-      position: absolute;
-      top: 0;
-      left: calc(50% - var(--uib-stroke) / 2);
-      width: var(--uib-stroke);
-      height: 100%;
-      transform-origin: center bottom;
-    }
-
-    .pulse {
-      position: absolute;
-      width: 100%;
-      height: 20%;
-      top: 15%;
-      border-radius: 999px;
-      background-color: white;
-      opacity: 0;
-      transform: scaleY(0);
-      transform-origin: center bottom;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xSpecter</title>
+    <link rel="icon" href="/image/avatar.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
 </head>
 <body>
-  <div class="container" id="loader"></div>
 
-  <script>
-    const container = document.getElementById("loader");
-    const totalLines = 24;
-
-    for (let i = 0; i < totalLines; i++) {
-      const angle = (360 / totalLines) * i;
-
-      const line = document.createElement("div");
-      line.className = "line";
-      line.style.transform = `rotate(${angle}deg)`;
-
-      const pulse = document.createElement("div");
-      pulse.className = "pulse";
-      line.appendChild(pulse);
-
-      gsap.to(pulse, {
-        scaleY: 1.5,
-        opacity: 1,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        duration: 0.6,
-        delay: i * 0.03
-      });
-
-      container.appendChild(line);
-    }
-
-    setTimeout(() => {
-      window.location.href = "https://xStrikea.github.io/home";
-    }, 3000);
-  </script>
+    <div id="content" style="display: none;">
+        <div class="profile">
+            <img src="/image/avatar.png" alt="Avatar" id="avatar">
+            <h1 id="title">xSpecter</h1>
+            <p id="description">Can create Lua scripts.</p>
+        </div>
+        <div class="buttons">
+            <a href="https://www.roblox.com/users/7313173302/profile" id="roblox">
+                <img src="/image/roblox.png" alt="Roblox Logo">
+                roblox
+            </a>
+            <a href="https://github.com/xStrikea" id="github">
+                <img src="/image/github.png" alt="GitHub Logo">
+                github
+            </a>
+            <a href="mailto:coder4819@gmail.com" id="gmail">
+                <img src="/image/gmail.png" alt="Gmail Logo">
+                gmail
+            </a>
+            <a href="https://scriptblox.com/u/Tektronix" id="scriptblox">
+                <img src="/image/scriptblox.png" alt="Scriptblox Logo">
+                Scriptblox
+            </a>
+            <a href="https://github.com/xStrikea/xTitanium" id="scriptblox">
+                <img src="/image/xTitanium.png" alt="xTitanium">
+                xTitanium
+            </a>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
