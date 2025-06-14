@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rendering Test</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+    #gpu-info {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-family: monospace;
+      z-index: 1000;
+      user-select: none;
+      pointer-events: none;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<div id="gpu-info"></div>
+<script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
+  import * as CANNON from 'https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js';
+
+  function getGPUInfo() {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    if (!gl) return '';
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    if (!info) return '';
+    const raw = gl.getParameter(info.UNMASKED_RENDERER_WEBGL) || '';
+    return raw.replace(/ANGLE\s*|Graphics|Apple|NVIDIA|AMD|Intel|GPU|Radeon|Series|GeForce|OpenGL|Mesa|\/.*||\s{2,}/gi, '').trim();
+  }
+
+  document.getElementById('gpu-info').textContent = getGPUInfo();
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  const cameraRadius = 100;
+  let cameraAngle = 0;
+  camera.position.set(cameraRadius, 60, 0);
+  camera.lookAt(0, 0, 0);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(10, 20, 10);
+  scene.add(light);
+
+  const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -9.82, 0) });
+  const noBounce = new CANNON.Material('noBounce');
+  const contact = new CANNON.ContactMaterial(noBounce, noBounce, { restitution: 0, friction: 0 });
+  world.defaultContactMaterial = contact;
+  world.addContactMaterial(contact);
+
+  const containerSize = 50;
+  const half = containerSize / 2;
+  const wallThickness = 1;
+
+  const glass = new THREE.MeshPhysicalMaterial({
+    color: 0x88aaff,
+    transparent: true,
+    opacity: 0.2,
+    roughness: 0,
+    metalness: 0,
+    transmission: 1,
+    side: THREE.BackSide
+  });
+
+  const container = new THREE.Mesh(new THREE.BoxGeometry(containerSize, containerSize, containerSize), glass);
+  scene.add(container);
+
+  const walls = [
+    { pos: [0, -half, 0], size: [half, wallThickness / 2, half] },
+    { pos: [-half, 0, 0], size: [wallThickness / 2, half, half] },
+    { pos: [half, 0, 0], size: [wallThickness / 2, half, half] },
+    { pos: [0, 0, -half], size: [half, half, wallThickness / 2] },
+    { pos: [0, 0, half], size: [half, half, wallThickness / 2] }
+  ];
+
+  for (const w of walls) {
+    const shape = new CANNON.Box(new CANNON.Vec3(...w.size));
+    const body = new CANNON.Body({
+      mass: 0,
+      shape,
+      position: new CANNON.Vec3(...w.pos),
+      material: noBounce
+    });
+    world.addBody(body);
+  }
+
+  const balls = [];
+
+  function createBall() {
+    const radius = 2;
+    const color = new THREE.Color(`hsl(${Math.random() * 360}, 100%, 50%)`);
+    const mesh = new THREE.Mesh(new THREE.SphereGeometry(radius, 5, 5), new THREE.MeshStandardMaterial({ color }));
+    scene.add(mesh);
+
+    const shape = new CANNON.Sphere(radius);
+    const body = new CANNON.Body({
+      mass: 1,
+      shape,
+      material: noBounce,
+      position: new CANNON.Vec3(0, half + radius, 0)
+    });
+
+    world.addBody(body);
+    balls.push({ mesh, body });
+
+    body.applyImpulse(new CANNON.Vec3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5) * 2), body.position);
+  }
+
+  setInterval(() => {
+    createBall();
+    createBall();
+  }, 500);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    world.step(1 / 60);
+
+    cameraAngle += 0.01;
+    camera.position.x = Math.cos(cameraAngle) * cameraRadius;
+    camera.position.z = Math.sin(cameraAngle) * cameraRadius;
+    camera.lookAt(0, 0, 0);
+
+    for (let i = balls.length - 1; i >= 0; i--) {
+      const { mesh, body } = balls[i];
+      if (body.position.y < -100) {
+        scene.remove(mesh);
+        world.removeBody(body);
+        balls.splice(i, 1);
+      } else {
+        mesh.position.copy(body.position);
+        mesh.quaternion.copy(body.quaternion);
+      }
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+</body>
+</html>
