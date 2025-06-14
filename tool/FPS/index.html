@@ -114,19 +114,19 @@
       mass: 1,
       shape,
       material: noBounce,
-      position: new CANNON.Vec3(0, half + radius, 0)
+      position: new CANNON.Vec3(0, -half + radius, 1)
     });
 
     world.addBody(body);
     balls.push({ mesh, body });
 
-    body.applyImpulse(new CANNON.Vec3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5) * 2), body.position);
+    body.applyImpulse(new CANNON.Vec3((Math.random() - 0.5) * 1, 0, (Math.random() - 0.5) * 1), body.position);
   }
 
   setInterval(() => {
     createBall();
     createBall();
-  }, 500);
+  }, 50);
 
   function animate() {
     requestAnimationFrame(animate);
