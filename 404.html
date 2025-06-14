@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>404 No found</title>
+  <title>404 Not Found</title>
   <style>
     body {
       background-color: #111;
@@ -27,7 +27,7 @@
   </style>
 </head>
 <body>
-  <h1>404 No found</h1>
+  <h1>404 Not Found</h1>
   <p>You're in a place you shouldn't be.</p>
   
   <hr>
@@ -36,11 +36,31 @@
   <ul>
     <li><a href="/">/</a> - Home</li>
     <li><a href="/tool">/tool</a> - tool</li>
-    <li><a href="/other">/other</a> -  other</li>
+    <li><a href="/other">/other</a> - other</li>
   </ul>
 
   <hr>
 
   <p><em>This website is licensed under the MIT.</em></p>
+
+  <script>
+    const query = window.location.search.toLowerCase();
+    if (query.includes("yes-found")) {
+      document.body.innerHTML = `
+        <h1>Wait a moment!</h1>
+        <p>How did you find this place?</p>
+        <hr>
+        <p><strong>Links: </strong></p>
+        <ul>
+          <li><a href="/">/</a> - Home</li>
+          <li><a href="/tool">/tool</a> - tool</li>
+          <li><a href="/other">/other</a> - other</li>
+        </ul>
+        <hr>
+        <p><em>This website is licensed under the MIT.</em></p>
+        <p><em>That's a bit strange.</em></p>
+      `;
+    }
+  </script>
 </body>
-</html> 
+</html>
