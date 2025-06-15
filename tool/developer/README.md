@@ -1,3 +1,7 @@
+---
+layout: default
+title: Get Key
+---
 If you want to get the developer project but don't have the matching QR code please refer to the following instructions.
 
 # Create QR code key  
