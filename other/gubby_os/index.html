@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GUBBY OS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="image/gubby.png" type="image/x-icon">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      margin: 0;
+      background: #111;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* 任務列 */
+    #taskbar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      height: 50px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+      z-index: 1000;
+    }
+
+    .task-left, .task-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .task-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 5px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .task-icon:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .task-icon img {
+      width: 22px;
+      height: 22px;
+    }
+
+    .time-display {
+      color: #ccc;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    /* 視窗共用 */
+    .window {
+      position: fixed;
+      top: 10vh;
+      left: 5vw;
+      width: 90vw;
+      height: 75vh;
+      background: rgba(30, 30, 30, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      color: #ddd;
+      display: none;
+      flex-direction: column;
+      z-index: 999;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .window-header {
+      background: #222;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+
+    .close-btn {
+      background: #e81123;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      line-height: 20px;
+    }
+
+    .window-body {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .sysinfo {
+      padding: 15px;
+      font-size: 14px;
+    }
+
+    /* 開始選單 */
+/* ✅ 開始選單樣式 */
+#start-menu {
+  position: fixed;
+  bottom: 60px;
+  left: 10px;
+  width: 280px;
+  background: rgba(20, 20, 20, 0.98);
+  border-radius: 16px;
+  padding: 15px;
+  display: none;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  animation: fadeIn 0.3s ease-out;
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  text-align: center;
+  color: #fff;
+}
+
+/* 👤 使用者頭像與名稱 */
+.user-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  margin-bottom: 6px;
+}
+.username {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* 🖼️ 中央圖片 */
+.start-background {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* App Tile */
+.start-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.start-tile {
+  background: #2c2c2c;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.start-tile:hover {
+  background: #444;
+}
+
+/* ✅ App Tile 區塊 */
+.start-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.start-tile {
+  background: #2c2c2c;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.start-tile:hover {
+  background: #444;
+}
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 600px) {
+      .start-grid {
+        grid-template-columns: 1fr;
+      }
+      .window {
+        width: 96vw;
+        height: 70vh;
+        left: 2vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 瀏覽器視窗 -->
+  <div class="window" id="browserWindow">
+    <div class="window-header">
+      Browser
+      <div class="close-btn" onclick="closeWindow('browserWindow')">×</div>
+    </div>
+    <div class="window-body">
+      <iframe src="https://www.google.com" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
+    </div>
+  </div>
+
+  <!-- 系統資訊視窗 -->
+  <div class="window" id="systemWindow">
+    <div class="window-header">
+      System Info
+      <div class="close-btn" onclick="closeWindow('systemWindow')">×</div>
+    </div>
+    <div class="window-body">
+      <div class="sysinfo">
+        <p><strong>OS:</strong> GUBBY OS</p>
+        <p><strong>OS version:</strong> 1.0</p>
+        <p><strong>Browser:</strong> <span id="browser"></span></p>
+        <p><strong>Language:</strong> <span id="lang"></span></p>
+        <p><strong>Platform:</strong> <span id="platform"></span></p>
+        <p><strong>Screen:</strong> <span id="screen"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 開始選單 -->
+<div id="start-menu">
+  <div class="user-info">
+    <img src="image/gubby.png" class="avatar" alt="User Avatar">
+    <div class="username">Admin</div>
+  </div>
+  <div class="start-grid">
+    <div class="start-tile" onclick="openWindow('browserWindow')">Browser</div>
+    <div class="start-tile" onclick="openWindow('systemWindow')">System</div>
+  </div>
+</div>
+
+  <!-- 任務列 -->
+  <div id="taskbar">
+    <div class="task-left">
+      <div class="task-icon" onclick="toggleStartMenu()">
+        <img src="image/gubby.png" alt="Start">
+      </div>
+    </div>
+    <div class="task-right">
+      <div class="time-display" id="clock">--:--</div>
+    </div>
+  </div>
+
+  <script>
+    function toggleStartMenu() {
+      const menu = document.getElementById('start-menu');
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function openWindow(id) {
+      closeAllWindows();
+      document.getElementById('start-menu').style.display = 'none';
+      document.getElementById(id).style.display = 'flex';
+    }
+
+    function closeWindow(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function closeAllWindows() {
+      document.querySelectorAll('.window').forEach(win => win.style.display = 'none');
+    }
+
+    // 系統資訊初始化
+    window.onload = () => {
+      document.getElementById('browser').textContent = navigator.userAgent;
+      document.getElementById('lang').textContent = navigator.language;
+      document.getElementById('platform').textContent = navigator.platform;
+      document.getElementById('screen').textContent = `${screen.width}x${screen.height}`;
+    };
+
+    // 實時時間
+    function updateClock() {
+      const clock = document.getElementById('clock');
+      const now = new Date();
+      clock.textContent = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // 點擊任務列外部關閉開始選單
+    window.addEventListener('click', function(e) {
+      const start = document.getElementById('start-menu');
+      if (!start.contains(e.target) && !e.target.closest('.task-icon')) {
+        start.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
