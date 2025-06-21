@@ -45,7 +45,7 @@
       word-break: break-all;
       cursor: pointer;
     }
-    #status {
+    #status, #countdown {
       margin-top: 10px;
       font-size: 13px;
       color: #aaa;
@@ -58,12 +58,13 @@
     <div id="uid">Logging in...</div>
     <button id="getKeyBtn">Generate Key</button>
     <div id="key" title="Click to copy"></div>
+    <div id="countdown"></div>
     <div id="status"></div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -82,23 +83,22 @@
 
     const btn = document.getElementById('getKeyBtn');
     const keyDisplay = document.getElementById('key');
-    const statusDisplay = document.getElementById('status');
     const uidDisplay = document.getElementById('uid');
+    const statusDisplay = document.getElementById('status');
+    const countdown = document.getElementById('countdown');
 
     let currentUID = null;
+    let countdownTimer = null;
 
     signInAnonymously(auth)
       .then(() => {
         onAuthStateChanged(auth, async (user) => {
           if (user) {
             currentUID = user.uid;
-            uidDisplay.textContent = ` ${currentUID}`;
+            uidDisplay.textContent = `Your UID: ${currentUID}`;
             await checkExistingKey();
           }
         });
-      })
-      .catch((error) => {
-        uidDisplay.textContent = "" + error.message;
       });
 
     function generateKey(length = 32) {
@@ -106,36 +106,68 @@
       return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
     }
 
+    function startCountdown(expireTime) {
+      if (countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = setInterval(() => {
+        const remaining = expireTime - Date.now();
+        if (remaining <= 0) {
+          clearInterval(countdownTimer);
+          countdown.textContent = "Key expired.";
+          location.reload(); // 自動刷新頁面重載驗證
+        } else {
+          const hrs = Math.floor(remaining / 3600000);
+          const mins = Math.floor((remaining % 3600000) / 60000);
+          const secs = Math.floor((remaining % 60000) / 1000);
+          countdown.textContent = `Key expires in: ${hrs}h ${mins}m ${secs}s`;
+        }
+      }, 1000);
+    }
+
     async function checkExistingKey() {
       const docRef = doc(db, "lootkeys", currentUID);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        keyDisplay.textContent = data.key;
-        btn.disabled = true;
-        btn.textContent = "Key Already Generated";
+        const now = Date.now();
+        const expireTime = data.timestamp + 86400000;
+        if (now >= expireTime) {
+          await deleteDoc(docRef);
+          statusDisplay.textContent = "Previous key expired. You can generate a new one.";
+          btn.disabled = false;
+          btn.textContent = "Generate Key";
+          keyDisplay.textContent = "";
+          countdown.textContent = "";
+        } else {
+          keyDisplay.textContent = data.key;
+          btn.disabled = true;
+          btn.textContent = "Key Already Generated";
+          startCountdown(expireTime);
+        }
       }
     }
 
     btn.onclick = async () => {
       const key = generateKey();
+      const timestamp = Date.now();
       const docRef = doc(db, "lootkeys", currentUID);
       await setDoc(docRef, {
         key,
-        timestamp: Date.now()
+        timestamp
       });
       keyDisplay.textContent = key;
       btn.disabled = true;
       btn.textContent = "Key Generated";
+      statusDisplay.textContent = "Key saved!";
+      startCountdown(timestamp + 86400000);
     };
 
     keyDisplay.onclick = async () => {
       try {
         await navigator.clipboard.writeText(keyDisplay.textContent);
-        statusDisplay.textContent = "Key copied to clipboard!";
+        statusDisplay.textContent = "Key copied!";
         setTimeout(() => statusDisplay.textContent = "", 2000);
       } catch {
-        statusDisplay.textContent = "Unable to copy.";
+        statusDisplay.textContent = "Copy failed.";
       }
     };
   </script>
