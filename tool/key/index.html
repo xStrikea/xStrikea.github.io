@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Get Key</title>
@@ -73,8 +73,7 @@
       projectId: "xtitanium-5f8cf",
       storageBucket: "xtitanium-5f8cf.appspot.com",
       messagingSenderId: "104699222536",
-      appId: "1:104699222536:web:fa780fac3c70f5f2dd0fbd",
-      measurementId: "G-90E3LT9527"
+      appId: "1:104699222536:web:fa780fac3c70f5f2dd0fbd"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -100,60 +99,6 @@
       }
     }
 
-    async function init() {
-      const url = new URL(window.location.href);
-      const visitorParam = url.searchParams.get('');
-      const ipParam = url.searchParams.get('ip');
-      const userIP = await getUserIP();
-
-      if (!userIP) {
-        statusDisplay.textContent = "Wrong IP";
-        return;
-      }
-
-      // ✅ 處理 visitor 模式
-      if (visitorParam === "visitors") {
-        const already = sessionStorage.getItem("redirected");
-        const docRef = doc(db, "lootkeys", userIP);
-        const snap = await getDoc(docRef);
-
-        if (snap.exists() && !already) {
-          const today = new Date();
-          const yyyyMMdd = today.getFullYear().toString()
-                         + String(today.getMonth() + 1).padStart(2, '0')
-                         + String(today.getDate()).padStart(2, '0');
-          sessionStorage.setItem("redirected", "1");
-          url.searchParams.delete('');
-          url.searchParams.set('ip', `${userIP}_${yyyyMMdd}`);
-          location.href = url.toString();
-          return;
-        } else {
-          sessionStorage.removeItem("redirected");
-          startApp(userIP);
-          return;
-        }
-      }
-
-      // ✅ 帶 ?ip=xxx 時進入正常程序
-      if (ipParam) {
-        const parts = ipParam.split("_");
-        if (parts.length === 2 && parts[0] === userIP) {
-          const today = new Date();
-          const todayStr = today.getFullYear().toString()
-                         + String(today.getMonth() + 1).padStart(2, '0')
-                         + String(today.getDate()).padStart(2, '0');
-          if (parts[1] === todayStr) {
-            startApp(userIP);
-            return;
-          }
-        }
-        statusDisplay.textContent = "Invalid parameter.";
-        return;
-      }
-
-      statusDisplay.textContent = "Please enter from the client.";
-    }
-
     function generateKey(length = 32) {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
@@ -165,13 +110,13 @@
         const remaining = expireTime - Date.now();
         if (remaining <= 0) {
           clearInterval(countdownTimer);
-          countdown.textContent = "Key has expired";
+          countdown.textContent = "Key has expired.";
           location.reload();
         } else {
           const hrs = Math.floor(remaining / 3600000);
           const mins = Math.floor((remaining % 3600000) / 60000);
           const secs = Math.floor((remaining % 60000) / 1000);
-          countdown.textContent = `金鑰剩餘時間：${hrs}時 ${mins}分 ${secs}秒`;
+          countdown.textContent = `Key expires in: ${hrs}h ${mins}m ${secs}s`;
         }
       }, 1000);
     }
@@ -181,19 +126,17 @@
       const snap = await getDoc(docRef);
       if (snap.exists()) {
         const data = snap.data();
-        const now = Date.now();
         const expire = data.timestamp + 86400000;
-        if (now >= expire) {
-          await deleteDoc(docRef);
-          btn.disabled = false;
-          keyDisplay.textContent = '';
-          countdown.textContent = '';
-          btn.textContent = "Generate Key";
-        } else {
+        if (Date.now() < expire) {
           keyDisplay.textContent = data.key;
           btn.disabled = true;
-          btn.textContent = "To generate a key";
+          btn.textContent = "Key already generated";
           startCountdown(expire);
+        } else {
+          await deleteDoc(docRef);
+          btn.disabled = false;
+          keyDisplay.textContent = "";
+          btn.textContent = "Generate Key";
         }
       } else {
         btn.disabled = false;
@@ -202,22 +145,76 @@
     }
 
     async function startApp(userIP) {
-      signInAnonymously(auth).then(() => {
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            currentUID = user.uid;
-            uidDisplay.textContent = `UID: ${currentUID}`;
-            await checkExistingKey();
-          }
+      signInAnonymously(auth)
+        .then(() => {
+          onAuthStateChanged(auth, async (user) => {
+            if (user) {
+              currentUID = user.uid;
+              uidDisplay.textContent = `Your UID: ${currentUID}`;
+              await checkExistingKey();
+            }
+          });
+        })
+        .catch((err) => {
+          uidDisplay.textContent = "Login failed: " + err.message;
+          statusDisplay.textContent = "Make sure anonymous auth is enabled in Firebase.";
         });
-      });
+    }
+
+    async function init() {
+      const url = new URL(location.href);
+      const visitorParam = url.searchParams.get('');
+      const ipParam = url.searchParams.get('ip');
+      const ip = await getUserIP();
+
+      if (!ip) {
+        statusDisplay.textContent = "Failed to get IP address.";
+        return;
+      }
+
+      if (visitorParam === 'visitors') {
+        const redirected = sessionStorage.getItem("redirected");
+        const docRef = doc(db, "lootkeys", ip);
+        const snap = await getDoc(docRef);
+        if (snap.exists() && !redirected) {
+          const today = new Date();
+          const dateStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+          sessionStorage.setItem("redirected", "1");
+          url.searchParams.delete('');
+          url.searchParams.set("ip", `${ip}_${dateStr}`);
+          location.href = url.toString();
+          return;
+        } else {
+          sessionStorage.removeItem("redirected");
+          startApp(ip);
+          return;
+        }
+      }
+
+      if (ipParam) {
+        const parts = ipParam.split('_');
+        if (parts[0] === ip) {
+          const today = new Date();
+          const dateStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+          if (parts[1] === dateStr) {
+            startApp(ip);
+            return;
+          }
+        }
+        statusDisplay.textContent = "Invalid IP or date in URL.";
+        return;
+      }
+
+      statusDisplay.textContent = "Please access through the correct entry.";
     }
 
     btn.onclick = async () => {
       const key = generateKey();
       const timestamp = Date.now();
-      const docRef = doc(db, "lootkeys", currentUID);
-      await setDoc(docRef, { key, timestamp });
+      await setDoc(doc(db, "lootkeys", currentUID), {
+        key,
+        timestamp
+      });
       keyDisplay.textContent = key;
       btn.disabled = true;
       btn.textContent = "Key generated";
@@ -227,10 +224,10 @@
     keyDisplay.onclick = async () => {
       try {
         await navigator.clipboard.writeText(keyDisplay.textContent);
-        statusDisplay.textContent = "Key Copied";
+        statusDisplay.textContent = "Key copied!";
         setTimeout(() => statusDisplay.textContent = "", 2000);
       } catch {
-        statusDisplay.textContent = "";
+        statusDisplay.textContent = "Copy failed.";
       }
     };
 
