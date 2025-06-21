@@ -89,16 +89,6 @@
     let currentUID = null;
     let countdownTimer = null;
 
-    async function getUserIP() {
-      try {
-        const res = await fetch("https://api.ipify.org?format=json");
-        const data = await res.json();
-        return data.ip;
-      } catch {
-        return null;
-      }
-    }
-
     function generateKey(length = 32) {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
@@ -144,7 +134,7 @@
       }
     }
 
-    async function startApp(userIP) {
+    async function startApp() {
       signInAnonymously(auth)
         .then(() => {
           onAuthStateChanged(auth, async (user) => {
@@ -157,55 +147,21 @@
         })
         .catch((err) => {
           uidDisplay.textContent = "Login failed: " + err.message;
-          statusDisplay.textContent = "Make sure anonymous auth is enabled in Firebase.";
+          statusDisplay.textContent = "Ensure anonymous auth is enabled in Firebase.";
         });
     }
 
     async function init() {
       const url = new URL(location.href);
-      const visitorParam = url.searchParams.get('');
-      const ipParam = url.searchParams.get('ip');
-      const ip = await getUserIP();
+      const visitor = url.searchParams.get("visitor");
 
-      if (!ip) {
-        statusDisplay.textContent = "Failed to get IP address.";
+      if (visitor === "1") {
+        // Visitor mode: directly allow and start
+        startApp();
         return;
       }
 
-      if (visitorParam === 'visitors') {
-        const redirected = sessionStorage.getItem("redirected");
-        const docRef = doc(db, "lootkeys", ip);
-        const snap = await getDoc(docRef);
-        if (snap.exists() && !redirected) {
-          const today = new Date();
-          const dateStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
-          sessionStorage.setItem("redirected", "1");
-          url.searchParams.delete('');
-          url.searchParams.set("ip", `${ip}_${dateStr}`);
-          location.href = url.toString();
-          return;
-        } else {
-          sessionStorage.removeItem("redirected");
-          startApp(ip);
-          return;
-        }
-      }
-
-      if (ipParam) {
-        const parts = ipParam.split('_');
-        if (parts[0] === ip) {
-          const today = new Date();
-          const dateStr = today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
-          if (parts[1] === dateStr) {
-            startApp(ip);
-            return;
-          }
-        }
-        statusDisplay.textContent = "Invalid IP or date in URL.";
-        return;
-      }
-
-      statusDisplay.textContent = "Please access through the correct entry.";
+      startApp(); // Default mode
     }
 
     btn.onclick = async () => {
