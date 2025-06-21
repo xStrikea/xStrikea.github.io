@@ -5,94 +5,66 @@
   <title>Get Key</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * {
-      box-sizing: border-box;
-    }
     body {
-      background-color: #0e0e0e;
-      color: #f5f5f5;
+      background-color: #111;
+      color: white;
       font-family: 'Segoe UI', sans-serif;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
-    }
-    h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
     }
     .card {
       background: #1e1e1e;
       padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
       max-width: 400px;
       width: 90%;
-      text-align: center;
-    }
-    .ip {
-      font-size: 14px;
-      color: #aaa;
-      margin-bottom: 20px;
     }
     button {
-      background: #4caf50;
+      background: #28a745;
+      color: white;
       border: none;
       padding: 12px 24px;
-      border-radius: 8px;
-      color: white;
       font-size: 16px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
     button:disabled {
-      background: #888;
+      background: #666;
       cursor: not-allowed;
-    }
-    button:hover:not(:disabled) {
-      background: #45a049;
     }
     #key {
       margin-top: 20px;
       font-size: 18px;
       color: #6af;
-      word-break: break-all;
       user-select: all;
+      word-break: break-all;
       cursor: pointer;
-      transition: opacity 0.2s ease;
     }
-    #key:hover {
-      opacity: 0.8;
-    }
-    .copy-info {
-      font-size: 12px;
-      color: #777;
-      margin-top: 4px;
+    #status {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>Get Your Key</h1>
-    <div class="ip" id="ip">Detecting IP...</div>
+    <h2>🔐 Get Your Unique Key</h2>
+    <div id="uid">Logging in...</div>
     <button id="getKeyBtn">Generate Key</button>
     <div id="key" title="Click to copy"></div>
-    <div class="copy-info" id="copyInfo"></div>
+    <div id="status"></div>
   </div>
 
-  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs,
-      doc,
-      setDoc,
-      deleteDoc
-    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAmsNwG5wzNO_nEBFOQ9lmBXPdWFmhMtBA",
@@ -106,56 +78,49 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth();
 
-    let userIP = '';
     const btn = document.getElementById('getKeyBtn');
     const keyDisplay = document.getElementById('key');
-    const ipDisplay = document.getElementById('ip');
-    const copyInfo = document.getElementById('copyInfo');
+    const statusDisplay = document.getElementById('status');
+    const uidDisplay = document.getElementById('uid');
 
-    // 取得使用者 IP 並更新網址參數
-    fetch('https://api.ipify.org?format=json')
-      .then(res => res.json())
-      .then(async data => {
-        userIP = data.ip;
-        ipDisplay.textContent = `Your IP: ${userIP}`;
-        const url = new URL(window.location.href);
-        if (!url.searchParams.get('ip')) {
-          url.searchParams.set('ip', userIP);
-          history.replaceState(null, '', url.toString());
-        }
-        await checkIfKeyExistsFromJSON(userIP);
+    let currentUID = null;
+
+    signInAnonymously(auth)
+      .then(() => {
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            currentUID = user.uid;
+            uidDisplay.textContent = ` ${currentUID}`;
+            await checkExistingKey();
+          }
+        });
+      })
+      .catch((error) => {
+        uidDisplay.textContent = "" + error.message;
       });
 
-    // 隨機金鑰產生器
     function generateKey(length = 32) {
       const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
     }
 
-    // 遍歷 JSON-like 結構，查找是否已存在該 IP 並檢查時間
-    async function checkIfKeyExistsFromJSON(ip) {
-      const snapshot = await getDocs(collection(db, "lootkeys"));
-      for (const docSnap of snapshot.docs) {
-        if (docSnap.id === ip) {
-          const data = docSnap.data();
-          const now = Date.now();
-          if (now - data.timestamp < 86400000) {
-            keyDisplay.textContent = data.key;
-            btn.disabled = true;
-            btn.textContent = "Key Already Generated";
-            return;
-          } else {
-            await deleteDoc(docSnap.ref);
-          }
-        }
+    async function checkExistingKey() {
+      const docRef = doc(db, "lootkeys", currentUID);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        keyDisplay.textContent = data.key;
+        btn.disabled = true;
+        btn.textContent = "Key Already Generated";
       }
     }
 
-    // 生成金鑰並儲存
     btn.onclick = async () => {
       const key = generateKey();
-      await setDoc(doc(db, "lootkeys", userIP), {
+      const docRef = doc(db, "lootkeys", currentUID);
+      await setDoc(docRef, {
         key,
         timestamp: Date.now()
       });
@@ -164,17 +129,13 @@
       btn.textContent = "Key Generated";
     };
 
-    // 點擊金鑰複製
     keyDisplay.onclick = async () => {
-      const key = keyDisplay.textContent.trim();
-      if (key.length > 0) {
-        try {
-          await navigator.clipboard.writeText(key);
-          copyInfo.textContent = "Key copied!";
-          setTimeout(() => (copyInfo.textContent = ""), 2000);
-        } catch {
-          copyInfo.textContent = "Unable to copy.";
-        }
+      try {
+        await navigator.clipboard.writeText(keyDisplay.textContent);
+        statusDisplay.textContent = "Key copied to clipboard!";
+        setTimeout(() => statusDisplay.textContent = "", 2000);
+      } catch {
+        statusDisplay.textContent = "Unable to copy.";
       }
     };
   </script>
