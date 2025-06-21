@@ -55,8 +55,8 @@
 <body>
   <div class="card">
     <h2>🔐 Get Your Unique Key</h2>
-    <div id="uid">載入中...</div>
-    <button id="getKeyBtn" disabled>載入中...</button>
+    <div id="uid">Loading...</div>
+    <button id="getKeyBtn" disabled>Loading...</button>
     <div id="key" title="Click to copy"></div>
     <div id="countdown"></div>
     <div id="status"></div>
@@ -107,7 +107,7 @@
       const userIP = await getUserIP();
 
       if (!userIP) {
-        statusDisplay.textContent = "無法取得IP。";
+        statusDisplay.textContent = "Wrong IP";
         return;
       }
 
@@ -147,11 +147,11 @@
             return;
           }
         }
-        statusDisplay.textContent = "參數驗證失敗，請從正確入口進入。";
+        statusDisplay.textContent = "Invalid parameter.";
         return;
       }
 
-      statusDisplay.textContent = "請從訪客入口進入。";
+      statusDisplay.textContent = "Please enter from the client.";
     }
 
     function generateKey(length = 32) {
@@ -165,7 +165,7 @@
         const remaining = expireTime - Date.now();
         if (remaining <= 0) {
           clearInterval(countdownTimer);
-          countdown.textContent = "Key 已過期";
+          countdown.textContent = "Key has expired";
           location.reload();
         } else {
           const hrs = Math.floor(remaining / 3600000);
@@ -192,7 +192,7 @@
         } else {
           keyDisplay.textContent = data.key;
           btn.disabled = true;
-          btn.textContent = "已產生";
+          btn.textContent = "To generate a key";
           startCountdown(expire);
         }
       } else {
@@ -220,17 +220,17 @@
       await setDoc(docRef, { key, timestamp });
       keyDisplay.textContent = key;
       btn.disabled = true;
-      btn.textContent = "已產生";
+      btn.textContent = "Key generated";
       startCountdown(timestamp + 86400000);
     };
 
     keyDisplay.onclick = async () => {
       try {
         await navigator.clipboard.writeText(keyDisplay.textContent);
-        statusDisplay.textContent = "已複製金鑰";
+        statusDisplay.textContent = "Key Copied";
         setTimeout(() => statusDisplay.textContent = "", 2000);
       } catch {
-        statusDisplay.textContent = "無法複製";
+        statusDisplay.textContent = "";
       }
     };
 
