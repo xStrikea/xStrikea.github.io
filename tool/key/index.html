@@ -62,140 +62,140 @@
     <div id="status"></div>
   </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAmsNwG5wzNO_nEBFOQ9lmBXPdWFmhMtBA",
-    authDomain: "xtitanium-5f8cf.firebaseapp.com",
-    projectId: "xtitanium-5f8cf",
-    storageBucket: "xtitanium-5f8cf.firebasestorage.app",
-    messagingSenderId: "104699222536",
-    appId: "1:104699222536:web:fa780fac3c70f5f2dd0fbd",
-    measurementId: "G-90E3LT9527"
-  };
+    const firebaseConfig = {
+      apiKey: "AIzaSyAmsNwG5wzNO_nEBFOQ9lmBXPdWFmhMtBA",
+      authDomain: "xtitanium-5f8cf.firebaseapp.com",
+      projectId: "xtitanium-5f8cf",
+      storageBucket: "xtitanium-5f8cf.appspot.com",
+      messagingSenderId: "104699222536",
+      appId: "1:104699222536:web:fa780fac3c70f5f2dd0fbd",
+      measurementId: "G-90E3LT9527"
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth();
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth();
 
-  const btn = document.getElementById('getKeyBtn');
-  const keyDisplay = document.getElementById('key');
-  const uidDisplay = document.getElementById('uid');
-  const statusDisplay = document.getElementById('status');
-  const countdown = document.getElementById('countdown');
+    const btn = document.getElementById('getKeyBtn');
+    const keyDisplay = document.getElementById('key');
+    const uidDisplay = document.getElementById('uid');
+    const statusDisplay = document.getElementById('status');
+    const countdown = document.getElementById('countdown');
 
-  let currentUID = null;
-  let countdownTimer = null;
+    let currentUID = null;
+    let countdownTimer = null;
+    let validAccess = false;
 
-  // 檢查網址合法性與 IP
-  let validAccess = false;
+    // 驗證 IP + 日期是否正確進入
+    fetch("https://api.ipify.org?format=json")
+      .then(res => res.json())
+      .then(async data => {
+        const userIP = data.ip;
+        const today = new Date();
+        const yyyyMMdd = today.getFullYear().toString() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+        const requiredParam = `${userIP}_${yyyyMMdd}`;
+        const url = new URL(window.location.href);
+        const param = url.searchParams.get("ip");
 
-  fetch("https://api.ipify.org?format=json")
-    .then(res => res.json())
-    .then(async data => {
-      const userIP = data.ip;
-      const today = new Date();
-      const yyyyMMdd = today.getFullYear().toString() +
-                       String(today.getMonth() + 1).padStart(2, '0') +
-                       String(today.getDate()).padStart(2, '0');
+        if (param !== requiredParam) {
+          statusDisplay.textContent = "❌ 無效網址，請從正確入口進入";
+          btn.disabled = true;
+          btn.textContent = "Access Denied";
+          return;
+        }
 
-      const requiredParam = `${userIP}_${yyyyMMdd}`;
-      const url = new URL(window.location.href);
-      const param = url.searchParams.get("ip");
+        validAccess = true;
 
-      if (param !== requiredParam) {
-        statusDisplay.textContent = "No bypassing";
-        btn.disabled = true;
-        btn.textContent = "Access Denied";
-        return;
-      }
-
-      validAccess = true;
-
-      signInAnonymously(auth)
-        .then(() => {
+        // 匿名登入
+        signInAnonymously(auth).then(() => {
           onAuthStateChanged(auth, async (user) => {
-            if (user && validAccess) {
+            if (user) {
               currentUID = user.uid;
               uidDisplay.textContent = `Your UID: ${currentUID}`;
               await checkExistingKey();
             }
           });
         });
-    });
+      });
 
-  function generateKey(length = 32) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-  }
+    function generateKey(length = 32) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    }
 
-  function startCountdown(expireTime) {
-    if (countdownTimer) clearInterval(countdownTimer);
-    countdownTimer = setInterval(() => {
-      const remaining = expireTime - Date.now();
-      if (remaining <= 0) {
-        clearInterval(countdownTimer);
-        countdown.textContent = "Key expired.";
-        location.reload(); // 自動刷新頁面
-      } else {
-        const hrs = Math.floor(remaining / 3600000);
-        const mins = Math.floor((remaining % 3600000) / 60000);
-        const secs = Math.floor((remaining % 60000) / 1000);
-        countdown.textContent = `Key expires in: ${hrs}h ${mins}m ${secs}s`;
-      }
-    }, 1000);
-  }
+    function startCountdown(expireTime) {
+      if (countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = setInterval(() => {
+        const remaining = expireTime - Date.now();
+        if (remaining <= 0) {
+          clearInterval(countdownTimer);
+          countdown.textContent = "Key expired.";
+          location.reload();
+        } else {
+          const hrs = Math.floor(remaining / 3600000);
+          const mins = Math.floor((remaining % 3600000) / 60000);
+          const secs = Math.floor((remaining % 60000) / 1000);
+          countdown.textContent = `Key expires in: ${hrs}h ${mins}m ${secs}s`;
+        }
+      }, 1000);
+    }
 
-  async function checkExistingKey() {
-    const docRef = doc(db, "lootkeys", currentUID);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      const now = Date.now();
-      const expireTime = data.timestamp + 86400000;
-      if (now >= expireTime) {
-        await deleteDoc(docRef);
-        statusDisplay.textContent = "Previous key expired. You can generate a new one.";
-        btn.disabled = false;
-        btn.textContent = "Generate Key";
-        keyDisplay.textContent = "";
-        countdown.textContent = "";
-      } else {
-        keyDisplay.textContent = data.key;
-        btn.disabled = true;
-        btn.textContent = "Key Already Generated";
-        startCountdown(expireTime);
+    async function checkExistingKey() {
+      const docRef = doc(db, "lootkeys", currentUID);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const now = Date.now();
+        const expireTime = data.timestamp + 86400000;
+        if (now >= expireTime) {
+          await deleteDoc(docRef);
+          statusDisplay.textContent = "Previous key expired. You can generate a new one.";
+          btn.disabled = false;
+          btn.textContent = "Generate Key";
+          keyDisplay.textContent = "";
+          countdown.textContent = "";
+        } else {
+          keyDisplay.textContent = data.key;
+          btn.disabled = true;
+          btn.textContent = "Key Already Generated";
+          startCountdown(expireTime);
+        }
       }
     }
-  }
 
-  btn.onclick = async () => {
-    const key = generateKey();
-    const timestamp = Date.now();
-    const docRef = doc(db, "lootkeys", currentUID);
-    await setDoc(docRef, {
-      key,
-      timestamp
-    });
-    keyDisplay.textContent = key;
-    btn.disabled = true;
-    btn.textContent = "Key Generated";
-    statusDisplay.textContent = "Key saved!";
-    startCountdown(timestamp + 86400000);
-  };
+    btn.onclick = async () => {
+      const key = generateKey();
+      const timestamp = Date.now();
+      const today = new Date();
+      const dateStr = today.getFullYear().toString() + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
 
-  keyDisplay.onclick = async () => {
-    try {
-      await navigator.clipboard.writeText(keyDisplay.textContent);
-      statusDisplay.textContent = "Key copied!";
-      setTimeout(() => statusDisplay.textContent = "", 2000);
-    } catch {
-      statusDisplay.textContent = "Copy failed.";
-    }
-  };
-</script>
+      const docRef = doc(db, "lootkeys", currentUID);
+      await setDoc(docRef, {
+        key,
+        timestamp,
+        date: dateStr
+      });
+      keyDisplay.textContent = key;
+      btn.disabled = true;
+      btn.textContent = "Key Generated";
+      statusDisplay.textContent = "Key saved!";
+      startCountdown(timestamp + 86400000);
+    };
+
+    keyDisplay.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(keyDisplay.textContent);
+        statusDisplay.textContent = "Key copied!";
+        setTimeout(() => statusDisplay.textContent = "", 2000);
+      } catch {
+        statusDisplay.textContent = "Copy failed.";
+      }
+    };
+  </script>
 </body>
 </html>
