@@ -42,7 +42,7 @@
       font-size: 18px;
       color: #6af;
       user-select: all;
-      word-break: break-all;
+      word-break: break-word;
       cursor: pointer;
     }
     #status, #countdown {
@@ -55,8 +55,8 @@
 <body>
   <div class="card">
     <h2>🔐 Get Your Unique Key</h2>
-    <div id="uid">Loading...</div>
-    <button id="getKeyBtn" disabled>Loading...</button>
+    <div id="uid">載入中...</div>
+    <button id="getKeyBtn" disabled>載入中...</button>
     <div id="key" title="Click to copy"></div>
     <div id="countdown"></div>
     <div id="status"></div>
@@ -104,82 +104,54 @@
       const url = new URL(window.location.href);
       const visitorParam = url.searchParams.get('');
       const ipParam = url.searchParams.get('ip');
-
       const userIP = await getUserIP();
+
       if (!userIP) {
-        statusDisplay.textContent = "無法取得IP，請稍後再試。";
-        btn.disabled = true;
-        btn.textContent = "Error";
+        statusDisplay.textContent = "無法取得IP。";
         return;
       }
 
-      if (visitorParam === 'visitors') {
-  const alreadyRedirected = localStorage.getItem("alreadyRedirected");
+      // ✅ 處理 visitor 模式
+      if (visitorParam === "visitors") {
+        const already = sessionStorage.getItem("redirected");
+        const docRef = doc(db, "lootkeys", userIP);
+        const snap = await getDoc(docRef);
 
-  const docRef = doc(db, 'lootkeys', userIP);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-    if (!alreadyRedirected) {
-      const today = new Date();
-      const yyyyMMdd = today.getFullYear().toString()
-                     + String(today.getMonth() + 1).padStart(2, '0')
-                     + String(today.getDate()).padStart(2, '0');
-      url.searchParams.delete('');
-      url.searchParams.set('ip', `${userIP}_${yyyyMMdd}`);
-      localStorage.setItem("alreadyRedirected", "true");
-      window.location.replace(url.toString());
-      return;
-    } else {
-      // 已重導過了，直接進入應用程式
-      localStorage.removeItem("alreadyRedirected"); // 清除避免影響後續
-      startApp(userIP);
-      return;
-    }
-  } else {
-    // 沒有紀錄
-    localStorage.removeItem("alreadyRedirected");
-    startApp(userIP);
-    return;
-  }
-}
-
-      // 如果網址帶了正確ip參數，直接進入app
-      if (ipParam) {
-        const [ipFromParam, dateFromParam] = ipParam.split('_');
-        const today = new Date();
-        const yyyyMMdd = today.getFullYear().toString()
-                       + String(today.getMonth() + 1).padStart(2, '0')
-                       + String(today.getDate()).padStart(2, '0');
-        if (ipFromParam === userIP && dateFromParam === yyyyMMdd) {
-          startApp(userIP);
+        if (snap.exists() && !already) {
+          const today = new Date();
+          const yyyyMMdd = today.getFullYear().toString()
+                         + String(today.getMonth() + 1).padStart(2, '0')
+                         + String(today.getDate()).padStart(2, '0');
+          sessionStorage.setItem("redirected", "1");
+          url.searchParams.delete('');
+          url.searchParams.set('ip', `${userIP}_${yyyyMMdd}`);
+          location.href = url.toString();
           return;
         } else {
-          statusDisplay.textContent = "Stop bypassing";
-          btn.disabled = true;
-          btn.textContent = "Access Denied";
+          sessionStorage.removeItem("redirected");
+          startApp(userIP);
           return;
         }
       }
 
-      // 沒有參數，請從訪客入口進入
-      statusDisplay.textContent = "Please use it on the client side.";
-      btn.disabled = true;
-      btn.textContent = "Access Denied";
-    }
-
-    async function startApp(userIP) {
-      signInAnonymously(auth).then(() => {
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            currentUID = user.uid;
-            uidDisplay.textContent = `Your UID: ${currentUID}`;
-            btn.disabled = false;
-            btn.textContent = "Generate Key";
-            await checkExistingKey();
+      // ✅ 帶 ?ip=xxx 時進入正常程序
+      if (ipParam) {
+        const parts = ipParam.split("_");
+        if (parts.length === 2 && parts[0] === userIP) {
+          const today = new Date();
+          const todayStr = today.getFullYear().toString()
+                         + String(today.getMonth() + 1).padStart(2, '0')
+                         + String(today.getDate()).padStart(2, '0');
+          if (parts[1] === todayStr) {
+            startApp(userIP);
+            return;
           }
-        });
-      });
+        }
+        statusDisplay.textContent = "參數驗證失敗，請從正確入口進入。";
+        return;
+      }
+
+      statusDisplay.textContent = "請從訪客入口進入。";
     }
 
     function generateKey(length = 32) {
@@ -193,72 +165,75 @@
         const remaining = expireTime - Date.now();
         if (remaining <= 0) {
           clearInterval(countdownTimer);
-          countdown.textContent = "Key expired.";
+          countdown.textContent = "Key 已過期";
           location.reload();
         } else {
           const hrs = Math.floor(remaining / 3600000);
           const mins = Math.floor((remaining % 3600000) / 60000);
           const secs = Math.floor((remaining % 60000) / 1000);
-          countdown.textContent = `Key expires in: ${hrs}h ${mins}m ${secs}s`;
+          countdown.textContent = `金鑰剩餘時間：${hrs}時 ${mins}分 ${secs}秒`;
         }
       }, 1000);
     }
 
     async function checkExistingKey() {
       const docRef = doc(db, "lootkeys", currentUID);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
+      const snap = await getDoc(docRef);
+      if (snap.exists()) {
+        const data = snap.data();
         const now = Date.now();
-        const expireTime = data.timestamp + 86400000;
-        if (now >= expireTime) {
+        const expire = data.timestamp + 86400000;
+        if (now >= expire) {
           await deleteDoc(docRef);
-          statusDisplay.textContent = "Previous key expired. You can generate a new one.";
           btn.disabled = false;
+          keyDisplay.textContent = '';
+          countdown.textContent = '';
           btn.textContent = "Generate Key";
-          keyDisplay.textContent = "";
-          countdown.textContent = "";
         } else {
           keyDisplay.textContent = data.key;
           btn.disabled = true;
-          btn.textContent = "Key Already Generated";
-          startCountdown(expireTime);
+          btn.textContent = "已產生";
+          startCountdown(expire);
         }
+      } else {
+        btn.disabled = false;
+        btn.textContent = "Generate Key";
       }
+    }
+
+    async function startApp(userIP) {
+      signInAnonymously(auth).then(() => {
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            currentUID = user.uid;
+            uidDisplay.textContent = `UID: ${currentUID}`;
+            await checkExistingKey();
+          }
+        });
+      });
     }
 
     btn.onclick = async () => {
       const key = generateKey();
       const timestamp = Date.now();
-      const today = new Date();
-      const dateStr = today.getFullYear().toString()
-                     + String(today.getMonth() + 1).padStart(2, '0')
-                     + String(today.getDate()).padStart(2, '0');
-
       const docRef = doc(db, "lootkeys", currentUID);
-      await setDoc(docRef, {
-        key,
-        timestamp,
-        date: dateStr
-      });
+      await setDoc(docRef, { key, timestamp });
       keyDisplay.textContent = key;
       btn.disabled = true;
-      btn.textContent = "Key Generated";
-      statusDisplay.textContent = "Key saved!";
+      btn.textContent = "已產生";
       startCountdown(timestamp + 86400000);
     };
 
     keyDisplay.onclick = async () => {
       try {
         await navigator.clipboard.writeText(keyDisplay.textContent);
-        statusDisplay.textContent = "Key copied!";
+        statusDisplay.textContent = "已複製金鑰";
         setTimeout(() => statusDisplay.textContent = "", 2000);
       } catch {
-        statusDisplay.textContent = "Copy failed.";
+        statusDisplay.textContent = "無法複製";
       }
     };
 
-    // 初始化入口
     init();
   </script>
 </body>
