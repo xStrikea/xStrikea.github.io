@@ -12,10 +12,9 @@
   <meta name="robots" content="index, follow" />
   
   <style>
+    /* 保留你之前的CSS */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
-
     *:focus { outline: none !important; }
-
     html, body {
       margin: 0; padding: 0;
       height: 100%;
@@ -27,7 +26,6 @@
       justify-content: flex-start;
       user-select: none;
     }
-
     h1 {
       margin: 2rem 0 0.3rem 0;
       color: #1e293b;
@@ -41,7 +39,6 @@
       width: 28px;
       height: 28px;
     }
-
     #counter {
       font-size: clamp(3rem, 8vw, 7rem);
       color: #1e293b;
@@ -50,7 +47,6 @@
       margin-top: 1rem;
       user-select: none;
     }
-
     #popdoge {
       width: 85vw;
       max-width: 700px;
@@ -59,8 +55,6 @@
       cursor: pointer;
       transition: transform 0.15s;
       margin-top: 1.5rem;
-
-      /* Remove tap highlight and blue outlines on mobile */
       -webkit-tap-highlight-color: transparent;
       outline: none !important;
       user-select: none;
@@ -69,11 +63,9 @@
       -ms-user-select: none;
       -webkit-touch-callout: none;
     }
-
     #popdoge:active {
       transform: scale(0.95);
     }
-
     #leaderbar {
       position: fixed;
       bottom: 0;
@@ -87,19 +79,16 @@
       font-size: 1rem;
       z-index: 10;
     }
-
     #leaderbar .left {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-
     .divider {
       width: 2px;
       height: 24px;
       background: #ccc;
     }
-
     .flag {
       margin: 0 0.5rem;
       font-size: 1.1rem;
@@ -107,14 +96,11 @@
       text-align: center;
       user-select: none;
     }
-
     #toggleBtn {
       border: none;
       background: none;
       font-size: 1.4rem;
       cursor: pointer;
-
-      /* Remove tap highlight and blue outlines on mobile */
       -webkit-tap-highlight-color: transparent;
       outline: none !important;
       user-select: none;
@@ -124,11 +110,9 @@
       -webkit-touch-callout: none;
       transition: transform 0.2s;
     }
-
     #toggleBtn:hover {
       transform: rotate(180deg);
     }
-
     #leaderboard {
       position: fixed;
       bottom: 3.5rem;
@@ -144,29 +128,24 @@
       z-index: 9;
       user-select: none;
     }
-
     #leaderboard.show {
       display: block;
       animation: slideUp 0.3s ease-out;
     }
-
     @keyframes slideUp {
       from { transform: translateY(100%); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
-
     #leaderboard h2 {
       margin-top: 0;
       font-size: 1.5rem;
       text-align: center;
     }
-
     #topScores {
       list-style: none;
       padding: 0;
       margin: 0;
     }
-
     #topScores li {
       padding: 0.6rem 1rem;
       margin-bottom: 0.5rem;
@@ -176,15 +155,6 @@
       justify-content: space-between;
       font-weight: 600;
       user-select: none;
-    }
-
-    /* English description */
-    section.description {
-      max-width: 800px;
-      padding: 1rem;
-      text-align: center;
-      color: #1e293b;
-      font-weight: 500;
     }
   </style>
 </head>
@@ -198,11 +168,6 @@
   <div id="counter">0</div>
   <img id="popdoge" src="image/doge.png" alt="Popdog" />
 
-  <section class="description">
-    <p>
-
-  </section>
-
   <div id="leaderbar">
     <div class="left">
       🏆
@@ -213,7 +178,7 @@
       <div class="divider"></div>
       <span class="flag" id="top3">🏳️</span>
     </div>
-    <button id="toggleBtn">⬆️</button>
+    <button id="toggleBtn">↑</button>
   </div>
 
   <div id="leaderboard">
@@ -259,7 +224,9 @@
   let code = "";
   let ready = false;
 
-  // Prevent rapid clicks lock
+  // 音效初始化
+  const bonkAudio = new Audio("audio/bonk.mp3");
+
   let canClick = true;
   let openTimeout = null;
 
@@ -290,13 +257,12 @@
     count++;
     counter.textContent = count;
 
-    // Show open image
     popdoge.src = open;
+    bonkAudio.currentTime = 0;
+    bonkAudio.play();
 
-    // Clear previous timeout, so continuous clicks keep image open longer
     if (openTimeout) clearTimeout(openTimeout);
 
-    // Close after 1 second
     openTimeout = setTimeout(() => {
       popdoge.src = closed;
       openTimeout = null;
@@ -313,7 +279,7 @@
 
     setTimeout(() => {
       canClick = true;
-    }, 100);  // Unlock after 0.1 seconds
+    }, 100);
   }
 
   function updateLeaderboard() {
@@ -337,12 +303,10 @@
       const sorted = Object.values(countryScores)
         .sort((a, b) => b.score - a.score);
 
-      // Show country code + flag in top bar
       top1.textContent = codeToFlagEmoji(sorted[0]?.code) + " " + (sorted[0]?.code || "??");
       top2.textContent = codeToFlagEmoji(sorted[1]?.code) + " " + (sorted[1]?.code || "??");
       top3.textContent = codeToFlagEmoji(sorted[2]?.code) + " " + (sorted[2]?.code || "??");
 
-      // Show full country name + flag in leaderboard
       leaderboardList.innerHTML = sorted.map(entry =>
         `<li><span>${codeToFlagEmoji(entry.code)} ${entry.name}</span><span>${entry.score}</span></li>`
       ).join('');
@@ -351,7 +315,7 @@
 
   toggleBtn.addEventListener("click", () => {
     leaderboard.classList.toggle("show");
-    toggleBtn.textContent = leaderboard.classList.contains("show") ? "⬇️" : "⬆️";
+    toggleBtn.textContent = leaderboard.classList.contains("show") ? "↑" : "↓";
   });
 
   popdoge.addEventListener("mousedown", pop);
