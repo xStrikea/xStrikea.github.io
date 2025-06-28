@@ -2,12 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Popdog - Doge</title>
+  <title>Popdog - Click Doge and Compete Globally!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="image/logo.png" type="image/x-icon" />
+
+  <meta name="description" content="Popdog is a fun web-based clicker game inspired by Popcat. Click the Doge to increase your score and compete globally!" />
+  <meta name="keywords" content="Popdog, Popcat, clicker game, Doge, leaderboard, Firebase game, global clicker, web game, meme game" />
+  <meta name="author" content="Popdog Team" />
+  <meta name="robots" content="index, follow" />
+  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
     *:focus { outline: none !important; }
+
     html, body {
       margin: 0; padding: 0;
       height: 100%;
@@ -19,6 +27,7 @@
       justify-content: flex-start;
       user-select: none;
     }
+
     h1 {
       margin: 2rem 0 0.3rem 0;
       color: #1e293b;
@@ -32,13 +41,16 @@
       width: 28px;
       height: 28px;
     }
+
     #counter {
       font-size: clamp(3rem, 8vw, 7rem);
       color: #1e293b;
       font-weight: 600;
       text-shadow: 0 4px 6px rgba(0,0,0,0.1);
       margin-top: 1rem;
+      user-select: none;
     }
+
     #popdoge {
       width: 85vw;
       max-width: 700px;
@@ -47,11 +59,20 @@
       cursor: pointer;
       transition: transform 0.15s;
       margin-top: 1.5rem;
+
+      /* Remove tap highlight and blue outlines on mobile */
       -webkit-tap-highlight-color: transparent;
       outline: none !important;
       user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-touch-callout: none;
     }
-    #popdoge:active { transform: scale(0.95); }
+
+    #popdoge:active {
+      transform: scale(0.95);
+    }
 
     #leaderbar {
       position: fixed;
@@ -66,33 +87,47 @@
       font-size: 1rem;
       z-index: 10;
     }
+
     #leaderbar .left {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
+
     .divider {
       width: 2px;
       height: 24px;
       background: #ccc;
     }
+
     .flag {
       margin: 0 0.5rem;
       font-size: 1.1rem;
       min-width: 3.5rem;
       text-align: center;
+      user-select: none;
     }
+
     #toggleBtn {
       border: none;
       background: none;
       font-size: 1.4rem;
       cursor: pointer;
+
+      /* Remove tap highlight and blue outlines on mobile */
       -webkit-tap-highlight-color: transparent;
       outline: none !important;
       user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -webkit-touch-callout: none;
       transition: transform 0.2s;
     }
-    #toggleBtn:hover { transform: rotate(180deg); }
+
+    #toggleBtn:hover {
+      transform: rotate(180deg);
+    }
 
     #leaderboard {
       position: fixed;
@@ -107,25 +142,31 @@
       box-shadow: 0 -6px 16px rgba(0,0,0,0.1);
       padding: 1rem 2rem;
       z-index: 9;
+      user-select: none;
     }
+
     #leaderboard.show {
       display: block;
       animation: slideUp 0.3s ease-out;
     }
+
     @keyframes slideUp {
       from { transform: translateY(100%); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+
     #leaderboard h2 {
       margin-top: 0;
       font-size: 1.5rem;
       text-align: center;
     }
+
     #topScores {
       list-style: none;
       padding: 0;
       margin: 0;
     }
+
     #topScores li {
       padding: 0.6rem 1rem;
       margin-bottom: 0.5rem;
@@ -134,138 +175,210 @@
       display: flex;
       justify-content: space-between;
       font-weight: 600;
+      user-select: none;
+    }
+
+    /* English description */
+    section.description {
+      max-width: 800px;
+      padding: 1rem;
+      text-align: center;
+      color: #1e293b;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
 
-<h1><img src="image/logo.png" alt="" /> Popdog - Doge</h1>
-<div id="counter">0</div>
-<img id="popdoge" src="image/doge.png" alt="Popdog" />
-<div id="leaderbar">
-  <div class="left">
-    🏆 <div class="divider"></div>
-    <span class="flag" id="top1">🏳️</span>
-    <div class="divider"></div>
-    <span class="flag" id="top2">🏳️</span>
-    <div class="divider"></div>
-    <span class="flag" id="top3">🏳️</span>
+  <h1>
+    <img src="image/logo.png" alt="Popdog Logo" />
+    Popdog - Doge
+  </h1>
+  
+  <div id="counter">0</div>
+  <img id="popdoge" src="image/doge.png" alt="Popdog" />
+
+  <section class="description">
+    <p>
+
+  </section>
+
+  <div id="leaderbar">
+    <div class="left">
+      🏆
+      <div class="divider"></div>
+      <span class="flag" id="top1">🏳️</span>
+      <div class="divider"></div>
+      <span class="flag" id="top2">🏳️</span>
+      <div class="divider"></div>
+      <span class="flag" id="top3">🏳️</span>
+    </div>
+    <button id="toggleBtn">⬆️</button>
   </div>
-  <button id="toggleBtn">⬆️</button>
-</div>
-<div id="leaderboard">
-  <h2>🌐 Global Rankings</h2>
-  <ul id="topScores">Loading...</ul>
-</div>
+
+  <div id="leaderboard">
+    <h2>🌐 Global Rankings</h2>
+    <ul id="topScores">Loading...</ul>
+  </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-import { getDatabase, ref, update, get, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getDatabase, ref, update, get, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
-const a = initializeApp({
-  apiKey: "AIzaSyBqsj5CkvEP_7MqQmYESgDnsz-VSTimhdw",
-  authDomain: "xsweb-6f858.firebaseapp.com",
-  databaseURL: "https://xsweb-6f858-default-rtdb.firebaseio.com",
-  projectId: "xsweb-6f858",
-  storageBucket: "xsweb-6f858.appspot.com",
-  messagingSenderId: "599529998192",
-  appId: "1:599529998192:web:63c64ed7dcc5208d5971b5"
-});
-const b = getDatabase(a),
-      c = getAuth();
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqsj5CkvEP_7MqQmYESgDnsz-VSTimhdw",
+    authDomain: "xsweb-6f858.firebaseapp.com",
+    databaseURL: "https://xsweb-6f858-default-rtdb.firebaseio.com",
+    projectId: "xsweb-6f858",
+    storageBucket: "xsweb-6f858.appspot.com",
+    messagingSenderId: "599529998192",
+    appId: "1:599529998192:web:63c64ed7dcc5208d5971b5"
+  };
 
-const d = document.getElementById("popdoge"),
-      e = document.getElementById("counter"),
-      f = document.getElementById("leaderboard"),
-      g = document.getElementById("topScores"),
-      h = document.getElementById("toggleBtn"),
-      i = document.getElementById("top1"),
-      j = document.getElementById("top2"),
-      k = document.getElementById("top3");
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const auth = getAuth();
 
-let l = null, m = 0, n = "Unknown", o = "", p = false, q = true, r = null;
-const s = "image/doge.png", t = "image/doge_open.png";
+  const popdoge = document.getElementById("popdoge");
+  const counter = document.getElementById("counter");
+  const leaderboard = document.getElementById("leaderboard");
+  const leaderboardList = document.getElementById("topScores");
+  const toggleBtn = document.getElementById("toggleBtn");
 
-function u(v) {
-  if (!v) return "🏳️";
-  return v.toUpperCase().replace(/./g, w =>
-    String.fromCodePoint(w.charCodeAt(0) + 127397));
-}
-async function x() {
-  try {
-    const y = await fetch("https://ipapi.co/json/"),
-          z = await y.json();
-    return { country: z.country_name || "Unknown", code: z.country_code || "" };
-  } catch { return { country: "Unknown", code: "" }; }
-}
-function A() {
-  if (!p || !q) return;
-  q = false;
-  m++;
-  e.textContent = m;
-  d.src = t;
-  if (r) clearTimeout(r);
-  r = setTimeout(() => d.src = s, 1000);
-  if (l) update(ref(b, "scores/" + l), {
-    score: m,
-    country: n,
-    code: o,
-    timestamp: Date.now()
-  });
-  setTimeout(() => q = true, 100);
-}
-function B() {
-  const C = ref(b, "scores");
-  onValue(C, D => {
-    const E = {};
-    D.forEach(F => {
-      const G = F.val(), H = G.country || "Unknown", I = G.code || "";
-      const J = H + "|" + I;
-      if (!E[J]) E[J] = { score: 0, name: H, code: I };
-      E[J].score += G.score || 0;
-    });
-    const K = Object.values(E).sort((L, M) => M.score - L.score);
-    i.textContent = u(K[0]?.code) + " " + (K[0]?.code || "??");
-    j.textContent = u(K[1]?.code) + " " + (K[1]?.code || "??");
-    k.textContent = u(K[2]?.code) + " " + (K[2]?.code || "??");
-    g.innerHTML = K.map(N =>
-      `<li><span>${u(N.code)} ${N.name}</span><span>${N.score}</span></li>`
-    ).join('');
-  });
-}
-h.addEventListener("click", () => {
-  f.classList.toggle("show");
-  h.textContent = f.classList.contains("show") ? "⬇️" : "⬆️";
-});
-d.addEventListener("mousedown", A);
-d.addEventListener("touchstart", A);
-signInAnonymously(c).then(async () => {
-  const O = await x();
-  n = O.country;
-  o = O.code;
-  onAuthStateChanged(c, P => {
-    if (P) {
-      l = P.uid;
-      const Q = ref(b, "scores/" + l);
-      get(Q).then(R => {
-        if (R.exists()) {
-          m = R.val().score || 0;
-          e.textContent = m;
-        } else {
-          update(Q, {
-            score: 0,
-            country: n,
-            code: o,
-            timestamp: Date.now()
-          });
-        }
-        B();
-        p = true;
+  const top1 = document.getElementById("top1");
+  const top2 = document.getElementById("top2");
+  const top3 = document.getElementById("top3");
+
+  const closed = "image/doge.png";
+  const open = "image/doge_open.png";
+
+  let uid = null;
+  let count = 0;
+  let country = "Unknown";
+  let code = "";
+  let ready = false;
+
+  // Prevent rapid clicks lock
+  let canClick = true;
+  let openTimeout = null;
+
+  function codeToFlagEmoji(code) {
+    if (!code) return "🏳️";
+    return code.toUpperCase().replace(/./g, c =>
+      String.fromCodePoint(c.charCodeAt(0) + 127397)
+    );
+  }
+
+  async function fetchCountryInfo() {
+    try {
+      const res = await fetch("https://ipapi.co/json/");
+      const data = await res.json();
+      return {
+        country: data.country_name || "Unknown",
+        code: data.country_code || ""
+      };
+    } catch {
+      return { country: "Unknown", code: "" };
+    }
+  }
+
+  function pop() {
+    if (!ready || !canClick) return;
+    canClick = false;
+
+    count++;
+    counter.textContent = count;
+
+    // Show open image
+    popdoge.src = open;
+
+    // Clear previous timeout, so continuous clicks keep image open longer
+    if (openTimeout) clearTimeout(openTimeout);
+
+    // Close after 1 second
+    openTimeout = setTimeout(() => {
+      popdoge.src = closed;
+      openTimeout = null;
+    }, 1000);
+
+    if (uid) {
+      update(ref(db, "scores/" + uid), {
+        score: count,
+        country: country,
+        code: code,
+        timestamp: Date.now()
       });
     }
+
+    setTimeout(() => {
+      canClick = true;
+    }, 100);  // Unlock after 0.1 seconds
+  }
+
+  function updateLeaderboard() {
+    const topRef = ref(db, "scores");
+    onValue(topRef, (snapshot) => {
+      const countryScores = {};
+
+      snapshot.forEach(child => {
+        const val = child.val();
+        const c = val.country || "Unknown";
+        const cd = val.code || "";
+        const key = c + "|" + cd;
+
+        if (!countryScores[key]) {
+          countryScores[key] = { score: 0, name: c, code: cd };
+        }
+
+        countryScores[key].score += val.score || 0;
+      });
+
+      const sorted = Object.values(countryScores)
+        .sort((a, b) => b.score - a.score);
+
+      // Show country code + flag in top bar
+      top1.textContent = codeToFlagEmoji(sorted[0]?.code) + " " + (sorted[0]?.code || "??");
+      top2.textContent = codeToFlagEmoji(sorted[1]?.code) + " " + (sorted[1]?.code || "??");
+      top3.textContent = codeToFlagEmoji(sorted[2]?.code) + " " + (sorted[2]?.code || "??");
+
+      // Show full country name + flag in leaderboard
+      leaderboardList.innerHTML = sorted.map(entry =>
+        `<li><span>${codeToFlagEmoji(entry.code)} ${entry.name}</span><span>${entry.score}</span></li>`
+      ).join('');
+    });
+  }
+
+  toggleBtn.addEventListener("click", () => {
+    leaderboard.classList.toggle("show");
+    toggleBtn.textContent = leaderboard.classList.contains("show") ? "⬇️" : "⬆️";
   });
-});
+
+  popdoge.addEventListener("mousedown", pop);
+  popdoge.addEventListener("touchstart", pop);
+
+  signInAnonymously(auth).then(async () => {
+    const info = await fetchCountryInfo();
+    country = info.country;
+    code = info.code;
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        uid = user.uid;
+        const userRef = ref(db, "scores/" + uid);
+        get(userRef).then(snapshot => {
+          if (snapshot.exists()) {
+            count = snapshot.val().score || 0;
+            counter.textContent = count;
+          } else {
+            update(userRef, { score: 0, country: country, code: code, timestamp: Date.now() });
+          }
+          updateLeaderboard();
+          ready = true;
+        });
+      }
+    });
+  });
 </script>
 
 </body>
