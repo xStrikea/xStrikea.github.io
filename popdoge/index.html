@@ -5,25 +5,22 @@
   <title>Popdog - Doge</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="image/logo.png" type="image/x-icon" />
-
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
-
     *:focus { outline: none !important; }
-
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
+      height: 100%;
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
       user-select: none;
     }
-
     h1 {
-      margin: 2rem 0 0.5rem 0;
+      margin: 2rem 0 0.3rem 0;
       color: #1e293b;
       font-weight: 700;
       font-size: 2rem;
@@ -31,35 +28,30 @@
       align-items: center;
       gap: 0.5rem;
     }
-
     h1 img {
       width: 28px;
       height: 28px;
     }
-
     #counter {
       font-size: clamp(3rem, 8vw, 7rem);
       color: #1e293b;
       font-weight: 600;
-      margin-top: 1rem;
       text-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-top: 1rem;
     }
-
     #popdoge {
       width: 85vw;
       max-width: 700px;
-      margin: 1.5rem 0;
       border-radius: 20px;
       box-shadow: 0 15px 25px rgba(0,0,0,0.15);
       cursor: pointer;
       transition: transform 0.15s;
+      margin-top: 1.5rem;
       -webkit-tap-highlight-color: transparent;
+      outline: none !important;
       user-select: none;
     }
-
-    #popdoge:active {
-      transform: scale(0.95);
-    }
+    #popdoge:active { transform: scale(0.95); }
 
     #leaderbar {
       position: fixed;
@@ -74,67 +66,66 @@
       font-size: 1rem;
       z-index: 10;
     }
-
     #leaderbar .left {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-
     .divider {
       width: 2px;
       height: 24px;
       background: #ccc;
     }
-
     .flag {
+      margin: 0 0.5rem;
       font-size: 1.1rem;
       min-width: 3.5rem;
       text-align: center;
     }
-
     #toggleBtn {
       border: none;
       background: none;
       font-size: 1.4rem;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
+      outline: none !important;
+      user-select: none;
+      transition: transform 0.2s;
     }
+    #toggleBtn:hover { transform: rotate(180deg); }
 
     #leaderboard {
       position: fixed;
       bottom: 3.5rem;
       width: 100%;
-      max-height: 60vh;
-      background: white;
-      overflow-y: auto;
       display: none;
-      padding: 1rem 2rem;
+      max-height: 60vh;
+      overflow-y: auto;
+      background: white;
       border-top-left-radius: 16px;
       border-top-right-radius: 16px;
       box-shadow: 0 -6px 16px rgba(0,0,0,0.1);
+      padding: 1rem 2rem;
+      z-index: 9;
     }
-
     #leaderboard.show {
       display: block;
       animation: slideUp 0.3s ease-out;
     }
-
     @keyframes slideUp {
       from { transform: translateY(100%); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
-
     #leaderboard h2 {
       margin-top: 0;
+      font-size: 1.5rem;
       text-align: center;
     }
-
     #topScores {
       list-style: none;
       padding: 0;
+      margin: 0;
     }
-
     #topScores li {
       padding: 0.6rem 1rem;
       margin-bottom: 0.5rem;
@@ -148,179 +139,134 @@
 </head>
 <body>
 
-  <h1><img src="image/logo.png" alt=""> Popdog - Doge</h1>
-  <div id="counter">0</div>
-  <img id="popdoge" src="image/doge.png" alt="Popdog" />
-
-  <div id="leaderbar">
-    <div class="left">
-      🏆
-      <div class="divider"></div>
-      <span class="flag" id="top1">🏳️</span>
-      <div class="divider"></div>
-      <span class="flag" id="top2">🏳️</span>
-      <div class="divider"></div>
-      <span class="flag" id="top3">🏳️</span>
-    </div>
-    <button id="toggleBtn">^</button>
+<h1><img src="image/logo.png" alt="" /> Popdog - Doge</h1>
+<div id="counter">0</div>
+<img id="popdoge" src="image/doge.png" alt="Popdog" />
+<div id="leaderbar">
+  <div class="left">
+    🏆 <div class="divider"></div>
+    <span class="flag" id="top1">🏳️</span>
+    <div class="divider"></div>
+    <span class="flag" id="top2">🏳️</span>
+    <div class="divider"></div>
+    <span class="flag" id="top3">🏳️</span>
   </div>
+  <button id="toggleBtn">⬆️</button>
+</div>
+<div id="leaderboard">
+  <h2>🌐 Global Rankings</h2>
+  <ul id="topScores">Loading...</ul>
+</div>
 
-  <div id="leaderboard">
-    <h2>🌐 Global Rankings</h2>
-    <ul id="topScores">Loading...</ul>
-  </div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getDatabase, ref, update, get, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, update, get, onValue, remove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+const a = initializeApp({
+  apiKey: "AIzaSyBqsj5CkvEP_7MqQmYESgDnsz-VSTimhdw",
+  authDomain: "xsweb-6f858.firebaseapp.com",
+  databaseURL: "https://xsweb-6f858-default-rtdb.firebaseio.com",
+  projectId: "xsweb-6f858",
+  storageBucket: "xsweb-6f858.appspot.com",
+  messagingSenderId: "599529998192",
+  appId: "1:599529998192:web:63c64ed7dcc5208d5971b5"
+});
+const b = getDatabase(a),
+      c = getAuth();
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBqsj5CkvEP_7MqQmYESgDnsz-VSTimhdw",
-      authDomain: "xsweb-6f858.firebaseapp.com",
-      databaseURL: "https://xsweb-6f858-default-rtdb.firebaseio.com",
-      projectId: "xsweb-6f858",
-      storageBucket: "xsweb-6f858.appspot.com",
-      messagingSenderId: "599529998192",
-      appId: "1:599529998192:web:63c64ed7dcc5208d5971b5"
-    };
+const d = document.getElementById("popdoge"),
+      e = document.getElementById("counter"),
+      f = document.getElementById("leaderboard"),
+      g = document.getElementById("topScores"),
+      h = document.getElementById("toggleBtn"),
+      i = document.getElementById("top1"),
+      j = document.getElementById("top2"),
+      k = document.getElementById("top3");
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth();
+let l = null, m = 0, n = "Unknown", o = "", p = false, q = true, r = null;
+const s = "image/doge.png", t = "image/doge_open.png";
 
-    const popdoge = document.getElementById("popdoge");
-    const counter = document.getElementById("counter");
-    const leaderboard = document.getElementById("leaderboard");
-    const leaderboardList = document.getElementById("topScores");
-    const toggleBtn = document.getElementById("toggleBtn");
-    const top1 = document.getElementById("top1");
-    const top2 = document.getElementById("top2");
-    const top3 = document.getElementById("top3");
-
-    const closed = "image/doge.png";
-    const open = "image/doge_open.png";
-
-    let uid = null;
-    let count = 0;
-    let country = "Unknown";
-    let code = "";
-    let ready = false;
-    let canClick = true;
-    let openTimeout = null;
-
-    function codeToFlag(code) {
-      return code.toUpperCase().replace(/./g, c =>
-        String.fromCodePoint(127397 + c.charCodeAt(0))
-      );
-    }
-
-    async function fetchCountryInfo() {
-      try {
-        const res = await fetch("https://ipapi.co/json/");
-        const data = await res.json();
-        return {
-          country: data.country_name || "Unknown",
-          code: data.country_code || "??"
-        };
-      } catch {
-        return { country: "Unknown", code: "??" };
-      }
-    }
-
-    function pop() {
-      if (!ready || !canClick) return;
-      canClick = false;
-
-      count++;
-      counter.textContent = count;
-      popdoge.src = open;
-
-      if (openTimeout) clearTimeout(openTimeout);
-      openTimeout = setTimeout(() => {
-        popdoge.src = closed;
-      }, 1000);
-
-      if (uid) {
-        update(ref(db, "scores/" + uid), {
-          score: count,
-          country: country,
-          code: code,
-          timestamp: Date.now()
-        });
-      }
-
-      setTimeout(() => {
-        canClick = true;
-      }, 100);
-    }
-
-    function updateLeaderboard() {
-      const topRef = ref(db, "scores");
-      onValue(topRef, (snapshot) => {
-        const totals = {};
-        const year = new Date().getFullYear();
-
-        snapshot.forEach(child => {
-          const data = child.val();
-          const key = (data.country || "Unknown") + "|" + (data.code || "??");
-
-          // 自動刪除去年的資料
-          const ts = data.timestamp || 0;
-          const tsYear = new Date(ts).getFullYear();
-          if (tsYear < year) {
-            remove(ref(db, "scores/" + child.key));
-            return;
-          }
-
-          if (!totals[key]) {
-            totals[key] = { score: 0, name: data.country, code: data.code };
-          }
-          totals[key].score += data.score || 0;
-        });
-
-        const sorted = Object.values(totals).sort((a, b) => b.score - a.score);
-
-        top1.textContent = codeToFlag(sorted[0]?.code || "??") + " " + (sorted[0]?.code || "??");
-        top2.textContent = codeToFlag(sorted[1]?.code || "??") + " " + (sorted[1]?.code || "??");
-        top3.textContent = codeToFlag(sorted[2]?.code || "??") + " " + (sorted[2]?.code || "??");
-
-        leaderboardList.innerHTML = sorted.map(e =>
-          `<li><span>${codeToFlag(e.code)} ${e.name}</span><span>${e.score}</span></li>`
-        ).join('');
-      });
-    }
-
-    toggleBtn.addEventListener("click", () => {
-      leaderboard.classList.toggle("show");
-      toggleBtn.textContent = leaderboard.classList.contains("show") ? "v" : "^";
+function u(v) {
+  if (!v) return "🏳️";
+  return v.toUpperCase().replace(/./g, w =>
+    String.fromCodePoint(w.charCodeAt(0) + 127397));
+}
+async function x() {
+  try {
+    const y = await fetch("https://ipapi.co/json/"),
+          z = await y.json();
+    return { country: z.country_name || "Unknown", code: z.country_code || "" };
+  } catch { return { country: "Unknown", code: "" }; }
+}
+function A() {
+  if (!p || !q) return;
+  q = false;
+  m++;
+  e.textContent = m;
+  d.src = t;
+  if (r) clearTimeout(r);
+  r = setTimeout(() => d.src = s, 1000);
+  if (l) update(ref(b, "scores/" + l), {
+    score: m,
+    country: n,
+    code: o,
+    timestamp: Date.now()
+  });
+  setTimeout(() => q = true, 100);
+}
+function B() {
+  const C = ref(b, "scores");
+  onValue(C, D => {
+    const E = {};
+    D.forEach(F => {
+      const G = F.val(), H = G.country || "Unknown", I = G.code || "";
+      const J = H + "|" + I;
+      if (!E[J]) E[J] = { score: 0, name: H, code: I };
+      E[J].score += G.score || 0;
     });
-
-    popdoge.addEventListener("mousedown", pop);
-    popdoge.addEventListener("touchstart", pop);
-
-    signInAnonymously(auth).then(async () => {
-      const info = await fetchCountryInfo();
-      country = info.country;
-      code = info.code;
-
-      onAuthStateChanged(auth, user => {
-        if (user) {
-          uid = user.uid;
-          const userRef = ref(db, "scores/" + uid);
-          get(userRef).then(snap => {
-            if (snap.exists()) {
-              count = snap.val().score || 0;
-              counter.textContent = count;
-            } else {
-              update(userRef, { score: 0, country, code, timestamp: Date.now() });
-            }
-            ready = true;
-            updateLeaderboard();
+    const K = Object.values(E).sort((L, M) => M.score - L.score);
+    i.textContent = u(K[0]?.code) + " " + (K[0]?.code || "??");
+    j.textContent = u(K[1]?.code) + " " + (K[1]?.code || "??");
+    k.textContent = u(K[2]?.code) + " " + (K[2]?.code || "??");
+    g.innerHTML = K.map(N =>
+      `<li><span>${u(N.code)} ${N.name}</span><span>${N.score}</span></li>`
+    ).join('');
+  });
+}
+h.addEventListener("click", () => {
+  f.classList.toggle("show");
+  h.textContent = f.classList.contains("show") ? "⬇️" : "⬆️";
+});
+d.addEventListener("mousedown", A);
+d.addEventListener("touchstart", A);
+signInAnonymously(c).then(async () => {
+  const O = await x();
+  n = O.country;
+  o = O.code;
+  onAuthStateChanged(c, P => {
+    if (P) {
+      l = P.uid;
+      const Q = ref(b, "scores/" + l);
+      get(Q).then(R => {
+        if (R.exists()) {
+          m = R.val().score || 0;
+          e.textContent = m;
+        } else {
+          update(Q, {
+            score: 0,
+            country: n,
+            code: o,
+            timestamp: Date.now()
           });
         }
+        B();
+        p = true;
       });
-    });
-  </script>
+    }
+  });
+});
+</script>
+
 </body>
 </html>
