@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Bonkdog - Click Doge and Compete Globally!</title>
@@ -6,6 +7,7 @@
   <link rel="icon" href="image/logo.png" type="image/x-icon" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
     html, body {
       margin: 0;
       padding: 0;
@@ -15,134 +17,148 @@
       font-family: 'Poppins', sans-serif;
       user-select: none;
       overflow: hidden;
-    }.content {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  height: 100%;
-  width: 100%;
-  padding-top: 2rem;
-}
+      box-sizing: border-box;
+    }
 
-h1 {
-  margin: 0 0 0.5rem 0;
-  color: white;
-  font-size: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
+    .content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100%;
+      width: 100%;
+      padding-top: 2rem;
+      box-sizing: border-box;
+    }
 
-h1 img {
-  width: 28px;
-  height: 28px;
-}
+    h1 {
+      margin: 0 0 0.5rem 0;
+      color: white;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-#counter {
-  font-size: clamp(3rem, 8vw, 6rem);
-  color: white;
-  text-shadow: 0 4px 8px rgba(0,0,0,0.5);
-  margin-top: 1rem;
-}
+    h1 img {
+      width: 28px;
+      height: 28px;
+    }
 
-#bonkdoge {
-  width: 85vw;
-  max-width: 700px;
-  margin-top: 2rem;
-  border-radius: 20px;
-  box-shadow: 0 15px 25px rgba(0,0,0,0.25);
-  cursor: pointer;
-  transition: transform 0.15s;
-}
+    #counter {
+      font-size: clamp(3rem, 8vw, 6rem);
+      color: white;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      margin-top: 1rem;
+    }
 
-#bonkdoge:active {
-  transform: scale(0.95);
-}
+    #bonkdoge {
+      width: 85vw;
+      max-width: 700px;
+      margin-top: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.25);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
 
-#leaderbar {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: rgba(255,255,255,0.95);
-  box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.8rem 1.2rem;
-  font-size: 1rem;
-  z-index: 20;
-}
+    #bonkdoge:active {
+      transform: scale(0.95);
+    }
 
-#toggleBtn {
-  border: none;
-  background: none;
-  font-size: 1.4rem;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  outline: none !important;
-  user-select: none;
-  margin-left: auto;
-  padding: 0.5rem;
-  z-index: 21;
-}
+    #leaderbar {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      z-index: 20;
+      box-sizing: border-box;
+    }
 
-#leaderboard {
-  position: fixed;
-  bottom: 3.5rem;
-  width: 100%;
-  display: none;
-  max-height: 60vh;
-  overflow-y: auto;
-  background: white;
-  border-top-left-radius: 24px;
-  border-top-right-radius: 24px;
-  box-shadow: 0 -6px 16px rgba(0,0,0,0.15);
-  padding: 1rem 2rem;
-  z-index: 19;
-}
+    .flag {
+      margin: 0 0.4rem;
+      font-size: 1.1rem;
+    }
 
-#leaderboard.show {
-  display: block;
-  animation: slideUp 0.3s ease-out;
-}
+    #toggleBtn {
+      border: none;
+      background: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      user-select: none;
+      margin-left: auto;
+      padding: 0.5rem;
+      max-width: 3rem;
+      z-index: 21;
+    }
 
-@keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
+    #leaderboard {
+      position: fixed;
+      bottom: 3.5rem;
+      width: 100%;
+      display: none;
+      max-height: 60vh;
+      overflow-y: auto;
+      background: white;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      box-shadow: 0 -6px 16px rgba(0,0,0,0.15);
+      padding: 1rem 2rem;
+      z-index: 19;
+      box-sizing: border-box;
+    }
 
-#leaderboard h2 {
-  margin-top: 0;
-  font-size: 1.5rem;
-  text-align: center;
-}
+    #leaderboard.show {
+      display: block;
+      animation: slideUp 0.3s ease-out;
+    }
 
-#topScores {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
 
-#topScores li {
-  padding: 0.6rem 1rem;
-  margin-bottom: 0.5rem;
-  background: #f1f5f9;
-  border-radius: 12px;
-  display: flex;
-  justify-content: space-between;
-  font-weight: 600;
-}
+    #leaderboard h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      text-align: center;
+    }
 
+    #topScores {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #topScores li {
+      padding: 0.6rem 1rem;
+      margin-bottom: 0.5rem;
+      background: #f1f5f9;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
   </style>
 </head>
-<body>  <div class="content">
+<body>
+  <div class="content">
     <h1><img src="image/logo.png" alt="logo" />Bonkdog</h1>
     <div id="counter">0</div>
     <img id="bonkdoge" src="image/doge.png" alt="Bonkdoge" />
-  </div>  <div id="leaderbar">
+  </div>
+
+  <div id="leaderbar">
     <div class="left">
       🏆
       <span class="flag" id="top1">🏳️</span>
@@ -150,10 +166,14 @@ h1 img {
       <span class="flag" id="top3">🏳️</span>
     </div>
     <button id="toggleBtn">↑</button>
-  </div>  <div id="leaderboard">
+  </div>
+
+  <div id="leaderboard">
     <h2>🌐 Global Rankings</h2>
     <ul id="topScores">Loading...</ul>
-  </div>  <script type="module">
+  </div>
+
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getDatabase, ref, update, get, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
@@ -291,5 +311,6 @@ h1 img {
         }
       });
     });
-  </script></body>
+  </script>
+</body>
 </html>
