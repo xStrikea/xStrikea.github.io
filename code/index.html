@@ -2,17 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Raw Code Viewer</title>
   <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
   <style>
     body {
       margin: 0;
       background: #111;
+      color: #eee;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 16px;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    pre, code {
+      margin: 0;
+      padding: 0;
+      background: none;
+      border: none;
+      box-shadow: none;
     }
     pre {
-      margin: 0;
-      padding: 1em;
-      font-family: monospace;
-      font-size: 1em;
       white-space: pre-wrap;
       word-break: break-word;
     }
@@ -22,16 +31,14 @@
   <pre><code id="code">// loading...</code></pre>
 
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-
-  <!-- 支援的語言套件 -->
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-javascript.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-css.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-c.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-java.min.js"></script>
+
   <script>
     function escapeHTML(str) {
       return str
@@ -44,16 +51,14 @@
         .replace(/`/g, "&#96;");
     }
 
-    // 解析 URL 參數
     const params = new URLSearchParams(location.search);
-    const rawLang = (params.get('lang') || 'text').toLowerCase();
-    const codeRaw = decodeURIComponent(params.get('code') || '');
+    const fallback = params.get('f'); // 支援 ?f=...
+    const rawLang = (params.get('lang') || 'js').toLowerCase();
+    const rawCode = decodeURIComponent(params.get('code') || fallback || '');
 
-    // 語言對照表
     const langMap = {
       js: 'javascript',
       html: 'markup',
-      css: 'css',
       py: 'python',
       sh: 'bash',
       bash: 'bash',
@@ -64,7 +69,7 @@
     };
 
     const lang = langMap[rawLang] || rawLang;
-    const safeCode = escapeHTML(codeRaw);
+    const safeCode = escapeHTML(rawCode);
 
     const codeEl = document.getElementById('code');
     codeEl.className = 'language-' + lang;
