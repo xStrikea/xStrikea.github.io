@@ -18,52 +18,148 @@
     overflow-x: hidden;
     -webkit-tap-highlight-color: transparent;
   }
-  /* 頂部容器 */
-  #header {
+  header {
     position: fixed;
     top: 0; left: 0; right: 0;
     height: 60px;
-    background: white;
+    background: rgba(255,255,255,0.95);
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* 左靠齊 */
+    justify-content: space-between;
     padding: 0 1rem;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    user-select: none;
     z-index: 30;
-    gap: 0.6rem;
   }
-  #header img {
-    width: 32px; height: 32px;
-    user-select: none;
-  }
-  #header h1 {
+  header h1 {
     margin: 0;
-    font-size: 1.5rem;
-    color: black;
     font-weight: 700;
-    user-select: none;
+    font-size: 1.8rem;
+    color: #222;
   }
-  #header p {
-    margin: 0;
+  #nav-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+  #nav-buttons button {
+    background: transparent;
+    border: none;
     font-weight: 600;
-    color: black;
-    user-select: none;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #007bff;
+    transition: color 0.2s ease;
   }
-  /* 主內容容器 */
-  .content {
-    position: relative;
-    z-index: 10;
+  #nav-buttons button:hover {
+    color: #0056b3;
+  }
+  #logoutBtn {
+    background: #d33;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #logoutBtn:hover {
+    background: #a00;
+  }
+  main {
+    height: 100%;
+    padding-top: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  /* 卡牌表單 */
+  .card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    width: 350px;
+    max-width: 90vw;
+    padding: 2rem;
+    user-select: none;
+  }
+  h2 {
+    margin-top: 0;
+    font-weight: 700;
+    font-size: 1.6rem;
+    text-align: center;
+    color: #222;
+  }
+  form {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  input[type="email"],
+  input[type="password"] {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+  }
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  button.submit-btn {
+    padding: 0.85rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    background: #007bff;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button.submit-btn:hover {
+    background: #0056b3;
+  }
+  .switch-text {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: #555;
+    user-select: none;
+  }
+  .switch-text span {
+    color: #007bff;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 0.2rem;
+    font-weight: 600;
+  }
+  .error-message {
+    color: #d93025;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  /* 遊戲主界面 */
+  #game-container {
+    display: none;
+    flex-direction: column;
     align-items: center;
-    padding: 70px 1rem 0 1rem; /* 預留 header 高度 */
+    width: 100%;
+    max-width: 720px;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 10;
   }
   #counter {
     font-size: clamp(3rem, 8vw, 6rem);
     color: white;
     text-shadow: 0 4px 8px rgba(0,0,0,0.5);
-    margin-top: 1rem;
+    margin-top: 2rem;
     user-select: none;
   }
   #bonkdoge {
@@ -76,9 +172,6 @@
     transition: transform 0.15s;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
   }
   #bonkdoge:active {
     transform: scale(0.95);
@@ -116,7 +209,6 @@
     user-select: none;
     padding: 0.2rem 0.5rem;
     transition: transform 0.2s ease;
-    user-select: none;
   }
   #toggleBtn:focus {
     outline: none;
@@ -171,174 +263,291 @@
 </head>
 <body>
 
-  <div id="header">
-    <img src="image/logo.png" alt="logo" draggable="false" />
-    <h1>Bonkdoge</h1>
-    <p>Beta</p>
+<header>
+  <h1>Bonkdoge</h1>
+  <div id="nav-buttons">
+    <button id="btn-login" aria-label="Switch to Login" style="display:none;">Login</button>
+    <button id="btn-register" aria-label="Switch to Register" style="display:none;">Register</button>
+  </div>
+  <button id="logoutBtn" style="display:none;">Logout</button>
+</header>
+
+<main>
+  <!-- 登入/註冊卡牌 -->
+  <div class="card" id="login-card">
+    <h2>Login</h2>
+    <form id="login-form" autocomplete="off">
+      <input type="email" id="login-email" placeholder="Email" required />
+      <input type="password" id="login-password" placeholder="Password" required minlength="6" />
+      <button type="submit" class="submit-btn">Login</button>
+      <div class="error-message" id="login-error"></div>
+    </form>
+    <div class="switch-text">
+      Don't have an account?<br />
+      <span id="to-register">Register</span>
+    </div>
   </div>
 
-  <div class="content">
+  <div class="card" id="register-card" style="display:none;">
+    <h2>Register</h2>
+    <form id="register-form" autocomplete="off">
+      <input type="email" id="register-email" placeholder="Email" required />
+      <input type="password" id="register-password" placeholder="Password" required minlength="6" />
+      <button type="submit" class="submit-btn">Register</button>
+      <div class="error-message" id="register-error"></div>
+    </form>
+    <div class="switch-text">
+      Already have an account?<br />
+      <span id="to-login">Login</span>
+    </div>
+  </div>
+
+  <!-- 遊戲主界面 -->
+  <div id="game-container">
     <div id="counter">0</div>
     <img id="bonkdoge" src="image/doge.png" alt="Bonkdoge" draggable="false" />
-  </div>
-
-  <div id="leaderbar">
-    <div class="left">
-      🏆
-      <span class="flag" id="top1">1nd</span>
-      <p>•</p>
-      <span class="flag" id="top2">️2nd</span>
-      <p>•</p>
-      <span class="flag" id="top3">3nd</span>
+    <div id="leaderbar">
+      <div class="left">
+        🏆
+        <span class="flag" id="top1">1st</span>
+        <p>•</p>
+        <span class="flag" id="top2">2nd</span>
+        <p>•</p>
+        <span class="flag" id="top3">3rd</span>
+      </div>
+      <button id="toggleBtn" aria-label="Toggle leaderboard">↑</button>
     </div>
-    <button id="toggleBtn" aria-label="Toggle leaderboard">↑</button>
+    <div id="leaderboard" role="region" aria-live="polite" aria-label="Global Rankings">
+      <h2>🌐 Global Rankings</h2>
+      <ul id="topScores">Loading...</ul>
+    </div>
   </div>
+</main>
 
-  <div id="leaderboard" role="region" aria-live="polite" aria-label="Global Rankings">
-    <h2>🌐 Global Rankings</h2>
-    <ul id="topScores">Loading...</ul>
-  </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+  import { getDatabase, ref, update, get, onValue } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js";
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, update, get, onValue } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyBqsj5CkvEP_7MqQmYESgDnsz-VSTimhdw",
+    authDomain: "xsweb-6f858.firebaseapp.com",
+    databaseURL: "https://xsweb-6f858-default-rtdb.firebaseio.com",
+    projectId: "xsweb-6f858",
+    storageBucket: "xsweb-6f858.appspot.com",
+    messagingSenderId: "599529998192",
+    appId: "1:599529998192:web:63c64ed7dcc5208d5971b5"
+  };
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBqsj5CkvEP_7MqQmYESgDnsz-VSTimhdw",
-      authDomain: "xsweb-6f858.firebaseapp.com",
-      databaseURL: "https://xsweb-6f858-default-rtdb.firebaseio.com",
-      projectId: "xsweb-6f858",
-      storageBucket: "xsweb-6f858.appspot.com",
-      messagingSenderId: "599529998192",
-      appId: "1:599529998192:web:63c64ed7dcc5208d5971b5"
-    };
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const auth = getAuth();
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth();
+  // DOM Elements
+  const loginCard = document.getElementById("login-card");
+  const registerCard = document.getElementById("register-card");
+  const btnLogin = document.getElementById("btn-login");
+  const btnRegister = document.getElementById("btn-register");
+  const toRegister = document.getElementById("to-register");
+  const toLogin = document.getElementById("to-login");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-    const bonkdoge = document.getElementById("bonkdoge");
-    const counter = document.getElementById("counter");
-    const leaderboard = document.getElementById("leaderboard");
-    const leaderboardList = document.getElementById("topScores");
-    const toggleBtn = document.getElementById("toggleBtn");
+  const loginForm = document.getElementById("login-form");
+  const registerForm = document.getElementById("register-form");
+  const loginError = document.getElementById("login-error");
+  const registerError = document.getElementById("register-error");
 
-    const top1 = document.getElementById("top1");
-    const top2 = document.getElementById("top2");
-    const top3 = document.getElementById("top3");
+  const gameContainer = document.getElementById("game-container");
+  const bonkdoge = document.getElementById("bonkdoge");
+  const counter = document.getElementById("counter");
+  const leaderboard = document.getElementById("leaderboard");
+  const leaderboardList = document.getElementById("topScores");
+  const toggleBtn = document.getElementById("toggleBtn");
 
-    const closed = "image/doge.png";
-    const open = "image/doge_open.png";
+  const top1 = document.getElementById("top1");
+  const top2 = document.getElementById("top2");
+  const top3 = document.getElementById("top3");
 
-    let uid = null;
-    let count = 0;
-    let country = "Unknown";
-    let code = "";
-    let canClick = true;
-    let ready = false;
-    let openTimeout = null;
+  const closedImg = "image/doge.png";
+  const openImg = "image/doge_open.png";
 
-    function codeToFlagEmoji(code) {
-      if (!code) return "";
-      return code.toUpperCase().replace(/./g, c => String.fromCodePoint(c.charCodeAt(0) + 127397));
+  // State
+  let count = 0;
+  let country = "Unknown";
+  let code = "";
+  let canClick = true;
+  let openTimeout = null;
+
+  // Functions to toggle login/register forms
+  function showLogin() {
+    loginCard.style.display = "block";
+    registerCard.style.display = "none";
+  }
+  function showRegister() {
+    loginCard.style.display = "none";
+    registerCard.style.display = "block";
+  }
+  btnLogin.addEventListener("click", showLogin);
+  btnRegister.addEventListener("click", showRegister);
+  toRegister.addEventListener("click", showRegister);
+  toLogin.addEventListener("click", showLogin);
+
+  // Show/hide login and register buttons in header (only when logged out)
+  function showNavButtons(show) {
+    btnLogin.style.display = show ? "inline-block" : "none";
+    btnRegister.style.display = show ? "inline-block" : "none";
+    logoutBtn.style.display = show ? "none" : "inline-block";
+  }
+
+  // Utility to convert country code to emoji flag
+  function codeToFlagEmoji(code) {
+    if (!code) return "";
+    return code.toUpperCase().replace(/./g, c => String.fromCodePoint(c.charCodeAt(0) + 127397));
+  }
+
+  // Fetch user country info by IP
+  async function fetchCountryInfo() {
+    try {
+      const res = await fetch("https://ipapi.co/json/");
+      const data = await res.json();
+      return { country: data.country_name || "Unknown", code: data.country_code || "" };
+    } catch {
+      return { country: "Unknown", code: "" };
     }
+  }
 
-    async function fetchCountryInfo() {
-      try {
-        const res = await fetch("https://ipapi.co/json/");
-        const data = await res.json();
-        return { country: data.country_name || "Unknown", code: data.country_code || "" };
-      } catch {
-        return { country: "Unknown", code: "" };
-      }
-    }
+  // bonkdoge click handler
+  function pop() {
+    if (!canClick) return;
+    canClick = false;
+    count++;
+    counter.textContent = count;
+    bonkdoge.src = openImg;
+    new Audio("audio/bonk.mp3").play();
 
-    function pop() {
-      if (!ready || !canClick) return;
-      canClick = false;
+    if (openTimeout) clearTimeout(openTimeout);
+    openTimeout = setTimeout(() => {
+      bonkdoge.src = closedImg;
+      openTimeout = null;
+    }, 500);
 
-      count++;
-      counter.textContent = count;
-
-      bonkdoge.src = open;
-      const newAudio = new Audio("audio/bonk.mp3");
-      newAudio.play();
-
-      if (openTimeout) clearTimeout(openTimeout);
-      openTimeout = setTimeout(() => {
-        bonkdoge.src = closed;
-        openTimeout = null;
-      }, 500);
-
-      if (uid) {
-        update(ref(db, "scores/" + uid), {
-          score: count,
-          country: country,
-          code: code,
-          timestamp: Date.now()
-        });
-      }
-
-      setTimeout(() => { canClick = true; }, 100);
-    }
-
-    function updateLeaderboard() {
-      const topRef = ref(db, "scores");
-      onValue(topRef, (snapshot) => {
-        const countryScores = {};
-        snapshot.forEach(child => {
-          const val = child.val();
-          const key = (val.country || "Unknown") + "|" + (val.code || "");
-          if (!countryScores[key]) {
-            countryScores[key] = { score: 0, name: val.country, code: val.code };
-          }
-          countryScores[key].score += val.score || 0;
-        });
-
-        const sorted = Object.values(countryScores).sort((a, b) => b.score - a.score);
-        top1.textContent = codeToFlagEmoji(sorted[0]?.code) + " " + (sorted[0]?.code || "1nd");
-        top2.textContent = codeToFlagEmoji(sorted[1]?.code) + " " + (sorted[1]?.code || "2nd");
-        top3.textContent = codeToFlagEmoji(sorted[2]?.code) + " " + (sorted[2]?.code || "3nd");
-
-        leaderboardList.innerHTML = sorted.map(entry =>
-          `<li><span>${codeToFlagEmoji(entry.code)} ${entry.name}</span><span>${entry.score}</span></li>`
-        ).join('');
+    if (auth.currentUser) {
+      update(ref(db, "scores/" + auth.currentUser.uid), {
+        score: count,
+        country: country,
+        code: code,
+        timestamp: Date.now()
       });
     }
 
-    toggleBtn.addEventListener("click", () => {
-      leaderboard.classList.toggle("show");
-      toggleBtn.textContent = leaderboard.classList.contains("show") ? "↓" : "↑";
+    setTimeout(() => { canClick = true; }, 100);
+  }
+
+  // Update leaderboard from database
+  function updateLeaderboard() {
+    const topRef = ref(db, "scores");
+    onValue(topRef, (snapshot) => {
+      const countryScores = {};
+      snapshot.forEach(child => {
+        const val = child.val();
+        const key = (val.country || "Unknown") + "|" + (val.code || "");
+        if (!countryScores[key]) {
+          countryScores[key] = { score: 0, name: val.country, code: val.code };
+        }
+        countryScores[key].score += val.score || 0;
+      });
+
+      const sorted = Object.values(countryScores).sort((a, b) => b.score - a.score);
+      // 排序後顯示前三名旗幟及排行榜列表
+      top1.textContent = codeToFlagEmoji(sorted[0]?.code) + " " + (sorted[0]?.code || "1st");
+      top2.textContent = codeToFlagEmoji(sorted[1]?.code) + " " + (sorted[1]?.code || "2nd");
+      top3.textContent = codeToFlagEmoji(sorted[2]?.code) + " " + (sorted[2]?.code || "3rd");
+
+      leaderboardList.innerHTML = sorted.map(entry =>
+        `<li><span>${codeToFlagEmoji(entry.code)} ${entry.name}</span><span>${entry.score}</span></li>`
+      ).join('');
     });
+  }
 
-    bonkdoge.addEventListener("mousedown", pop);
-    bonkdoge.addEventListener("touchstart", pop);
+  // 切換排行榜顯示按鈕行為
+  toggleBtn.addEventListener("click", () => {
+    leaderboard.classList.toggle("show");
+    toggleBtn.textContent = leaderboard.classList.contains("show") ? "↓" : "↑";
+  });
 
-    signInAnonymously(auth).then(async () => {
+  // bonkdoge 點擊事件
+  bonkdoge.addEventListener("mousedown", pop);
+  bonkdoge.addEventListener("touchstart", pop);
+
+  // 監聽登入狀態
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      // 已登入，隱藏登入註冊介面，顯示遊戲介面
+      loginCard.style.display = "none";
+      registerCard.style.display = "none";
+      gameContainer.style.display = "flex";
+      showNavButtons(false); // 隱藏登入註冊按鈕，顯示登出
+
+      // 取得國家資訊
       const info = await fetchCountryInfo();
       country = info.country;
       code = info.code;
 
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          uid = user.uid;
+      // 載入用戶分數
+      const userRef = ref(db, "scores/" + user.uid);
+      const snapshot = await get(userRef);
+      if (snapshot.exists()) {
+        count = snapshot.val().score || 0;
+        counter.textContent = count;
+      } else {
+        // 新用戶初始化
+        await update(userRef, { score: 0, country, code, timestamp: Date.now() });
+        count = 0;
+        counter.textContent = count;
+      }
+      updateLeaderboard();
+    } else {
+      // 登出狀態，顯示登入卡牌
+      gameContainer.style.display = "none";
+      loginCard.style.display = "block";
+      registerCard.style.display = "none";
+      showNavButtons(true);
+      count = 0;
+      counter.textContent = count;
+    }
+  });
 
-          const userRef = ref(db, "scores/" + uid);
-          get(userRef).then(snapshot => {
-            if (snapshot.exists()) {
-              count = snapshot.val().score || 0;
-              counter.textContent = count;
-            } else {
-              update(userRef, { score: 0, country: country, code: code, timestamp: Date.now() });
-            }
-            updateLeaderboard();
-            ready = true;
-          });
-        }
-      });
-    });
-  </script>
+  // 登入表單提交
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    loginError.textContent = "";
+    const email = loginForm["login-email"].value.trim();
+    const password = loginForm["login-password"].value.trim();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      loginError.textContent = err.message;
+    }
+  });
 
+  // 註冊表單提交
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    registerError.textContent = "";
+    const email = registerForm["register-email"].value.trim();
+    const password = registerForm["register-password"].value.trim();
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      registerError.textContent = err.message;
+    }
+  });
+
+  // 登出按鈕
+  logoutBtn.addEventListener("click", () => {
+    signOut(auth);
+  });
+</script>
 </body>
 </html>
