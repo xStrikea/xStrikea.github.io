@@ -1,0 +1,364 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+/* Reset & base */
+html, body {
+  margin: 0; padding: 0;
+  height: 100%;
+  background: url('image/background.png') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Poppins', sans-serif;
+  user-select: none;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Header */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(255,255,255,0.95);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  user-select: none;
+  z-index: 30;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Header 左側：logo + 標題 + 版本 */
+#header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#logo {
+  height: 36px;
+  width: auto;
+  user-select: none;
+}
+
+/* 標題與版本號容器，垂直排列 */
+#title-version {
+  display: flex;
+  user-select: none;
+}
+
+/* 標題 */
+#title-version h1 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #222;
+  line-height: 1.1;
+}
+
+/* 版本號文字 */
+#version {
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 600;
+  margin-top: 2px;
+  user-select: none;
+}
+
+/* Header 右側區塊 */
+#header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #555;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* 導覽按鈕群組 */
+#nav-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+#nav-buttons button {
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #007bff;
+  transition: color 0.2s ease;
+  padding: 0.1rem 0.25rem;
+}
+
+#nav-buttons button:hover {
+  color: #0056b3;
+}
+
+#logoutBtn {
+  background: #d33;
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#logoutBtn:hover {
+  background: #a00;
+}
+
+/* Main content */
+main {
+  height: 100%;
+  padding-top: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* 卡牌式表單 */
+.card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+  width: 350px;
+  max-width: 90vw;
+  padding: 2rem;
+  user-select: none;
+}
+
+h2 {
+  margin-top: 0;
+  font-weight: 700;
+  font-size: 1.6rem;
+  text-align: center;
+  color: #222;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+input[type="email"],
+input[type="password"] {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button.submit-btn {
+  padding: 0.85rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: #007bff;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button.submit-btn:hover {
+  background: #0056b3;
+}
+
+.switch-text {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #555;
+  user-select: none;
+}
+
+.switch-text span {
+  color: #007bff;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-weight: 600;
+}
+
+.error-message {
+  color: #d93025;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* 遊戲主界面 */
+#game-container {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 720px;
+  padding: 0 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+#counter {
+  font-size: clamp(3rem, 8vw, 6rem);
+  color: white;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  margin-top: 2rem;
+  user-select: none;
+}
+
+#bonkdoge {
+  width: 85vw;
+  max-width: 700px;
+  margin-top: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 15px 25px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+#bonkdoge:active {
+  transform: scale(0.95);
+}
+
+/* 底部排版 */
+#leaderbar {
+  position: fixed;
+  bottom: 0;
+  left: 0; right: 0;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  z-index: 25;
+}
+
+#leaderbar .left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  user-select: none;
+}
+
+#leaderbar .flag {
+  font-size: 1.2rem;
+}
+
+#toggleBtn {
+  border: none;
+  background: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  outline: none !important;
+  user-select: none;
+  padding: 0.2rem 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+#toggleBtn:focus {
+  outline: none;
+}
+
+#toggleBtn:hover {
+  transform: rotate(180deg);
+}
+
+/* 排行榜視窗 */
+#leaderboard {
+  position: fixed;
+  bottom: 3.8rem; /* 預留leaderbar高度 + margin */
+  left: 0; right: 0;
+  max-height: 55vh;
+  overflow-y: auto;
+  background: white;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  box-shadow: 0 -6px 16px rgba(0,0,0,0.15);
+  padding: 1rem 2rem;
+  z-index: 24;
+  user-select: none;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#leaderboard.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+#leaderboard h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  text-align: center;
+  user-select: none;
+}
+
+#topScores {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#topScores li {
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.5rem;
+  background: #f1f5f9;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* 載入動畫畫面 */
+#loading-screen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  color: #444;
+  transition: opacity 0.4s ease;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 6px solid #ccc;
+  border-top-color: #007bff;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
