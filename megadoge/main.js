@@ -116,7 +116,7 @@ function pop() {
   count++;
   counter.textContent = count;
   bonkdoge.src = openImg;
-  new Audio("audio/bonk.mp3").play();
+  new Audio("audio/audio.mp3").play();
 
   if (openTimeout) clearTimeout(openTimeout);
   openTimeout = setTimeout(() => {
