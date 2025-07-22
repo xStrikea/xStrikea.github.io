@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://xStrikea.github.io/sitemap.xml

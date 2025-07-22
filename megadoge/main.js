@@ -154,9 +154,9 @@ function updateLeaderboard() {
 
     const sorted = Object.values(countryScores).sort((a, b) => b.score - a.score);
     // 顯示前三名
-    top1.textContent = codeToFlagEmoji(sorted[0]?.code) + " " + (sorted[0]?.code || "1st");
-    top2.textContent = codeToFlagEmoji(sorted[1]?.code) + " " + (sorted[1]?.code || "2nd");
-    top3.textContent = codeToFlagEmoji(sorted[2]?.code) + " " + (sorted[2]?.code || "3rd");
+    top1.textContent = codeToFlagEmoji(sorted[0]?.code) + " " + (sorted[0]?.code || "🥇1st");
+    top2.textContent = codeToFlagEmoji(sorted[1]?.code) + " " + (sorted[1]?.code || "🥈2nd");
+    top3.textContent = codeToFlagEmoji(sorted[2]?.code) + " " + (sorted[2]?.code || "🥉3rd");
 
     leaderboardList.innerHTML = sorted
       .map(
