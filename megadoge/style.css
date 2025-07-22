@@ -235,6 +235,14 @@ button.submit-btn:hover {
   user-select: none;
 }
 
+#text {
+  font-size: clamp(1rem, 4vw, 3rem);
+  color: white;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  margin-top: 1rem;
+  user-select: none;
+}
+
 #bonkdoge:active {
   transform: scale(0.95);
 }
