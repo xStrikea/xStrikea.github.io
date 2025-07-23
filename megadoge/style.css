@@ -28,6 +28,21 @@ header {
   font-family: 'Poppins', sans-serif;
 }
 
+#langToggleBtn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #007bff;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+#langToggleBtn:hover {
+  color: #0056b3;
+}
+
 /* Header 左側：logo + 標題 + 版本 */
 #header-left {
   display: flex;

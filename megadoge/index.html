@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="google-site-verification" content="4aDKc4W10Cdjnh_ligkoGT1ie6H4MD_r0CX84OWmh2k" />
   <title>MegaDoge - Click Doge and Compete Globally!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -23,6 +22,7 @@
 
   <link rel="icon" href="image/logo.png" type="image/x-icon" />
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 <body>
 <div id="loading-screen">
@@ -35,17 +35,19 @@
     <img id="logo" src="image/logo.png" alt="Bonkdoge Logo" />
     <div id="title-version">
       <h1>MegaDoge</h1>
-      <span id="version">V 1.6</span>
+      <span id="version">V 1.7</span>
     </div>
   </div>
 
   <div id="header-right">
-    <div id="nav-buttons">
-      <button id="btn-login" aria-label="Switch to Login" style="display:none;">Login</button>
-      <button id="btn-register" aria-label="Switch to Register" style="display:none;">Register</button>
-    </div>
-    <button id="logoutBtn" style="display:none;">Logout</button>
-  </div>
+<div id="nav-buttons">
+  <button id="langToggleBtn" aria-label="Toggle Language">
+    <span class="material-symbols-outlined">translate</span>
+  </button>
+  <button id="btn-login">Login</button>
+  <button id="btn-register">Register</button>
+  <button id="logoutBtn" style="display: none">Logout</button>
+</div>
 </header>
 
 <main>

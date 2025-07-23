@@ -173,6 +173,52 @@ toggleBtn.addEventListener("click", () => {
   toggleBtn.textContent = leaderboard.classList.contains("show") ? "↓" : "↑";
 });
 
+const langToggleBtn = document.getElementById("langToggleBtn");
+
+let currentLang = "en"; // 預設語言
+
+const langMap = {
+  "Login": "登入",
+  "Register": "註冊",
+  "Logout": "登出",
+  "Don't have an account?": "沒有帳號？",
+  "Already have an account?": "已經有帳號？",
+  "Email": "電子郵件",
+  "Password": "密碼",
+  "Tap Bonk Doge to score high and climb the leaderboard!": "點擊狗狗來得分，登上排行榜！",
+  "Global Rankings": "全球排行榜",
+  "Loading MegaDoge...": "載入 MegaDoge 中...",
+  "Loading...": "載入中...",
+  "🌐 Global Rankings": "🌐 全球排行榜",
+};
+
+function toggleLanguage() {
+  currentLang = currentLang === "en" ? "zh" : "en";
+
+  // 修改文字
+  const textNodes = document.querySelectorAll("button, h1, h2, span, p, label, div, input::placeholder");
+
+  textNodes.forEach(node => {
+    if (node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE) {
+      const text = node.textContent.trim();
+      if (currentLang === "zh" && langMap[text]) {
+        node.textContent = langMap[text];
+      } else if (currentLang === "en") {
+        const entry = Object.entries(langMap).find(([en, zh]) => zh === text);
+        if (entry) node.textContent = entry[0];
+      }
+    }
+  });
+
+  // 額外處理 placeholder
+  const emailInput = document.querySelectorAll('input[type="email"]');
+  const passwordInput = document.querySelectorAll('input[type="password"]');
+  emailInput.forEach(input => input.placeholder = currentLang === "zh" ? "電子郵件" : "Email");
+  passwordInput.forEach(input => input.placeholder = currentLang === "zh" ? "密碼" : "Password");
+}
+
+langToggleBtn.addEventListener("click", toggleLanguage);
+
 // bonkdoge 點擊事件綁定
 bonkdoge.addEventListener("mousedown", pop);
 bonkdoge.addEventListener("touchstart", pop);
