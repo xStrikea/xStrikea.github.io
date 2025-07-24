@@ -190,6 +190,8 @@ const langMap = {
   "Loading MegaDoge...": "載入 MegaDoge 中...",
   "Loading...": "載入中...",
   "🌐 Global Rankings": "🌐 全球排行榜",
+  "Don't have an account?": "沒有帳戶？",
+  "Already have an account?": "擁有帳戶？",
 };
 
 function toggleLanguage() {
