@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
 
-/* Reset & base */
 html, body {
   margin: 0; padding: 0;
   height: 100%;
@@ -12,7 +11,6 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Header */
 header {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -43,7 +41,6 @@ header {
   color: #0056b3;
 }
 
-/* Header 左側：logo + 標題 + 版本 */
 #header-left {
   display: flex;
   align-items: center;
@@ -56,13 +53,11 @@ header {
   user-select: none;
 }
 
-/* 標題與版本號容器，垂直排列 */
 #title-version {
   display: flex;
   user-select: none;
 }
 
-/* 標題 */
 #title-version h1 {
   margin: 0;
   font-weight: 700;
@@ -71,7 +66,6 @@ header {
   line-height: 1.1;
 }
 
-/* 版本號文字 */
 #version {
   font-size: 0.9rem;
   color: #555;
@@ -80,7 +74,6 @@ header {
   user-select: none;
 }
 
-/* Header 右側區塊 */
 #header-right {
   display: flex;
   flex-direction: column;
@@ -92,7 +85,6 @@ header {
   user-select: none;
 }
 
-/* 導覽按鈕群組 */
 #nav-buttons {
   display: flex;
   gap: 1rem;
@@ -129,7 +121,6 @@ header {
   background: #a00;
 }
 
-/* Main content */
 main {
   height: 100%;
   padding-top: 70px;
@@ -138,11 +129,10 @@ main {
   align-items: flex-start;
 }
 
-/* 卡牌式表單 */
 .card {
   background: rgba(255,255,255,0.95);
   border-radius: 16px;
-  box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+  box-shadow: 0 32px 32px rgba(0,0,0,0.12);
   width: 350px;
   max-width: 90vw;
   padding: 2rem;
@@ -218,7 +208,6 @@ button.submit-btn:hover {
   text-align: center;
 }
 
-/* 遊戲主界面 */
 #game-container {
   display: none;
   flex-direction: column;
@@ -254,7 +243,6 @@ button.submit-btn:hover {
   transform: scale(0.95);
 }
 
-/* 底部排版 */
 #leaderbar {
   position: fixed;
   bottom: 0;
@@ -300,10 +288,9 @@ button.submit-btn:hover {
   transform: rotate(180deg);
 }
 
-/* 排行榜視窗 */
 #leaderboard {
   position: fixed;
-  bottom: 3.8rem; /* 預留leaderbar高度 + margin */
+  bottom: 3.8rem; 
   left: 0; right: 0;
   max-height: 55vh;
   overflow-y: auto;
@@ -348,7 +335,6 @@ button.submit-btn:hover {
   user-select: none;
 }
 
-/* 載入動畫畫面 */
 #loading-screen {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;

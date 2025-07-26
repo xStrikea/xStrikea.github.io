@@ -8,7 +8,6 @@ import {
   signOut,
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyBqsj5CkvEP_7MqQmYESgDnsz-VSTimhdw",
   authDomain: "xsweb-6f858.firebaseapp.com",
@@ -23,7 +22,6 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth();
 
-// DOM Elements
 const loginCard = document.getElementById("login-card");
 const registerCard = document.getElementById("register-card");
 const btnLogin = document.getElementById("btn-login");
@@ -51,14 +49,12 @@ const top3 = document.getElementById("top3");
 const closedImg = "image/doge.png";
 const openImg = "image/doge_open.png";
 
-// State
 let count = 0;
 let country = "Unknown";
 let code = "";
 let canClick = true;
 let openTimeout = null;
 
-// 載入畫面隱藏
 function hideLoading() {
   const loader = document.getElementById("loading-screen");
   if (loader) {
@@ -69,7 +65,6 @@ function hideLoading() {
   }
 }
 
-// 切換登入 / 註冊卡牌
 function showLogin() {
   loginCard.style.display = "block";
   registerCard.style.display = "none";
@@ -83,14 +78,12 @@ btnRegister.addEventListener("click", showRegister);
 toRegister.addEventListener("click", showRegister);
 toLogin.addEventListener("click", showLogin);
 
-// 顯示或隱藏導覽按鈕
 function showNavButtons(show) {
   btnLogin.style.display = show ? "inline-block" : "none";
   btnRegister.style.display = show ? "inline-block" : "none";
   logoutBtn.style.display = show ? "none" : "inline-block";
 }
 
-// 國碼轉旗幟 Emoji
 function codeToFlagEmoji(code) {
   if (!code) return "";
   return code.toUpperCase().replace(/./g, (c) =>
@@ -98,7 +91,6 @@ function codeToFlagEmoji(code) {
   );
 }
 
-// 取得使用者 IP 國家資訊
 async function fetchCountryInfo() {
   try {
     const res = await fetch("https://ipapi.co/json/");
@@ -109,7 +101,20 @@ async function fetchCountryInfo() {
   }
 }
 
-// bonkdoge 點擊計數邏輯
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+function setCookie(name, value, days = 30) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Strict`;
+}
+function getValidCountFromCookie(uid) {
+  const cookieName = `magadoge_count_${uid}`;
+  const val = parseInt(getCookie(cookieName));
+  return (typeof val === "number" && !isNaN(val) && val >= 0) ? val : 0;
+}
+
 function pop() {
   if (!canClick) return;
   canClick = false;
@@ -127,10 +132,11 @@ function pop() {
   if (auth.currentUser) {
     update(ref(db, "scores/" + auth.currentUser.uid), {
       score: count,
-      country: country,
-      code: code,
+      country,
+      code,
       timestamp: Date.now(),
     });
+    setCookie(`magadoge_count_${auth.currentUser.uid}`, count);
   }
 
   setTimeout(() => {
@@ -138,7 +144,6 @@ function pop() {
   }, 100);
 }
 
-// 更新排行榜資料
 function updateLeaderboard() {
   const topRef = ref(db, "scores");
   onValue(topRef, (snapshot) => {
@@ -153,10 +158,9 @@ function updateLeaderboard() {
     });
 
     const sorted = Object.values(countryScores).sort((a, b) => b.score - a.score);
-    // 顯示前三名
     top1.textContent = codeToFlagEmoji(sorted[0]?.code) + " " + (sorted[0]?.code || "🥇1st");
-    top2.textContent = codeToFlagEmoji(sorted[1]?.code) + " " + (sorted[1]?.code || "🥈2nd");
-    top3.textContent = codeToFlagEmoji(sorted[2]?.code) + " " + (sorted[2]?.code || "🥉3rd");
+    top2.textContent = codeToFlagEmoji(sorted[1]?.code) + " " + (sorted[1]?.code || "🥇2nd");
+    top3.textContent = codeToFlagEmoji(sorted[2]?.code) + " " + (sorted[2]?.code || "🥇3rd");
 
     leaderboardList.innerHTML = sorted
       .map(
@@ -167,7 +171,6 @@ function updateLeaderboard() {
   });
 }
 
-// 排行榜切換按鈕
 toggleBtn.addEventListener("click", () => {
   leaderboard.classList.toggle("show");
   toggleBtn.textContent = leaderboard.classList.contains("show") ? "↓" : "↑";
@@ -175,7 +178,7 @@ toggleBtn.addEventListener("click", () => {
 
 const langToggleBtn = document.getElementById("langToggleBtn");
 
-let currentLang = "en"; // 預設語言
+let currentLang = "en";
 
 const langMap = {
   "Login": "登入",
@@ -196,10 +199,7 @@ const langMap = {
 
 function toggleLanguage() {
   currentLang = currentLang === "en" ? "zh" : "en";
-
-  // 修改文字
   const textNodes = document.querySelectorAll("button, h1, h2, span, p, label, div, input::placeholder");
-
   textNodes.forEach(node => {
     if (node.childNodes.length === 1 && node.childNodes[0].nodeType === Node.TEXT_NODE) {
       const text = node.textContent.trim();
@@ -211,8 +211,6 @@ function toggleLanguage() {
       }
     }
   });
-
-  // 額外處理 placeholder
   const emailInput = document.querySelectorAll('input[type="email"]');
   const passwordInput = document.querySelectorAll('input[type="password"]');
   emailInput.forEach(input => input.placeholder = currentLang === "zh" ? "電子郵件" : "Email");
@@ -221,55 +219,53 @@ function toggleLanguage() {
 
 langToggleBtn.addEventListener("click", toggleLanguage);
 
-// bonkdoge 點擊事件綁定
 bonkdoge.addEventListener("mousedown", pop);
 bonkdoge.addEventListener("touchstart", pop);
 
-// 監聽 Firebase Auth 狀態
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // 使用者已登入，隱藏登入註冊卡牌，顯示遊戲主畫面
     loginCard.style.display = "none";
     registerCard.style.display = "none";
     gameContainer.style.display = "flex";
     showNavButtons(false);
-
-    // 取得使用者國家資訊
     const info = await fetchCountryInfo();
     country = info.country;
     code = info.code;
 
-    // 讀取用戶分數
-    const userRef = ref(db, "scores/" + user.uid);
-    const snapshot = await get(userRef);
-    if (snapshot.exists()) {
-      count = snapshot.val().score || 0;
-      counter.textContent = count;
+    const cookieName = `magadoge_count_${user.uid}`;
+    count = getValidCountFromCookie(user.uid);
+
+    if (count === 0) {
+      const userRef = ref(db, "scores/" + user.uid);
+      const snapshot = await get(userRef);
+      if (snapshot.exists()) {
+        count = snapshot.val().score || 0;
+      }
+      setCookie(cookieName, count);
     } else {
-      await update(userRef, { score: 0, country, code, timestamp: Date.now() });
-      count = 0;
-      counter.textContent = count;
+      const userRef = ref(db, "scores/" + user.uid);
+      await update(userRef, {
+        score: count,
+        country,
+        code,
+        timestamp: Date.now(),
+      });
     }
+    counter.textContent = count;
+
     updateLeaderboard();
-
-    // 載入完成後隱藏載入畫面
     hideLoading();
-
   } else {
-    // 登出狀態，顯示登入卡牌，隱藏遊戲主畫面
     gameContainer.style.display = "none";
     loginCard.style.display = "block";
     registerCard.style.display = "none";
     showNavButtons(true);
     count = 0;
     counter.textContent = count;
-
-    // 載入完成後隱藏載入畫面
     hideLoading();
   }
 });
 
-// 登入表單提交
 loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   loginError.textContent = "";
@@ -282,7 +278,6 @@ loginForm.addEventListener("submit", async (e) => {
   }
 });
 
-// 註冊表單提交
 registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   registerError.textContent = "";
@@ -295,7 +290,6 @@ registerForm.addEventListener("submit", async (e) => {
   }
 });
 
-// 登出按鈕事件
 logoutBtn.addEventListener("click", () => {
   signOut(auth);
 });
