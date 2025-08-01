@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>RingX — Free Scripts</title>
+  <meta name="description" content="RingX: Simple, modern, physics-driven ring effect GUI. High-performance ring attack controller for Roblox." />
+  <meta name="theme-color" content="#0f111a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="image/logo.svg" type="image/x-icon" />
+  <style>
+    :root {
+      --bg:#0f111a;
+      --card:#1e2236;
+      --text:#e5e7ff;
+      --muted:#8a8fbf;
+      --radius:16px;
+      --shadow:0 24px 48px -4px rgba(0,0,0,.55);
+      --accent:#ff4f4f;
+      --transition:.3s cubic-bezier(.4,.2,.2,1);
+      font-family: 'Inter', system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    *{box-sizing:border-box;}
+    html, body{margin:0;background:var(--bg);color:var(--text);line-height:1.5;min-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+    .container{max-width:1100px;margin:0 auto;padding:2rem 1rem;display:flex;flex-direction:column;gap:2rem;transition:transform .25s ease;position:relative;}
+    .hero{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;}
+    .badge{display:inline-block;padding:.35em .9em;background:rgba(255,79,79,.1);color:var(--accent);border-radius:999px;font-size:.65rem;letter-spacing:.05em;text-transform:uppercase;font-weight:600;}
+    h1{margin:0;font-size:2.75rem;font-weight:600;line-height:1.1;}
+    h2{margin:0;font-size:1.75rem;font-weight:600;margin-top:1rem;}
+    p{margin:0 0 1rem;font-size:1rem;}
+    .highlight{position:relative;display:inline-block;}
+    .highlight:after{content:'';position:absolute;left:0;bottom:4px;width:100%;height:6px;background:linear-gradient(120deg,var(--accent),#ff7f7f);border-radius:3px;mix-blend-mode:overlay;}
+    .buttons{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem;}
+    .btn{padding:.8em 1em;border:none;cursor:pointer;border-radius:12px;font-weight:600;display:inline-flex;align-items:center;gap:.4rem;transition:var(--transition);text-decoration:none;background:transparent;color:inherit;position:relative;}
+    .btn:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+    .btn-primary{background:var(--accent);color:#fff;}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;}
+    .card{background:var(--card);border-radius:var(--radius);padding:1.5rem;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+    .card h3{margin-top:0;font-size:1.25rem;}
+    .code{background:rgba(255,255,255,.05);padding:1rem;border-radius:8px;overflow:auto;font-family:ui-monospace,monospace;font-size:.9rem;white-space: pre;word-break: break-all;}
+    .shadow-accent{box-shadow:0 16px 32px -2px rgba(255,79,79,.35);}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+    .footer{margin-top:auto;padding:2rem 1rem;font-size:.8rem;text-align:center;color:var(--muted);}
+    .pill{background:rgba(255,255,255,.07);padding:5px 10px;border-radius:999px;font-size:.6rem;display:inline-block;}
+    .muted{color:var(--muted);}
+    .copy-wrapper{position:relative;max-width:100%;}
+    .copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.08);border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.65rem;backdrop-filter:blur(6px);color:var(--text);}
+    .tagline-img{height:32px; display:block; margin-bottom:4px;}
+    .hl-keyword { color: #ff9f43; font-weight:600; }
+    .hl-string { color: #7bed9f; }
+    .hl-comment { color: #576574; font-style:italic; }
+    pre{margin:0;font-family:ui-monospace,monospace;font-size:.9rem;}
+   #zoom-controls {
+  display: none !important;
+}
+    @media (max-width: 1200px){
+      .hero{grid-template-columns:1fr;}
+    }
+    @media (max-width: 880px){
+      h1{font-size:2.2rem;}
+      .buttons{flex-direction:column;}
+      .btn{width:100%;justify-content:center;}
+      /* 手機停用 scale（避免裁切） */
+      .container { transform: none !important; }
+      /* Zoom 控制變小不擋 */
+      #zoom-controls { top:8px; bottom:auto; right:8px; font-size:.7rem; padding:6px; gap:4px; }
+      #zoom-controls button { padding:4px 8px; }
+    }
+    @media (max-width: 500px){
+      h1{font-size:1.9rem;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="hero">
+      <div>
+        <div>
+          <img src="image/logo.svg" alt="RingX logo" class="tagline-img">
+          <h1>Modern, black <span class="highlight">Ring attacker</span> Script</h1>
+        </div>
+        <p>RingX is a lightweight and efficient Roblox ring physics controller. It combines a draggable GUI, radius/strength adjustment, persistent object retention, and snap field logic, enabling players to attack others using dynamic rings.</p>
+        <div class="buttons">
+          <a class="btn btn-primary" href="#download">Execute</a>
+          <a class="btn btn-primary" href="#GitHub">GitHub</a>
+        </div>
+      </div>
+      <div aria-label="Diagram" style="position:relative;min-height:220px;">
+        <div class="card shadow-accent" style="padding:1rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <div style="width:12px;height:12px;border-radius:50%;background:#ff4f4f;"></div>
+              <div style="font-size:.9rem;">RingX GUI diagram</div>
+            </div>
+            <div style="font-size:.7rem;">v2</div>
+          </div>
+          <div style="height:300px;display:flex;align-items:center;justify-content:center;border:1px dashed rgba(255,255,255,.2);border-radius:8px;overflow:hidden;">
+            <img src="image/gui.svg" alt="RingX GUI preview" style="max-width:100%;max-height:100%;object-fit:contain;">
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section id="features">
+      <div class="cards">
+        <div class="card">
+          <h3>Draggable GUI</h3>
+          <p>Floating control panel that you can drag without interrupting gameplay. Supports minimize, expand, and close.</p>
+        </div>
+        <div class="card">
+          <h3>Ring Radius</h3>
+          <p>Adjust ring size in real time to choose the optimal attack range.</p>
+        </div>
+        <div class="card">
+          <h3>Security</h3>
+          <p>Obfuscated code reduces risk of unauthorized modifications.</p>
+        </div>
+        <div class="card">
+          <h3>Sound</h3>
+          <p>Feedback includes sound effects for a more tactile feel.</p>
+        </div>
+      </div>
+    </section>
+
+    <div>
+      <h2 id="download">Execute</h2>
+      <p>Paste the script below into your executor.</p>
+      <div class="copy-wrapper">
+        <button class="copy-btn" aria-label="Copy script" data-default="Copy">Copy</button>
+        <div class="code" aria-live="polite">
+          <pre><code id="lua-code" class="language-lua">loadstring(game:HttpGet('https://raw.githubusercontent.com/xStrikea/RingX/refs/heads/main/deta/V2/RingX.lua'))()</code></pre>
+        </div>
+      </div>
+      <p class="muted">* Loading may be slow.</p>
+    </div>
+    
+      <div>
+      <h2 id="GitHub">GitHub</h2>
+      <p>Where to store future update scripts.</p>
+       <div class="buttons">
+          <a class="btn btn-primary" href="https://github.com/xStrikea/RingX">Storage</a>
+      <p class="muted">* The only trusted repository.</p>
+     </div>
+     </div>
+
+    <section id="more">
+      <div class="cards">
+        <div class="card">
+          <h3>Theme Style</h3>
+          <p>Dark tones, modern typography, and clean layout define a cohesive visual experience.</p>
+        </div>
+        <div class="card">
+          <h3>Practicality</h3>
+          <p>Handle annoying or trolling players effectively.</p>
+        </div>
+        <div class="card">
+          <h3>Minimal Script</h3>
+          <p>Fetches functionality via HttpGet with a short bootstrap.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
+        <div class="pill">RingX</div>
+        <div class="pill">Modern GUI</div>
+        <div class="pill">Black-themed</div>
+        <div class="pill">Lightweight</div>
+      </div>
+      <p>Attack, prank—for you to choose.</p>
+      <p style="margin-top:8px;">If you encounter bugs or have questions, reply to my email.</p>
+      <div style="margin-top:4px;font-size:.65rem;">xTitanium studio</div>
+    </footer>
+  </div>
+
+<script>
+  // Simple Lua syntax highlighting (keywords, strings, comments)
+  function highlightLua(code) {
+    const keywords = ['and','break','do','else','elseif','end','false','for','function','if','in','local','nil','not','or','repeat','return','then','true','until','while'];
+    let escaped = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    escaped = escaped.replace(/('.*?'|".*?")/g, '<span class="hl-string">$1</span>'); // strings
+    escaped = escaped.replace(/--.*$/gm, '<span class="hl-comment">$&</span>'); // comments
+    const kwPattern = new RegExp('\\b(' + keywords.join('|') + ')\\b', 'g');
+    escaped = escaped.replace(kwPattern, '<span class="hl-keyword">$1</span>'); // keywords
+    return escaped;
+  }
+
+  // Apply highlighting to the code block
+  const codeEl = document.getElementById('lua-code');
+  const raw = codeEl.textContent;
+  codeEl.innerHTML = highlightLua(raw);
+
+  // Copy button logic with fallback
+  document.querySelectorAll('.copy-wrapper').forEach(wrapper => {
+    const btn = wrapper.querySelector('.copy-btn');
+    const defaultText = btn.getAttribute('data-default') || 'Copy';
+    const successText = 'Copied';
+    btn.textContent = defaultText;
+
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(raw);
+        btn.textContent = successText;
+      } catch (e) {
+        const textarea = document.createElement('textarea');
+        textarea.value = raw;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        btn.textContent = successText;
+      }
+      setTimeout(() => {
+        btn.textContent = defaultText;
+      }, 1200);
+    });
+  });
+
+  // Auto-fit scaling: shrink to fit viewport (no upscale), disabled on small screens
+  (function(){
+    const container = document.querySelector('.container');
+    let manualOverride = false;
+    let currentScale = 1;
+    const MIN = 0.5;
+    const MAX = 2;
+    const AUTO_MIN = 0.6;
+
+    function applyScale(s) {
+      currentScale = Math.min(MAX, Math.max(MIN, s));
+      container.style.transformOrigin = 'top center';
+      container.style.transform = `scale(${currentScale})`;
+    }
+
+    function autoFit() {
+      if (manualOverride) return;
+      const vw = window.innerWidth;
+      if (vw <= 880) { // small screen: disable auto scale
+        applyScale(1);
+        return;
+      }
+      const vh = window.innerHeight;
+      const rect = container.getBoundingClientRect();
+      const cw = rect.width;
+      const ch = rect.height;
+      let scaleW = vw / cw;
+      let scaleH = vh / ch;
+      let scale = Math.min(scaleW, scaleH);
+      if (scale > 1) scale = 1; // no upscaling
+      if (scale < AUTO_MIN) scale = AUTO_MIN;
+      applyScale(scale);
+    }
+
+    window.addEventListener('load', autoFit);
+    window.addEventListener('resize', autoFit);
+  })();
+</script>
+</body>
+</html>
