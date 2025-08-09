@@ -23,62 +23,252 @@
       font-family: 'Inter', system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
     }
     *{box-sizing:border-box;}
-    html, body{margin:0;background:var(--bg);color:var(--text);line-height:1.5;min-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-    .container{max-width:1100px;margin:0 auto;padding:2rem 1rem;display:flex;flex-direction:column;gap:2rem;transition:transform .25s ease;position:relative;}
-    .hero{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;}
-    .badge{display:inline-block;padding:.35em .9em;background:rgba(255,79,79,.1);color:var(--accent);border-radius:999px;font-size:.65rem;letter-spacing:.05em;text-transform:uppercase;font-weight:600;}
-    h1{margin:0;font-size:2.75rem;font-weight:600;line-height:1.1;}
-    h2{margin:0;font-size:1.75rem;font-weight:600;margin-top:1rem;}
-    p{margin:0 0 1rem;font-size:1rem;}
-    .highlight{position:relative;display:inline-block;}
-    .highlight:after{content:'';position:absolute;left:0;bottom:4px;width:100%;height:6px;background:linear-gradient(120deg,var(--accent),#ff7f7f);border-radius:3px;mix-blend-mode:overlay;}
-    .buttons{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem;}
-    .btn{padding:.8em 1em;border:none;cursor:pointer;border-radius:12px;font-weight:600;display:inline-flex;align-items:center;gap:.4rem;transition:var(--transition);text-decoration:none;background:transparent;color:inherit;position:relative;}
-    .btn:focus-visible{outline:2px solid #fff;outline-offset:2px;}
-    .btn-primary{background:var(--accent);color:#fff;}
-    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;}
-    .card{background:var(--card);border-radius:var(--radius);padding:1.5rem;position:relative;overflow:hidden;box-shadow:var(--shadow);}
-    .card h3{margin-top:0;font-size:1.25rem;}
-    .code{background:rgba(255,255,255,.05);padding:1rem;border-radius:8px;overflow:auto;font-family:ui-monospace,monospace;font-size:.9rem;white-space: pre;word-break: break-all;}
-    .shadow-accent{box-shadow:0 16px 32px -2px rgba(255,79,79,.35);}
-    .split{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
-    .footer{margin-top:auto;padding:2rem 1rem;font-size:.8rem;text-align:center;color:var(--muted);}
-    .pill{background:rgba(255,255,255,.07);padding:5px 10px;border-radius:999px;font-size:.6rem;display:inline-block;}
-    .muted{color:var(--muted);}
-    .copy-wrapper{position:relative;max-width:100%;}
-    .copy-btn{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.08);border:none;padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.65rem;backdrop-filter:blur(6px);color:var(--text);}
-    .tagline-img{height:32px; display:block; margin-bottom:4px;}
-    .hl-keyword { color: #ff9f43; font-weight:600; }
-    .hl-string { color: #7bed9f; }
-    .hl-comment { color: #576574; font-style:italic; }
-    pre{margin:0;font-family:ui-monospace,monospace;font-size:.9rem;}
-   #zoom-controls {
-  display: none !important;
-}
-    @media (max-width: 1200px){
-      .hero{grid-template-columns:1fr;}
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: url('image/background.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text);
+      line-height: 1.5;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
     }
-    @media (max-width: 880px){
-      h1{font-size:2.2rem;}
-      .buttons{flex-direction:column;}
-      .btn{width:100%;justify-content:center;}
+    .background-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(15, 17, 26, 0.75);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      transition: transform .25s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .badge {
+      display: inline-block;
+      padding: .35em .9em;
+      background: rgba(255,79,79,.1);
+      color: var(--accent);
+      border-radius: 999px;
+      font-size: .65rem;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.75rem;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+    h2 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+    p {
+      margin: 0 0 1rem;
+      font-size: 1rem;
+    }
+    .highlight {
+      position: relative;
+      display: inline-block;
+    }
+    .highlight:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 4px;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(120deg, var(--accent), #ff7f7f);
+      border-radius: 3px;
+      mix-blend-mode: overlay;
+    }
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: .5rem;
+    }
+    .btn {
+      padding: .8em 1em;
+      border: none;
+      cursor: pointer;
+      border-radius: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      transition: var(--transition);
+      text-decoration: none;
+      background: transparent;
+      color: inherit;
+      position: relative;
+    }
+    .btn:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.25rem;
+    }
+    .code {
+      background: rgba(255,255,255,.05);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow: auto;
+      font-family: ui-monospace, monospace;
+      font-size: .9rem;
+      white-space: pre;
+      word-break: break-all;
+    }
+    .shadow-accent {
+      box-shadow: 0 16px 32px -2px rgba(255,79,79,.35);
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .footer {
+      margin-top: auto;
+      padding: 2rem 1rem;
+      font-size: .8rem;
+      text-align: center;
+      color: var(--muted);
+    }
+    .pill {
+      background: rgba(255,255,255,.07);
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: .6rem;
+      display: inline-block;
+    }
+    .muted {
+      color: var(--muted);
+    }
+    .copy-wrapper {
+      position: relative;
+      max-width: 100%;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255,255,255,.08);
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: .65rem;
+      backdrop-filter: blur(6px);
+      color: var(--text);
+    }
+    .tagline-img {
+      height: 32px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .hl-keyword {
+      color: #ff9f43;
+      font-weight: 600;
+    }
+    .hl-string {
+      color: #7bed9f;
+    }
+    .hl-comment {
+      color: #576574;
+      font-style: italic;
+    }
+    pre {
+      margin: 0;
+      font-family: ui-monospace, monospace;
+      font-size: .9rem;
+    }
+    #zoom-controls {
+      display: none !important;
+    }
+    @media (max-width: 1200px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 880px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+      .buttons {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
       /* 手機停用 scale（避免裁切） */
-      .container { transform: none !important; }
+      .container {
+        transform: none !important;
+      }
       /* Zoom 控制變小不擋 */
-      #zoom-controls { top:8px; bottom:auto; right:8px; font-size:.7rem; padding:6px; gap:4px; }
-      #zoom-controls button { padding:4px 8px; }
+      #zoom-controls {
+        top: 8px;
+        bottom: auto;
+        right: 8px;
+        font-size: .7rem;
+        padding: 6px;
+        gap: 4px;
+      }
+      #zoom-controls button {
+        padding: 4px 8px;
+      }
     }
-    @media (max-width: 500px){
-      h1{font-size:1.9rem;}
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 1.9rem;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="background-overlay"></div>
   <div class="container">
     <header class="hero">
       <div>
         <div>
-          <img src="image/logo.svg" alt="RingX logo" class="tagline-img">
+          <img src="image/logo.svg" alt="RingX logo" class="tagline-img" />
           <h1>Modern, black <span class="highlight">Ring attacker</span> Script</h1>
         </div>
         <p>RingX is a lightweight and efficient Roblox ring physics controller. It combines a draggable GUI, radius/strength adjustment, persistent object retention, and snap field logic, enabling players to attack others using dynamic rings.</p>
@@ -97,7 +287,7 @@
             <div style="font-size:.7rem;">v2</div>
           </div>
           <div style="height:300px;display:flex;align-items:center;justify-content:center;border:1px dashed rgba(255,255,255,.2);border-radius:8px;overflow:hidden;">
-            <img src="image/gui.svg" alt="RingX GUI preview" style="max-width:100%;max-height:100%;object-fit:contain;">
+            <img src="image/gui.svg" alt="RingX GUI preview" style="max-width:100%;max-height:100%;object-fit:contain;" />
           </div>
         </div>
       </div>
@@ -136,14 +326,14 @@
       <p class="muted">* Loading may be slow.</p>
     </div>
     
-      <div>
+    <div>
       <h2 id="GitHub">GitHub</h2>
       <p>Where to store future update scripts.</p>
-       <div class="buttons">
-          <a class="btn btn-primary" href="https://github.com/xStrikea/RingX">Storage</a>
-      <p class="muted">* The only trusted repository.</p>
-     </div>
-     </div>
+      <div class="buttons">
+        <a class="btn btn-primary" href="https://github.com/xStrikea/RingX">Storage</a>
+        <p class="muted">* The only trusted repository.</p>
+      </div>
+    </div>
 
     <section id="more">
       <div class="cards">
