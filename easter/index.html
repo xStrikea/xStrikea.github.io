@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" href="image/logo.png" type="image/x-icon" />
+  <title>Easter eggs</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #000;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      user-select: none;
+    }
+    #logo {
+      width: min(40vmin, 320px);
+      height: auto;
+      cursor: pointer;
+    }
+    #logo.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .swarm {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .hint {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      font: 12px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+      color: #aaa;
+      opacity: 0.8;
+      pointer-events: none;
+      text-align: center;
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      backdrop-filter: blur(2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <img id="logo" src="image/logo.png" alt="Logo" draggable="false" />
+    <div class="swarm" id="swarm" aria-hidden="true"></div>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script>
+    (function () {
+      const logo = document.getElementById('logo');
+      const swarm = document.getElementById('swarm');
+      const hint  = document.getElementById('hint');
+      let clicks = 0;
+      let triggered = false;
+      const MAX_CLICKS = 10;
+      const FLOATER_COUNT = 80;
+      const rand = (min, max) => Math.random() * (max - min) + min;
+      const randInt = (min, max) => Math.floor(rand(min, max + 1));
+
+      function onLogoClick() {
+        clicks++;
+        gsap.fromTo(logo, { scale: 1 }, { scale: 0.95, duration: 0.15, yoyo: true, repeat: 1 });
+        if (!triggered && clicks >= MAX_CLICKS) {
+          triggered = true;
+          triggerEffect();
+        } else {
+          if (!triggered && hint) {
+            const remain = Math.max(MAX_CLICKS - clicks, 0);
+            hint.textContent = remain > 0 ? `` : ``;
+          }
+        }
+      }
+
+      function createFloater(xPct, yPct) {
+        const img = document.createElement('img');
+        img.src = 'image/logo.png';
+        img.alt = '';
+        img.className = 'floater';
+        img.style.position = 'absolute';
+        img.style.width = randInt(20, 64) + 'px';
+        img.style.left = (typeof xPct === 'number' ? xPct : rand(5, 95)) + '%';
+        img.style.top = (typeof yPct === 'number' ? yPct : rand(5, 95)) + '%';
+        img.style.opacity = 0;
+        swarm.appendChild(img);
+
+        gsap.to(img, {
+          opacity: 1,
+          duration: 0.6,
+          onComplete: () => {
+            gsap.to(img, {
+              x: rand(-300, 300),
+              y: rand(-300, 300),
+              rotation: rand(-360, 360),
+              duration: rand(5, 10),
+              repeat: -1,
+              yoyo: true,
+              ease: "sine.inOut"
+            });
+          }
+        });
+        return img;
+      }
+
+      function triggerEffect() {
+        gsap.to(logo, { opacity: 0, scale: 0, duration: 1, ease: "power2.inOut" });
+        if (hint) {
+          hint.textContent = ':)';
+          setTimeout(() => hint.remove(), 2000);
+        }
+        const rect = logo.getBoundingClientRect();
+        const stageRect = document.getElementById('stage').getBoundingClientRect();
+        const centerX = ((rect.left + rect.width / 2) - stageRect.left) / stageRect.width * 100;
+        const centerY = ((rect.top + rect.height / 2) - stageRect.top) / stageRect.height * 100;
+        for (let i = 0; i < Math.min(20, FLOATER_COUNT); i++) {
+          createFloater(centerX + rand(-5, 5), centerY + rand(-5, 5));
+        }
+        for (let i = 20; i < FLOATER_COUNT; i++) {
+          createFloater();
+        }
+        const refill = setInterval(() => {
+          if (document.hidden) return;
+          for (let i = 0; i < 8; i++) createFloater();
+          const maxNodes = 300;
+          while (swarm.childElementCount > maxNodes) {
+            swarm.firstElementChild?.remove();
+          }
+        }, 1500);
+        setTimeout(() => clearInterval(refill), 5 * 60 * 1000);
+
+        startCollisionCheck();
+      }
+
+      function startCollisionCheck() {
+        const threshold = 40;
+        function check() {
+          const nodes = Array.from(swarm.children);
+          for (let i = 0; i < nodes.length; i++) {
+            const a = nodes[i].getBoundingClientRect();
+            for (let j = i + 1; j < nodes.length; j++) {
+              const b = nodes[j].getBoundingClientRect();
+              const dx = (a.left + a.width/2) - (b.left + b.width/2);
+              const dy = (a.top + a.height/2) - (b.top + b.height/2);
+              const dist = Math.sqrt(dx*dx + dy*dy);
+              if (dist < threshold) {
+                let target = nodes[j];
+                if (target && !target.dataset.removing) {
+                  target.dataset.removing = "true";
+                  gsap.to(target, {
+                    opacity: 0,
+                    scale: 0,
+                    duration: 0.5,
+                    onComplete: () => target.remove()
+                  });
+                }
+              }
+            }
+          }
+          requestAnimationFrame(check);
+        }
+        requestAnimationFrame(check);
+      }
+
+      logo.addEventListener('click', onLogoClick, { passive: true });
+      logo.addEventListener('touchend', onLogoClick, { passive: true });
+      logo.addEventListener('dragstart', e => e.preventDefault());
+    })();
+  </script>
+</body>
+</html>
