@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RingX V4 </title>
+<style>
+body {
+  margin:0;
+  background-color:#fff;
+  font-family: 'Arial', sans-serif;
+  user-select: none;
+  overflow:hidden;
+}
+
+#mainFrame {
+  width:260px;
+  height:220px;
+  background-color: rgb(15,15,15);
+  border-radius:20px;
+  position:absolute;
+  left: calc(50% - 130px);
+  top: calc(50% - 110px);
+  transition: height 0.3s;
+  overflow:hidden;
+  box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+#titleBar {
+  width:100%;
+  height:45px;
+  background-color: rgb(25,25,25);
+  color: rgb(240,240,240);
+  font-size:20px;
+  line-height:45px;
+  text-align:center;
+  border-top-left-radius:20px;
+  border-top-right-radius:20px;
+  position:relative;
+  font-weight:500;
+  cursor:move;
+}
+
+#minimizeBtn {
+  position:absolute;
+  top:7px;
+  right:10px;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  border:none;
+  background-color: rgb(45,45,45);
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.btn {
+  background-color: rgb(45,45,45);
+  color: rgb(240,240,240);
+  border:none;
+  border-radius:50px; /* 膠囊圓角 */
+  cursor:pointer;
+  font-size:18px;
+}
+
+#toggleBtn {
+  width:85%;
+  height:40px;
+  margin:15px auto;
+  display:block;
+  border-radius:50px;
+}
+
+#controls {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 10%;
+  height:40px;
+  flex-shrink:0;
+}
+
+#radiusDisplay {
+  width:60%;
+  height:40px;
+  background-color: rgb(30,30,30);
+  color: rgb(220,220,220);
+  border-radius:50px;
+  text-align:center;
+  line-height:40px;
+  font-size:18px;
+  flex-shrink:0;
+}
+
+#watermark {
+  position:absolute;
+  bottom:6px;
+  width:100%;
+  text-align:center;
+  font-size:14px;
+  color: rgb(180,180,180);
+}
+</style>
+</head>
+<body>
+
+<div id="mainFrame">
+  <div id="titleBar">RingX V4
+    <button id="minimizeBtn">-</button>
+  </div>
+  <button id="toggleBtn" class="btn">RingX Off</button>
+  <div id="controls">
+    <button id="decreaseBtn" class="btn">&lt;</button>
+    <div id="radiusDisplay">Radius: 50</div>
+    <button id="increaseBtn" class="btn">&gt;</button>
+  </div>
+  <div id="watermark">RingX V4 by xSpecter</div>
+</div>
+
+<script>
+const mainFrame = document.getElementById('mainFrame');
+const toggleBtn = document.getElementById('toggleBtn');
+const decreaseBtn = document.getElementById('decreaseBtn');
+const increaseBtn = document.getElementById('increaseBtn');
+const radiusDisplay = document.getElementById('radiusDisplay');
+const watermark = document.getElementById('watermark');
+const minimizeBtn = document.getElementById('minimizeBtn');
+
+let radius = 50;
+let ringOn = false;
+let minimized = false;
+
+toggleBtn.addEventListener('click', () => {
+  ringOn = !ringOn;
+  toggleBtn.textContent = ringOn ? 'RingX On' : 'RingX Off';
+  toggleBtn.style.backgroundColor = ringOn ? 'rgb(50,205,50)' : 'rgb(45,45,45)';
+});
+
+decreaseBtn.addEventListener('click', () => {
+  radius = Math.max(1, radius-2);
+  radiusDisplay.textContent = `Radius: ${radius}`;
+});
+
+increaseBtn.addEventListener('click', () => {
+  radius = Math.min(1000, radius+2);
+  radiusDisplay.textContent = `Radius: ${radius}`;
+});
+
+minimizeBtn.addEventListener('click', () => {
+  minimized = !minimized;
+  if(minimized){
+    toggleBtn.style.display = 'none';
+    document.getElementById('controls').style.display = 'none';
+    watermark.style.display = 'none';
+    mainFrame.style.height = '45px';
+    minimizeBtn.textContent = '+';
+  } else {
+    toggleBtn.style.display = 'block';
+    document.getElementById('controls').style.display = 'flex';
+    watermark.style.display = 'block';
+    mainFrame.style.height = '220px';
+    minimizeBtn.textContent = '-';
+  }
+});
+
+let dragging = false;
+let offsetX, offsetY;
+
+document.getElementById('titleBar').addEventListener('mousedown', (e) => {
+  dragging = true;
+  offsetX = e.clientX - mainFrame.offsetLeft;
+  offsetY = e.clientY - mainFrame.offsetTop;
+});
+
+document.addEventListener('mouseup', () => dragging = false);
+document.addEventListener('mousemove', (e) => {
+  if(dragging){
+    mainFrame.style.left = `${e.clientX - offsetX}px`;
+    mainFrame.style.top = `${e.clientY - offsetY}px`;
+  }
+});
+</script>
+
+</body>
+</html>

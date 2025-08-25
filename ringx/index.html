@@ -81,32 +81,22 @@
     pre { margin:0; font-family:ui-monospace, monospace; font-size:.9rem; }
     #zoom-controls { display:none !important; }
 
-    /* News Card */
-    .news-card {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 260px;
-      z-index: 999;
-      padding: 1rem;
-      border-radius: var(--radius);
-      background: var(--card);
-      box-shadow: var(--shadow);
-      animation: fadeIn 0.4s ease;
+    /* GUI preview container */
+    #gui-preview-container {
+      height: 300px;
+      border:1px dashed rgba(255,255,255,.2);
+      border-radius:8px;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
-    .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: .5rem;
+    #gui-preview-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
     }
-    .news-header h3 { margin:0; font-size:1.1rem; }
-    .close-btn {
-      background: none; border: none; font-size:1.2rem; color: var(--text);
-      cursor: pointer; transition: color .2s;
-    }
-    .close-btn:hover { color: var(--accent); }
-    @keyframes fadeIn { from {opacity:0; transform: translateY(-10px);} to {opacity:1; transform: translateY(0);} }
 
     @media (max-width: 1200px) { .hero { grid-template-columns:1fr; } }
     @media (max-width: 880px) {
@@ -143,12 +133,12 @@
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div style="display:flex;gap:8px;align-items:center;">
               <div style="width:12px;height:12px;border-radius:50%;background:#ff4f4f;"></div>
-              <div style="font-size:.9rem;">RingX GUI diagram</div>
+              <div style="font-size:.9rem;">RingX GUI diagram (perhaps）</div>
             </div>
-            <div style="font-size:.7rem;">v2</div>
+            <div style="font-size:.7rem;">v4</div>
           </div>
-          <div style="height:300px;display:flex;align-items:center;justify-content:center;border:1px dashed rgba(255,255,255,.2);border-radius:8px;overflow:hidden;">
-            <img src="image/gui.svg" alt="RingX GUI preview" style="max-width:100%;max-height:100%;object-fit:contain;" />
+          <div id="gui-preview-container">
+            <iframe id="gui-preview-iframe" src="image/index.html"></iframe>
           </div>
         </div>
       </div>
@@ -264,13 +254,6 @@
     window.addEventListener('load', autoFit);
     window.addEventListener('resize', autoFit);
   })();
-
-  // News card: close & play audio
-  const newsCard = document.getElementById('news-card');
-  newsCard.querySelector('.close-btn').addEventListener('click', ()=>{ newsCard.style.display='none'; });
-  document.getElementById('play-btn').addEventListener('click', ()=>{
-    document.getElementById('news-audio').play();
-  });
 </script>
 </body>
 </html>
