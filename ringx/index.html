@@ -3,13 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>RingX — Free Scripts</title>
-  <meta name="description" content="RingX: Simple, modern, physics-driven ring effect GUI. High-performance ring attack controller for Roblox." />
+  <title>RingX — Free Roblox Scripts & GUI Tools</title>
+  <meta name="description" content="Download RingX — a simple, modern, physics-driven ring effect GUI script for Roblox. Free Roblox GUI, scripts, and tools for developers." />
+  <meta name="keywords" content="Roblox script, Roblox GUI, free Roblox scripts, RingX, Roblox tools, Lua script, Roblox exploit GUI, Super Ring, superring, RingX, ringx" />
+  <meta name="xRavex" content="xRavex Studio" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="RingX — Free Roblox Scripts & GUI Tools" />
+  <meta property="og:description" content="RingX: A free, physics-based GUI script for Roblox. Modern, fast, and easy-to-use." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://xStrikea.github.io/ringx/" />
+  <meta property="og:image" content="https://xStrikea.github.io/ringx/image/logo.zvg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="RingX — Free Roblox Scripts" />
+  <meta name="twitter:description" content="Modern GUI for Roblox with physics-driven ring effects." />
+  <meta name="twitter:image" content="https://xStrikea.github.io/ringx/image/logo.zvg" />
   <meta name="theme-color" content="#0f111a" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
   <link rel="icon" href="image/logo.svg" type="image/x-icon" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "RingX",
+    "operatingSystem": "Windows, macOS",
+    "applicationCategory": "GameApplication",
+    "description": "RingX is a free Roblox GUI script providing physics-driven ring effects.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+</head>
   <style>
     :root {
       --bg:#0f111a;
@@ -114,7 +143,6 @@
   <div class="background-overlay"></div>
   <div class="container">
 
-    <!-- Hero Section -->
     <header class="hero">
       <div>
         <div>
@@ -144,7 +172,6 @@
       </div>
     </header>
 
-    <!-- Features Section -->
     <section id="features">
       <div class="cards">
         <div class="card"><h3>Draggable GUI</h3><p>Floating control panel that you can drag without interrupting gameplay. Supports minimize, expand, and close.</p></div>
@@ -154,7 +181,6 @@
       </div>
     </section>
 
-    <!-- Execute -->
     <div>
       <h2 id="download">Execute</h2>
       <p>Paste the script below into your executor.</p>
@@ -167,7 +193,6 @@
       <p class="muted">* Loading may be slow.</p>
     </div>
     
-    <!-- GitHub -->
     <div>
       <h2 id="GitHub">GitHub</h2>
       <p>Where to store future update scripts.</p>
@@ -177,7 +202,6 @@
       </div>
     </div>
     
-    <!-- Discord -->
      <div>
       <h2 id="Discord">Discord</h2>
       <p>Join our team and show your support.</p>
@@ -187,7 +211,6 @@
       </div>
     </div>
 
-    <!-- More Features -->
     <section id="more">
       <div class="cards">
         <div class="card"><h3>Theme Style</h3><p>Dark tones, modern typography, and clean layout define a cohesive visual experience.</p></div>
@@ -211,7 +234,6 @@
   </div>
 
 <script>
-  // Lua syntax highlighting
   function highlightLua(code) {
     const keywords = ['and','break','do','else','elseif','end','false','for','function','if','in','local','nil','not','or','repeat','return','then','true','until','while'];
     let escaped = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -225,7 +247,6 @@
   const raw = codeEl.textContent;
   codeEl.innerHTML = highlightLua(raw);
 
-  // Copy button
   document.querySelectorAll('.copy-wrapper').forEach(wrapper => {
     const btn = wrapper.querySelector('.copy-btn');
     const defaultText = btn.getAttribute('data-default') || 'Copy';
@@ -239,7 +260,6 @@
     });
   });
 
-  // Auto-fit scaling
   (function(){
     const container = document.querySelector('.container');
     function applyScale(s){ container.style.transformOrigin='top center'; container.style.transform=`scale(${s})`; }
