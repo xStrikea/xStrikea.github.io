@@ -38,7 +38,6 @@
     }
   }
   </script>
-</head>
   <style>
     :root {
       --bg:#0f111a;
@@ -63,6 +62,42 @@
       -webkit-overflow-scrolling: touch;
       position: relative;
     }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top:0; left:0; right:0;
+      height:60px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 1.5rem;
+      background-color: rgba(15,17,26,0.9);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(0,0,0,.5);
+      z-index: 999;
+    }
+    .nav-left {
+      display:flex;
+      align-items:center;
+      gap: 12px;
+    }
+    .nav-logo { height:40px; }
+    .nav-right { display:flex; gap:12px; }
+    .nav-btn {
+      width:40px; height:40px;
+      border-radius:50%;
+      background: var(--card);
+      border:none;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      cursor:pointer;
+      transition: var(--transition);
+    }
+    .nav-btn img { width:20px; height:20px; }
+    .nav-btn:hover { background: var(--accent); }
+
     .background-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -80,6 +115,7 @@
       transition: transform .25s ease;
       position: relative;
       z-index: 1;
+      padding-top: 80px; /* 避開 navbar */
     }
     .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
     .badge { display: inline-block; padding: .35em .9em; background: rgba(255,79,79,.1); color: var(--accent); border-radius: 999px; font-size: .65rem; letter-spacing: .05em; text-transform: uppercase; font-weight: 600; }
@@ -109,23 +145,8 @@
     .hl-comment { color:#576574; font-style:italic; }
     pre { margin:0; font-family:ui-monospace, monospace; font-size:.9rem; }
     #zoom-controls { display:none !important; }
-
-    /* GUI preview container */
-    #gui-preview-container {
-      height: 300px;
-      border:1px dashed rgba(255,255,255,.2);
-      border-radius:8px;
-      overflow:hidden;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    #gui-preview-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
+    #gui-preview-container { height: 300px; border:1px dashed rgba(255,255,255,.2); border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    #gui-preview-iframe { width: 100%; height: 100%; border: none; display: block; }
 
     @media (max-width: 1200px) { .hero { grid-template-columns:1fr; } }
     @media (max-width: 880px) {
@@ -135,25 +156,38 @@
       .container { transform:none !important; }
       #zoom-controls { top:8px; bottom:auto; right:8px; font-size:.7rem; padding:6px; gap:4px; }
       #zoom-controls button { padding:4px 8px; }
+      .nav-right { gap:8px; }
     }
     @media (max-width: 500px) { h1 { font-size:1.9rem; } }
   </style>
 </head>
 <body>
   <div class="background-overlay"></div>
-  <div class="container">
 
+  <nav class="navbar">
+    <div class="nav-left">
+      <img src="image/logo.svg" alt="RingX logo" class="nav-logo" />
+      <span style="font-weight:600;">RingX</span>
+    </div>
+    <div class="nav-right">
+      <a href="https://github.com/xStrikea/RingX" class="nav-btn" aria-label="GitHub">
+        <img src="image/github.svg" alt="GitHub">
+      </a>
+      <a href="https://tinyurl.com/ringx-dc" class="nav-btn" aria-label="Discord">
+        <img src="image/discord.svg" alt="Discord">
+      </a>
+    </div>
+  </nav>
+
+  <div class="container">
     <header class="hero">
       <div>
         <div>
-          <img src="image/logo.svg" alt="RingX logo" class="tagline-img" />
           <h1>Modern, black <span class="highlight">Ring attacker</span> Script</h1>
         </div>
         <p>RingX is a lightweight and efficient Roblox ring physics controller. It combines a draggable GUI, radius/strength adjustment, persistent object retention, and snap field logic, enabling players to attack others using dynamic rings.</p>
         <div class="buttons">
           <a class="btn btn-primary" href="#download">Execute</a>
-          <a class="btn btn-primary" href="#GitHub">GitHub</a>
-          <a class="btn btn-primary" href="#Discord">Discord</a>
         </div>
       </div>
       <div aria-label="Diagram" style="position:relative;min-height:220px;">
@@ -161,7 +195,7 @@
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div style="display:flex;gap:8px;align-items:center;">
               <div style="width:12px;height:12px;border-radius:50%;background:#ff4f4f;"></div>
-              <div style="font-size:.9rem;">RingX GUI diagram (perhaps）</div>
+              <div style="font-size:.9rem;">RingX GUI diagram</div>
             </div>
             <div style="font-size:.7rem;">v4</div>
           </div>
@@ -187,28 +221,10 @@
       <div class="copy-wrapper">
         <button class="copy-btn" aria-label="Copy script" data-default="Copy">Copy</button>
         <div class="code" aria-live="polite">
-          <pre><code id="lua-code" class="language-lua">loadstring(game:HttpGet('https://raw.githubusercontent.com/xStrikea/RingX/refs/heads/main/deta/executor/RingX.lua'))()</code></pre>
+          <pre><code id="lua-code">loadstring(game:HttpGet('https://raw.githubusercontent.com/xStrikea/RingX/refs/heads/main/deta/executor/RingX.lua'))()</code></pre>
         </div>
       </div>
       <p class="muted">* Loading may be slow.</p>
-    </div>
-    
-    <div>
-      <h2 id="GitHub">GitHub</h2>
-      <p>Where to store future update scripts.</p>
-      <div class="buttons">
-        <a class="btn btn-primary" href="https://github.com/xStrikea/RingX">RingX</a>
-        <p class="muted">* The only trusted repository.</p>
-      </div>
-    </div>
-    
-     <div>
-      <h2 id="Discord">Discord</h2>
-      <p>Join our team and show your support.</p>
-      <div class="buttons">
-        <a class="btn btn-primary" href="https://tinyurl.com/ringx-dc">xRavex Studio</a>
-        <p class="muted">* :)</p>
-      </div>
     </div>
 
     <section id="more">
@@ -219,61 +235,27 @@
       </div>
     </section>
 
-    <footer class="footer">
-      <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
-        <div class="pill">RingX</div>
-        <div class="pill">Modern GUI</div>
-        <div class="pill">Black-themed</div>
-        <div class="pill">Lightweight</div>
-      </div>
-      <p>Attack, prank—for you to choose.</p>
-      <p style="margin-top:8px;">If you encounter bugs or have questions, reply to my email.</p>
-      <div style="margin-top:4px;font-size:.65rem;">xRavex studio</div>
+   <footer class="footer">
+      <p>&copy; 2025 RingX — Free Roblox Scripts & GUI Tools. All rights reserved.</p>
+      <p class="muted">Designed by xRavex Studio.</p>
     </footer>
-
   </div>
 
-<script>
-  function highlightLua(code) {
-    const keywords = ['and','break','do','else','elseif','end','false','for','function','if','in','local','nil','not','or','repeat','return','then','true','until','while'];
-    let escaped = code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    escaped = escaped.replace(/('.*?'|".*?")/g, '<span class="hl-string">$1</span>');
-    escaped = escaped.replace(/--.*$/gm, '<span class="hl-comment">$&</span>');
-    const kwPattern = new RegExp('\\b(' + keywords.join('|') + ')\\b', 'g');
-    escaped = escaped.replace(kwPattern, '<span class="hl-keyword">$1</span>');
-    return escaped;
-  }
-  const codeEl = document.getElementById('lua-code');
-  const raw = codeEl.textContent;
-  codeEl.innerHTML = highlightLua(raw);
+  <script>
+    // Copy to clipboard
+    const copyBtn = document.querySelector('.copy-btn');
+    const luaCode = document.getElementById('lua-code').innerText;
 
-  document.querySelectorAll('.copy-wrapper').forEach(wrapper => {
-    const btn = wrapper.querySelector('.copy-btn');
-    const defaultText = btn.getAttribute('data-default') || 'Copy';
-    const successText = 'Copied';
-    btn.textContent = defaultText;
-    btn.addEventListener('click', async () => {
-      const codeText = wrapper.querySelector('code').textContent;
-      try { await navigator.clipboard.writeText(codeText); btn.textContent = successText; }
-      catch { const ta = document.createElement('textarea'); ta.value=codeText; ta.readOnly=true; ta.style.position='absolute'; ta.style.left='-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); btn.textContent = successText; }
-      setTimeout(()=>{btn.textContent=defaultText;},1200);
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(luaCode).then(() => {
+        copyBtn.innerText = 'Copied!';
+        setTimeout(() => copyBtn.innerText = copyBtn.dataset.default, 1500);
+      }).catch(err => {
+        copyBtn.innerText = 'Error';
+        console.error(err);
+        setTimeout(() => copyBtn.innerText = copyBtn.dataset.default, 1500);
+      });
     });
-  });
-
-  (function(){
-    const container = document.querySelector('.container');
-    function applyScale(s){ container.style.transformOrigin='top center'; container.style.transform=`scale(${s})`; }
-    function autoFit(){
-      const vw=window.innerWidth;
-      if(vw<=880){ applyScale(1); return; }
-      const vh=window.innerHeight;
-      const cw=container.offsetWidth, ch=container.offsetHeight;
-      let scale=Math.min(vw/cw,vh/ch); if(scale>1)scale=1; if(scale<0.6)scale=0.6;
-      applyScale(scale);
-    }
-    window.addEventListener('load', autoFit);
-    window.addEventListener('resize', autoFit);
-  })();
-</script>
+  </script>
 </body>
 </html>
