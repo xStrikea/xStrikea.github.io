@@ -163,7 +163,7 @@ function Library:AddButton(config)
         Button.MouseButton1Click:Connect(config.Callback)
     end
 
-    self.YOffset += 0.1
+    self.YOffset = 0.1
     return Button
 end
 
@@ -182,7 +182,7 @@ function Library:AddLabel(text)
     UICorner.CornerRadius = UDim.new(0,10)
     UICorner.Parent = Label
 
-    self.YOffset += 0.1
+    self.YOffset = 0.1
     return Label
 end
 
@@ -208,7 +208,7 @@ function Library:AddToggle(config)
         if config.Callback then config.Callback(state) end
     end)
 
-    self.YOffset += 0.1
+    self.YOffset = 0.1
     return Button
 end
 
@@ -234,7 +234,7 @@ function Library:AddTextbox(config)
         end
     end)
 
-    self.YOffset += 0.1
+    self.YOffset = 0.1
     return Box
 end
 
