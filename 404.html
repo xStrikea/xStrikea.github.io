@@ -2,68 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>404 Not Found</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found</title>
   <style>
-    body {
-      background-color: #111;
-      color: #ccc;
-      font-family: monospace;
-      font-size: 14px;
-      line-height: 1.6;
-      padding: 20px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    a {
-      color: #6af;
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+    }
+    h1 {
+      font-size: 10rem;
+      font-weight: bold;
+      position: relative;
+      display: inline-block;
+      overflow: visible;
+    }
+    h1 span {
+      display: inline-block;
+      position: relative;
+    }
+    p {
+      font-size: 1.5rem;
+      margin-top: 1rem;
+      color: #ccc;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 2rem;
+      padding: 0.75rem 1.5rem;
+      color: #000;
+      background-color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: 0.3s;
       text-decoration: none;
     }
-    a:hover {
-      text-decoration: underline;
+    .btn:hover {
+      background-color: #ccc;
     }
-    hr {
-      border: none;
-      border-top: 1px solid #333;
-      margin: 20px 0;
+    .floating-circle {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.1);
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <h1>404 Not Found</h1>
-  <p>You're in a place you shouldn't be.</p>
-  
-  <hr>
+  <div class="container">
+    <h1 id="error-text">
+      <span>4</span><span>0</span><span>4</span>
+    </h1>
+    <p>Oops! The page you are looking for doesn't exist.</p>
+    <a href="/" class="btn">Go Home</a>
+  </div>
 
-  <p><strong>Links: </strong></p>
-  <ul>
-    <li><a href="/">/</a> - Home</li>
-    <li><a href="/tool">/tool</a> - tool</li>
-    <li><a href="/other">/other</a> - other</li>
-    <li><a href="/tool/android/">/app</a> - Android Package</li>
-  </ul>
-
-  <hr>
-
-  <p><em>1.This website is licensed under the MIT.</em></p>
-  <p><em>2.Think about it...，/example?yes-found</p></em>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script>
-    const query = window.location.search.toLowerCase();
-    if (query.includes("yes-found")) {
-      document.body.innerHTML = `
-        <h1>Wait a moment!</h1>
-        <p>How did you find this place?</p>
-        <hr>
-        <p><strong>Links: </strong></p>
-        <ul>
-          <li><a href="/">/</a> - Home</li>
-          <li><a href="/tool">/tool</a> - tool</li>
-          <li><a href="/other">/other</a> - other</li>
-          <li><a href="/tool/android/">package</a> - Android Package</li>
-        </ul>
-        <hr>
-        <p><em>1.This website is licensed under the MIT.</em></p>
-        <p><em>2.That's a bit strange.</em></p>
-      `;
+    // 漂浮的圓圈背景
+    for(let i=0; i<20; i++){
+      const circle = document.createElement('div');
+      circle.classList.add('floating-circle');
+      document.body.appendChild(circle);
+      const size = Math.random() * 50 + 20;
+      circle.style.width = size + 'px';
+      circle.style.height = size + 'px';
+      circle.style.left = Math.random() * window.innerWidth + 'px';
+      circle.style.top = Math.random() * window.innerHeight + 'px';
+      gsap.to(circle, {
+        duration: Math.random() * 10 + 5,
+        y: `+=${Math.random() * 300 + 50}`,
+        x: `+=${Math.random() * 300 - 150}`,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
     }
+
+    // 碎裂文字動畫
+    const chars = document.querySelectorAll('#error-text span');
+    chars.forEach((char, index)=>{
+      gsap.from(char, {
+        duration: 1.2,
+        y: -200,
+        opacity: 0,
+        rotation: Math.random() * 60 - 30,
+        delay: index * 0.2,
+        ease: "back.out(1.7)"
+      });
+      gsap.to(char, {
+        duration: 2,
+        x: Math.random() * 20 - 10,
+        y: Math.random() * 20 - 10,
+        rotation: Math.random() * 20 - 10,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: 1.5
+      });
+    });
+
+    // 文字 & 按鈕淡入
+    gsap.from("p", {duration: 1.2, opacity: 0, delay: 1});
+    gsap.from(".btn", {duration: 1, opacity: 0, y: 50, delay: 1.2});
   </script>
 </body>
 </html>
