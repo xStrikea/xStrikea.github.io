@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 - Page Not Found</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       height: 100vh;
       display: flex;
@@ -20,20 +16,9 @@
       color: #fff;
       overflow: hidden;
     }
-    .container {
-      text-align: center;
-    }
-    h1 {
-      font-size: 10rem;
-      font-weight: bold;
-      position: relative;
-      display: inline-block;
-      overflow: visible;
-    }
-    h1 span {
-      display: inline-block;
-      position: relative;
-    }
+    .container { text-align: center; }
+    h1 { font-size: 10rem; font-weight: bold; }
+    h1 span { display: inline-block; }
     p {
       font-size: 1.5rem;
       margin-top: 1rem;
@@ -49,18 +34,9 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
-      transition: 0.3s;
       text-decoration: none;
     }
-    .btn:hover {
-      background-color: #ccc;
-    }
-    .floating-circle {
-      position: absolute;
-      border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.1);
-      pointer-events: none;
-    }
+    .btn:hover { background-color: #ccc; }
   </style>
 </head>
 <body>
@@ -74,52 +50,38 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script>
-    // 漂浮的圓圈背景
-    for(let i=0; i<20; i++){
-      const circle = document.createElement('div');
-      circle.classList.add('floating-circle');
-      document.body.appendChild(circle);
-      const size = Math.random() * 50 + 20;
-      circle.style.width = size + 'px';
-      circle.style.height = size + 'px';
-      circle.style.left = Math.random() * window.innerWidth + 'px';
-      circle.style.top = Math.random() * window.innerHeight + 'px';
-      gsap.to(circle, {
-        duration: Math.random() * 10 + 5,
-        y: `+=${Math.random() * 300 + 50}`,
-        x: `+=${Math.random() * 300 - 150}`,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      });
-    }
-
-    // 碎裂文字動畫
     const chars = document.querySelectorAll('#error-text span');
-    chars.forEach((char, index)=>{
+
+    // 初始淡入動畫
+    chars.forEach((char, index) => {
       gsap.from(char, {
-        duration: 1.2,
-        y: -200,
+        duration: 0.8,
+        y: -50,
         opacity: 0,
-        rotation: Math.random() * 60 - 30,
-        delay: index * 0.2,
-        ease: "back.out(1.7)"
-      });
-      gsap.to(char, {
-        duration: 2,
-        x: Math.random() * 20 - 10,
-        y: Math.random() * 20 - 10,
-        rotation: Math.random() * 20 - 10,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 1.5
+        rotation: Math.random() * 10 - 5,
+        delay: index * 0.1,
+        ease: "back.out(1.3)"
       });
     });
 
-    // 文字 & 按鈕淡入
-    gsap.from("p", {duration: 1.2, opacity: 0, delay: 1});
-    gsap.from(".btn", {duration: 1, opacity: 0, y: 50, delay: 1.2});
+    // 每個字隨機輕微但可見搖動
+    chars.forEach(char => {
+      function animateChar() {
+        gsap.to(char, {
+          duration: 0.3 + Math.random() * 0.2, // 0.3~0.5秒
+          x: Math.random() * 4 - 2,           // ±2px
+          y: Math.random() * 4 - 2,           // ±2px
+          rotation: Math.random() * 2 - 1,    // ±1°
+          ease: "sine.inOut",
+          onComplete: animateChar            // 完成後再次隨機
+        });
+      }
+      animateChar();
+    });
+
+    // 文字和按鈕淡入
+    gsap.from("p", {duration: 1, opacity: 0, delay: 0.8});
+    gsap.from(".btn", {duration: 1, opacity: 0, y: 20, delay: 1});
   </script>
 </body>
 </html>
