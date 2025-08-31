@@ -10,30 +10,9 @@
   </url>
   
   <url>
-    <loc>https://xStrikea.github.io/magadoge/</loc>
+    <loc>https://xStrikea.github.io/ringx/</loc>
     <lastmod>2025-07-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-  </url>
-  
-  <url>
-    <loc>https://xStrikea.github.io/tool/pixel/</loc>
-    <lastmod>2025-07-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>https://xStrikea.github.io/tool/FPS</loc>
-    <lastmod>2025-07-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-    <url>
-    <loc>https://xStrikea.github.io/tool/webgl</loc>
-    <lastmod>2025-07-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
   </url>
 </urlset>
