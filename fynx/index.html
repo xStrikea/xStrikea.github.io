@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Fynx Notify — Free Roblox Client Notification System</title>
+  <meta name="description" content="Download Fynx Notify — a modern, client-side, lightweight notification system for Roblox. Free Roblox GUI scripts and tools." />
+  <meta name="keywords" content="Roblox script, Roblox GUI, Fynx Notify, notification system, client-side, Lua script, Roblox tools" />
+  <meta name="xRavex" content="xRavex Studio" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Fynx Notify — Free Roblox Client Notification System" />
+  <meta property="og:description" content="Fynx Notify: A free, client-only notification GUI for Roblox. Modern, fast, and easy-to-use." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://xStrikea.github.io/fynx-notify/" />
+  <meta property="og:image" content="https://xStrikea.github.io/fynx-notify/image/logo.svg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Fynx Notify — Free Roblox Notification GUI" />
+  <meta name="twitter:description" content="Modern client-side notification system for Roblox with black-themed GUI." />
+  <meta name="twitter:image" content="https://xStrikea.github.io/fynx-notify/image/logo.svg" />
+  <meta name="theme-color" content="#0f111a" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="image/logo.png" type="image/x-icon" />
+  <style>
+    :root {
+      --bg:#0f111a;
+      --card:#1e2236;
+      --text:#e5e7ff;
+      --muted:#8a8fbf;
+      --radius:16px;
+      --shadow:0 24px 48px -4px rgba(0,0,0,.55);
+      --accent:#ff4f4f;
+      --transition:.3s cubic-bezier(.4,.2,.2,1);
+      font-family: 'Inter', system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    *{box-sizing:border-box;}
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: url('image/background.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text);
+      line-height: 1.5;
+      overflow-y: auto;
+      position: relative;
+    }
+    .navbar {
+      position: fixed; top:0; left:0; right:0; height:60px;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:0 1.5rem; background-color: rgba(15,17,26,0.9);
+      backdrop-filter: blur(8px); box-shadow: 0 2px 8px rgba(0,0,0,.5); z-index: 999;
+    }
+    .nav-left { display:flex; align-items:center; gap:12px; }
+    .nav-logo { height:40px; }
+    .nav-right { display:flex; gap:12px; }
+    .nav-btn { width:40px; height:40px; border-radius:50%; background: var(--card); border:none; display:flex; justify-content:center; align-items:center; cursor:pointer; transition: var(--transition); }
+    .nav-btn img { width:20px; height:20px; }
+    .nav-btn:hover { background: var(--accent); }
+    .background-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background-color: rgba(15,17,26,0.75); pointer-events: none; z-index: 0; }
+    .container { max-width:1100px; margin:0 auto; padding:2rem 1rem; display:flex; flex-direction:column; gap:2rem; position:relative; z-index:1; padding-top:80px; }
+    h1 { margin:0; font-size:2.75rem; font-weight:600; line-height:1.1; }
+    h2 { margin:0; font-size:1.75rem; font-weight:600; margin-top:1rem; }
+    p { margin:0 0 1rem; font-size:1rem; }
+    .buttons { display:flex; gap:1rem; flex-wrap:wrap; margin-top:.5rem; }
+    .btn { padding:.8em 1em; border:none; cursor:pointer; border-radius:12px; font-weight:600; display:inline-flex; align-items:center; gap:.4rem; transition: var(--transition); text-decoration:none; background:transparent; color:inherit; position: relative; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:1.5rem; }
+    .card { background: var(--card); border-radius: var(--radius); padding:1.5rem; position:relative; overflow:hidden; box-shadow: var(--shadow); }
+    .footer { margin-top:auto; padding:2rem 1rem; font-size:.8rem; text-align:center; color: var(--muted); }
+    .code { background: rgba(255,255,255,.05); padding:1rem; border-radius:8px; overflow:auto; font-family:ui-monospace, monospace; font-size:.9rem; white-space:pre; }
+    .copy-wrapper { position: relative; max-width:100%; }
+    .copy-btn { position: absolute; top:8px; right:8px; background: rgba(255,255,255,.08); border:none; padding:6px 10px; border-radius:8px; cursor:pointer; font-size:.65rem; backdrop-filter: blur(6px); color: var(--text); }
+    @media (max-width:1200px){.hero{grid-template-columns:1fr;}} 
+    @media (max-width:880px){h1{font-size:2.2rem;}.buttons{flex-direction:column;}.btn{width:100%;justify-content:center;}} 
+    @media (max-width:500px){h1{font-size:1.9rem;}}
+  </style>
+</head>
+<body>
+  <div class="background-overlay"></div>
+  <nav class="navbar">
+    <div class="nav-left">
+      <img src="image/logo.png" alt="Fynx Notify logo" class="nav-logo" />
+      <span style="font-weight:600;">Fynx Notify</span>
+    </div>
+    <div class="nav-right">
+      <a href="https://github.com/xStrikea/FynxNotify" class="nav-btn" aria-label="GitHub">
+        <img src="image/github.svg" alt="GitHub">
+      </a>
+      <a href="https://tinyurl.com/fynx-dc" class="nav-btn" aria-label="Discord">
+        <img src="image/discord.svg" alt="Discord">
+      </a>
+    </div>
+  </nav>
+  <div class="container">
+    <header class="hero">
+      <div>
+        <h1>Fynx Notify — <span class="highlight">Client-side Notification</span> System</h1>
+        <p>A modern, black-themed notification GUI for Roblox. Client-only, lightweight, and fully customizable.</p>
+        <div class="buttons">
+          <a class="btn btn-primary" href="#download">Example</a>
+        </div>
+      </div>
+    </header>
+
+    <section id="features">
+      <div class="cards">
+        <div class="card"><h3>Client-only</h3><p>Notifications are visible only to you; fully local without server replication.</p></div>
+        <div class="card"><h3>Stackable Alerts</h3><p>Multiple notifications auto-stack and slide smoothly above your tools bar.</p></div>
+        <div class="card"><h3>Custom Actions</h3><p>Add buttons with callbacks for interactive notifications.</p></div>
+        <div class="card"><h3>Modern UI</h3><p>Black theme with sleek animations and adjustable typography.</p></div>
+      </div>
+    </section>
+
+    <div>
+      <h2 id="download">Example</h2>
+      <p>Paste the script below into your executor.</p>
+      <div class="copy-wrapper">
+        <button class="copy-btn" aria-label="Copy script" data-default="Copy">Copy</button>
+        <div class="code" aria-live="polite">
+          <pre><code id="lua-code"></code>
+if not _G.FynxNotify then
+    loadstring(game:HttpGet("https://example.com/fynx_notify_core.lua"))()
+end
+
+task.wait(2)
+
+_G.FynxNotify:Notify({
+    Title = "TEST",
+    Text = "TEST-001",
+    Duration = 4,
+    Icon = "rbxassetid://6031071053",
+    SoundId = "rbxassetid://12222132"
+})
+
+task.delay(5, function()
+    _G.FynxNotify:Success("TEST-002", "TEST-003", 3)
+end)
+
+task.delay(8, function()
+    _G.FynxNotify:Notify({
+        Title = "TEST-004",
+        Text = "TEST-005",
+        Duration = 6,
+        ActionText = "TEST-006",
+        Callback = function()
+            print("TEST-007")
+        end
+    })
+end)</code></pre>
+        </div>
+      </div>
+      <p class="muted">* Ensure HTTP requests are enabled in your executor.</p>
+    </div>
+
+   <footer class="footer">
+      <p>&copy; 2025 Fynx Notify — Free Roblox Client Notification System. All rights reserved.</p>
+      <p class="muted">Designed by xRavex Studio.</p>
+    </footer>
+  </div>
+
+  <script>
+    const copyBtn = document.querySelector('.copy-btn');
+    const luaCode = document.getElementById('lua-code').innerText;
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(luaCode).then(() => {
+        copyBtn.innerText = 'Copied!';
+        setTimeout(() => copyBtn.innerText = copyBtn.dataset.default, 1500);
+      }).catch(err => {
+        copyBtn.innerText = 'Error';
+        console.error(err);
+        setTimeout(() => copyBtn.innerText = copyBtn.dataset.default, 1500);
+      });
+    });
+  </script>
+</body>
+</html>
