@@ -1,40 +1,208 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>xSpecter</title>
-    <link rel="icon" href="/image/avatar.png" type="image/x-icon">
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12/dist/gsap.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>xRavex Studio — Free Roblox Scripts & GUI Tools</title>
+  <meta name="description" content="Scripts developed by xSpecter. Any software or scripts we develop are free and available to any implementer." />
+  <meta name="keywords" content="Roblox script, Roblox GUI, free Roblox scripts, 100% free script, Roblox tools, Lua script, Roblox exploit GUI, Super Ring, superring, ringx" />
+  <meta name="xRavex" content="xRavex Studio" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="xRavex Studio — Free Roblox Scripts & GUI Tools" />
+  <meta property="og:description" content="Executor Script: A free, physics-based GUI script for Roblox. Modern, fast, and easy-to-use." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://xStrikea.github.io/" />
+  <meta property="og:image" content="https://xStrikea.github.io/image/logo.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="xRavex Studio — Free Roblox Scripts" />
+  <meta name="twitter:description" content="Permanently free and practical scripts." />
+  <meta name="twitter:image" content="https://xStrikea.github.io/image/logo.png" />
+  <meta name="theme-color" content="#0f111a" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="image/logo.svg" type="image/x-icon" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Executor ScriptX",
+    "operatingSystem": "Windows, macOS",
+    "applicationCategory": "GameApplication",
+    "description": "Permanently free and practical scripts.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+  <style>
+    :root {
+      --bg:#0f111a;
+      --card:#1e2236;
+      --text:#e5e7ff;
+      --muted:#8a8fbf;
+      --radius:16px;
+      --shadow:0 24px 48px -4px rgba(0,0,0,.55);
+      --accent:#ff4f4f;
+      --transition:.3s cubic-bezier(.4,.2,.2,1);
+      font-family: 'Inter', system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    }
+    *{box-sizing:border-box;}
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: url('image/background.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text);
+      line-height: 1.5;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top:0; left:0; right:0;
+      height:60px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 1.5rem;
+      background-color: rgba(15,17,26,0.9);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(0,0,0,.5);
+      z-index: 999;
+    }
+    .nav-left {
+      display:flex;
+      align-items:center;
+      gap: 12px;
+    }
+    .nav-logo { height:40px; }
+    .nav-right { display:flex; gap:12px; }
+    .nav-btn {
+      width:40px; height:40px;
+      border-radius:50%;
+      background: var(--card);
+      border:none;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      cursor:pointer;
+      transition: var(--transition);
+    }
+    .nav-btn img { width:20px; height:20px; }
+    .nav-btn:hover { background: var(--accent); }
+
+    .background-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(15, 17, 26, 0.75);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      transition: transform .25s ease;
+      position: relative;
+      z-index: 1;
+      padding-top: 80px; /* 避開 navbar */
+    }
+    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+    .badge { display: inline-block; padding: .35em .9em; background: rgba(255,79,79,.1); color: var(--accent); border-radius: 999px; font-size: .65rem; letter-spacing: .05em; text-transform: uppercase; font-weight: 600; }
+    h1 { margin:0; font-size:2.75rem; font-weight:600; line-height:1.1; }
+    h2 { margin:0; font-size:1.75rem; font-weight:600; margin-top:1rem; }
+    p { margin:0 0 1rem; font-size:1rem; }
+    .highlight { position: relative; display: inline-block; }
+    .highlight:after { content: ''; position: absolute; left:0; bottom:4px; width:100%; height:6px; background:linear-gradient(120deg,var(--accent),#ff7f7f); border-radius:3px; mix-blend-mode: overlay; }
+    .buttons { display:flex; gap:1rem; flex-wrap:wrap; margin-top:.5rem; }
+    .btn { padding:.8em 1em; border:none; cursor:pointer; border-radius:12px; font-weight:600; display:inline-flex; align-items:center; gap:.4rem; transition: var(--transition); text-decoration:none; background:transparent; color:inherit; position: relative; }
+    .btn:focus-visible { outline:2px solid #fff; outline-offset:2px; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1.5rem; }
+    .card { background: var(--card); border-radius: var(--radius); padding:1.5rem; position: relative; overflow: hidden; box-shadow: var(--shadow); }
+    .card h3 { margin-top:0; font-size:1.25rem; }
+    .code { background: rgba(255,255,255,.05); padding:1rem; border-radius:8px; overflow:auto; font-family:ui-monospace, monospace; font-size:.9rem; white-space:pre; word-break:break-all; }
+    .shadow-accent { box-shadow: 0 16px 32px -2px rgba(255,79,79,.35); }
+    .split { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+    .footer { margin-top:auto; padding:2rem 1rem; font-size:.8rem; text-align:center; color: var(--muted); }
+    .pill { background: rgba(255,255,255,.07); padding:5px 10px; border-radius:999px; font-size:.6rem; display:inline-block; }
+    .muted { color: var(--muted); }
+    .copy-wrapper { position: relative; max-width: 100%; }
+    .copy-btn { position: absolute; top:8px; right:8px; background: rgba(255,255,255,.08); border:none; padding:6px 10px; border-radius:8px; cursor:pointer; font-size:.65rem; backdrop-filter: blur(6px); color: var(--text); }
+    .tagline-img { height:32px; display:block; margin-bottom:4px; }
+    .hl-keyword { color:#ff9f43; font-weight:600; }
+    .hl-string { color:#7bed9f; }
+    .hl-comment { color:#576574; font-style:italic; }
+    pre { margin:0; font-family:ui-monospace, monospace; font-size:.9rem; }
+    #zoom-controls { display:none !important; }
+    #gui-preview-container { height: 300px; border:1px dashed rgba(255,255,255,.2); border-radius:8px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+    #gui-preview-iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    @media (max-width: 1200px) { .hero { grid-template-columns:1fr; } }
+    @media (max-width: 880px) {
+      h1 { font-size:2.2rem; }
+      .buttons { flex-direction: column; }
+      .btn { width:100%; justify-content:center; }
+      .container { transform:none !important; }
+      #zoom-controls { top:8px; bottom:auto; right:8px; font-size:.7rem; padding:6px; gap:4px; }
+      #zoom-controls button { padding:4px 8px; }
+      .nav-right { gap:8px; }
+    }
+    @media (max-width: 500px) { h1 { font-size:1.9rem; } }
+  </style>
 </head>
 <body>
+  <div class="background-overlay"></div>
 
-    <div id="content" style="display: none;">
-        <div class="profile">
-            <img src="/image/avatar.png" alt="Avatar" id="avatar">
-            <h1 id="title">xSpecter</h1>
-            <p id="description">Likes pranks.</p>
-        </div>
-        <div class="buttons">
-            <a href="https://www.roblox.com/users/9311837988/profile" id="roblox">
-                <img src="/image/roblox.png" alt="Roblox Logo">
-                roblox
-            </a>
-            <a href="https://github.com/xStrikea" id="github">
-                <img src="/image/github.png" alt="GitHub Logo">
-                github
-            </a>
-            <a href="mailto:coder4819@gmail.com" id="gmail">
-                <img src="/image/gmail.png" alt="Gmail Logo">
-                gmail
-            </a>
-            <a href="https://xStrikea.github.io/megadoge" id="megadoge">
-                <img src="/image/MegaDoge.png" alt="xTitanium">
-                megadoge
-            </a>
-        </div>
+  <nav class="navbar">
+    <div class="nav-left">
+      <img src="image/logo.png" alt="xRavex Studio logo" class="nav-logo" />
+      <span style="font-weight:600;">xRavex Studio</span>
     </div>
-    <script src="script.js"></script>
+    <div class="nav-right">
+      <a href="https://github.com/xStrikea/RingX" class="nav-btn" aria-label="GitHub">
+        <img src="ringx/image/github.svg" alt="GitHub">
+      </a>
+      <a href="https://tinyurl.com/ringx-dc" class="nav-btn" aria-label="Discord">
+        <img src="ringx/image/discord.svg" alt="Discord">
+      </a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="hero">
+      <div>
+        <h1>Modern, Practical <span class="highlight">100% Free</span> Script</h1>
+        <p>We make scripts 100% free forever, so you don't have to deal with annoying tasks and can just enjoy using the executor. <br> <span class="highlight">Remember not to get banned !</span></p>
+      </div>
+    </header>
+
+    <!-- RingX Section -->
+    <section>
+      <a href="/ringx/" style="text-decoration:none; color:inherit; display:block;">
+        <h2>RingX</h2>
+        <p>RingX is a modern, physics-driven GUI script for Roblox. Simple to use, lightweight, and designed with performance in mind. Enjoy a clean interface with advanced part control and customization features.</p>
+        <div style="position:relative; width:100%; padding-top:56.25%; border-radius:60px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,.4); margin-bottom:8px;">
+          <img src="image/a.png" alt="RingX Preview" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;">
+        </div>
+        <p class="muted">* New version XF</p>
+      </a>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; 2025 xRavex Studio — Free Roblox Scripts & GUI Tools. All rights reserved.</p>
+      <p class="muted">Designed by xRavex Studio.</p>
+    </footer>
+  </div>
 </body>
 </html>
