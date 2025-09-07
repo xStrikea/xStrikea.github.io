@@ -21,7 +21,7 @@ ScreenGui.Name = "JeffTheKillerWuzHere"
 VideoScreen.Parent = ScreenGui
 VideoScreen.Size = UDim2.new(1,0,1,0)
 
-writefile("face.mp4", game:HttpGet("https://xstrikea.github.io/scripthub/face.mp4"))
+writefile("face.mp4", game:HttpGet("https://github.com/xStrikea/xStrikea.github.io/blob/main/scripthub/face.mp4?raw=yes"))
 
 VideoScreen.Video = getcustomasset("face.mp4")
 
