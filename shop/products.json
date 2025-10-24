@@ -1,0 +1,44 @@
+[
+  {
+    "name": "RingX XR",
+    "creator": "xSpecter",
+    "os_or_code": "Luau",
+    "image": "images/RingX.png",
+    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/XF/RingX.lua"
+  },
+  {
+    "name": "RingX Beta",
+    "creator": "xSpecter",
+    "os_or_code": "Luau",
+    "image": "images/RingX.png",
+    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/Beta/RingX.lua"
+  },
+  {
+    "name": "RingX V4",
+    "creator": "xSpecter",
+    "os_or_code": "Luau",
+    "image": "images/RingX.png",
+    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V4/RingX.lua"
+  },
+  {
+    "name": "RingX V3",
+    "creator": "xSpecter",
+    "os_or_code": "Luau",
+    "image": "images/RingX.png",
+    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V3/RingX.lua"
+  },
+  {
+    "name": "RingX V2",
+    "creator": "xSpecter",
+    "os_or_code": "Luau",
+    "image": "images/RingX.png",
+    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V2/RingX.lua"
+  },
+  {
+    "name": "RingX V1",
+    "creator": "xSpecter",
+    "os_or_code": "Luau",
+    "image": "images/RingX.png",
+    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V1/RingX.lua"
+  }
+]
