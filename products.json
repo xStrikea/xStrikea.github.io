@@ -21,6 +21,13 @@
     "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V4/RingX.lua"
   },
   {
+    "name": "Termux 0.119.0-beta.3",
+    "creator": "Termux",
+    "os_or_code": "Android Package",
+    "image": "https://imag.malavida.com/mvimgbig/download-s/termux-22770-0.jpg",
+    "url": "https://f-droid.org/repo/com.termux_1022.apk"
+  },
+  {
     "name": "RingX V3",
     "creator": "xSpecter",
     "os_or_code": "Luau",
