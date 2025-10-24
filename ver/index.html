@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenSoftware Version</title>
+<link rel="shortcut icon" href="image/logo1.png" type="image/x-icon">
+<meta name="description" content="View the version information of OpenSoftware — lightweight, modern, and verified free apps." />
+<meta name="theme-color" content="#0f111a" />
+<style>
+:root {
+  --bg:#0f111a;
+  --card:#1e2236;
+  --text:#e5e7ff;
+  --muted:#8a8fbf;
+  --accent:#ff4f4f;
+  --radius:16px;
+  --shadow:0 24px 48px -4px rgba(0,0,0,.55);
+  --transition:.3s cubic-bezier(.4,.2,.2,1);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+*{box-sizing:border-box; margin:0; padding:0; outline:none;}
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-y: auto;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  background-color: rgba(15,17,26,0.9);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0,0,0,.5);
+  z-index: 999;
+  border-radius: 0 0 12px 12px;
+}
+.nav-left { display:flex; align-items:center; gap:12px; }
+.nav-logo { height:40px; }
+.nav-right { display:flex; gap:12px; }
+.nav-btn {
+  width:40px; height:40px;
+  border-radius:50%;
+  background: var(--card);
+  border:none;
+  display:flex; justify-content:center; align-items:center;
+  cursor:pointer; transition: var(--transition);
+}
+.nav-btn img { width:20px; height:20px; }
+.nav-btn:hover { background: var(--accent); }
+
+/* Version Box */
+.version-box {
+  max-width: 520px;
+  margin: 120px auto;
+  background: rgba(30,34,54,0.8);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  animation: fadeIn 0.6s ease forwards;
+}
+.version-box img {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 1rem;
+  border-radius: 20px;
+  object-fit: contain;
+}
+.version-box h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+.version-box p {
+  color: var(--muted);
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+.version-number {
+  font-size: 1.1rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+.version-footer {
+  font-size: 0.85rem;
+  color: var(--muted);
+  border-top: 1px solid #2a2e44;
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width:8px; }
+::-webkit-scrollbar-thumb { background-color:#333; border-radius:4px; }
+::-webkit-scrollbar-track { background-color:var(--bg); }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-left">
+    <img src="image/logo.png" alt="OpenSoftware logo" class="nav-logo" />
+    <span style="font-weight:600;">OpenSoftware</span>
+  </div>
+  <div class="nav-right">
+    <a href="https://github.com/xStrikea/RingX" class="nav-btn" aria-label="GitHub"><img src="image/github.svg" alt="GitHub"></a>
+    <a href="https://discord.gg/Kkx29kSna4" class="nav-btn" aria-label="Discord"><img src="image/discord.svg" alt="Discord"></a>
+    <a href="/" class="nav-btn" aria-label="Home"><img src="image/Home.png" alt="Home"></a>
+  </div>
+</nav>
+
+<!-- Version Info -->
+<section class="version-box">
+  <img src="image/logo.png" alt="App logo">
+  <h1>OpenSoftware</h1>
+  <p>Free, safe, and verified software platform.</p>
+  <div class="version-number">Version 1.0.2 (Build 0002)</div>
+  <p>Licensed under MIT — Created by <strong>xSpecter</strong></p>
+  <div class="version-footer">
+    © 2025 OpenSoftware Project. All rights reserved.
+  </div>
+</section>
+
+</body>
+</html>
