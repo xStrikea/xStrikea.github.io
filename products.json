@@ -1,5 +1,12 @@
 [
   {
+    "name": "OpenSoftware APP",
+    "creator": "xSpecter",
+    "os_or_code": "executable file",
+    "image": "image/logo.png",
+    "url": "assets/OpenSoftware.exe"
+  },
+  {
     "name": "RingX XR",
     "creator": "xSpecter",
     "os_or_code": "Luau",
