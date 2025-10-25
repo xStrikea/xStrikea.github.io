@@ -75,7 +75,7 @@ html, body { margin:0; height:100%; background:#0f111a; color:var(--text); line-
   top: -50%; left: -50%;
   width: 200%; height: 200%;
   background: linear-gradient(120deg, rgba(255,79,79,0.3), rgba(255,127,127,0.1), rgba(255,79,79,0.3));
-  animation: gradientMove 6s linear infinite;
+  animation: gradientMove 10s linear infinite;
   z-index: 0;
 }
 @keyframes gradientMove {
@@ -83,7 +83,7 @@ html, body { margin:0; height:100%; background:#0f111a; color:var(--text); line-
   100% { transform: rotate(360deg); }
 }
 
-.hero > div { position: relative; z-index: 1; animation: fadeInUp 1s ease forwards; opacity: 0; }
+.hero > div { position: relative; z-index: 1; animation: fadeInUp 0.1s ease forwards; opacity: 0; }
 .hero h1 { font-size: 2.75rem; font-weight: 600; margin:0; line-height:1.1; }
 .hero .highlight { position: relative; display: inline-block; }
 .hero .highlight:after {
