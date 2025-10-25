@@ -7,6 +7,13 @@
     "url": "assets/OpenSoftware.exe"
   },
   {
+    "name": "OpenSoftware APP",
+    "creator": "xSpecter",
+    "os_or_code": "Android Package",
+    "image": "image/logo.png",
+    "url": "assets/OpenSoftware.apk"
+  },
+  {
     "name": "RingX XR",
     "creator": "xSpecter",
     "os_or_code": "Luau",
@@ -55,4 +62,4 @@
     "image": "images/RingX.png",
     "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V1/RingX.lua"
   }
-]
+  ]

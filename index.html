@@ -187,6 +187,43 @@ html, body { margin:0; height:100%; background:#0f111a; color:var(--text); line-
 .contribute a:hover {
   background: #ff6f6f;
 }
+/* 九宮格方塊樣式 */
+.grid-section {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1.2rem;
+}
+.grid-item {
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, background 0.3s;
+}
+.grid-item:hover {
+  transform: translateY(-6px);
+  background: #292929;
+}
+.grid-item img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-bottom: 1px solid #333;
+}
+.grid-item span {
+  display: block;
+  padding: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.9rem;
+}
 
 /* Scrollbar */
 ::-webkit-scrollbar { width:8px; }
@@ -217,6 +254,11 @@ html, body { margin:0; height:100%; background:#0f111a; color:var(--text); line-
   </div>
 </header>
 
+<!-- 九宮格按鈕區 -->
+<section class="grid-section">
+  <div class="grid-container" id="gridContainer"></div>
+</section>
+
 <!-- 分隔線 -->
 <div class="divider"></div>
 
@@ -241,7 +283,7 @@ const container = document.getElementById('productContainer');
 const pagination = document.getElementById('pagination');
 
 // 根據螢幕大小設定每頁顯示數量
-let perPage = 6;
+let perPage = 9;
 if (window.innerWidth >= 768 && window.innerWidth < 1400) perPage = 15;
 else if (window.innerWidth >= 1400) perPage = 20;
 
@@ -282,6 +324,7 @@ function renderPage(page) {
       creatorHTML = `<span>${item.creator}</span>`;
     }
 
+    // 檔案卡片模板
     card.innerHTML = `
       <img src="${item.image}" alt="${item.name}">
       <div class="info">
@@ -290,6 +333,7 @@ function renderPage(page) {
         <span>${item.os_or_code}</span>
       </div>
     `;
+
     container.appendChild(card);
   });
 }
