@@ -297,7 +297,7 @@ fetch('products.json')
     renderPage(currentPage);
     renderPagination();
   })
-  .catch(err => console.error('JSON讀取錯誤:', err));
+  .catch(err => console.error('', err));
 
 function renderPage(page) {
   container.innerHTML = '';
