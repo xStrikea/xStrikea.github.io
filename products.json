@@ -7,59 +7,10 @@
     "url": "assets/OpenSoftware.apk"
   },
   {
-    "name": "RingX XR",
-    "creator": "xSpecter",
-    "os_or_code": "Luau",
-    "image": "images/RingX.png",
-    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/XF/RingX.lua"
-  },
-  {
     "name": "AME Beta",
     "creator": "Ameliorated",
     "os_or_code": "Zone Improvement Plan",
     "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK8CVa7DnqCGi5k6Xr2GRvBJ-kBh3bYE3BMw&usqp=CAU",
     "url": "https://download.ameliorated.io/AME%20Beta.zip"
-  },
-  {
-    "name": "RingX Beta",
-    "creator": "xSpecter",
-    "os_or_code": "Luau",
-    "image": "images/RingX.png",
-    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/Beta/RingX.lua"
-  },
-  {
-    "name": "RingX V4",
-    "creator": "xSpecter",
-    "os_or_code": "Luau",
-    "image": "images/RingX.png",
-    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V4/RingX.lua"
-  },
-  {
-    "name": "Termux 0.119.0-beta.3",
-    "creator": "Termux",
-    "os_or_code": "Android Package",
-    "image": "https://imag.malavida.com/mvimgbig/download-s/termux-22770-0.jpg",
-    "url": "https://f-droid.org/repo/com.termux_1022.apk"
-  },
-  {
-    "name": "RingX V3",
-    "creator": "xSpecter",
-    "os_or_code": "Luau",
-    "image": "images/RingX.png",
-    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V3/RingX.lua"
-  },
-  {
-    "name": "RingX V2",
-    "creator": "xSpecter",
-    "os_or_code": "Luau",
-    "image": "images/RingX.png",
-    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V2/RingX.lua"
-  },
-  {
-    "name": "RingX V1",
-    "creator": "xSpecter",
-    "os_or_code": "Luau",
-    "image": "images/RingX.png",
-    "url": "https://raw.githubusercontent.com/xStrikea/Dynx/refs/heads/main/RingX/V1/RingX.lua"
   }
   ]
