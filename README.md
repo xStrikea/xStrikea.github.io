@@ -14,16 +14,6 @@
 
 ---
 
-## Version
-
-**OpenSoftware Version 1.0.4 (Build 0004)**
-
-- Licensed under **MIT**
-- Created by **xSpecter**
-- Release Year: 2025
-
----
-
 ## Contribute
 
 Want to share your favorite files, scripts, or games?  
