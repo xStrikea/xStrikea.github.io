@@ -43,9 +43,7 @@ function renderPage(page) {
     container.appendChild(card);
   });
 
-  gsap.fromTo('.product-card', 
-    { opacity: 0, scale: 0.9 }, 
-    { opacity: 1, scale: 1, stagger: 0.1, duration: 0.5, ease: "power2.out" });
+  gsap.fromTo('.product-card', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, stagger: 0.1, duration: 0.5, ease: "power2.out" });
 }
 
 function renderPagination() {
@@ -82,7 +80,6 @@ function changePage(page) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// GSAP Entrance animations
 function runAnimations() {
   gsap.to('.navbar', { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" });
   gsap.to('.hero', { opacity: 1, y: 0, duration: 0.8, delay: 0.2 });
@@ -90,12 +87,16 @@ function runAnimations() {
   gsap.to('.contribute', { opacity: 1, y: 0, duration: 0.8, delay: 1 });
 }
 
-// Resize adaptive pagination
+// Resize adaptive pagination with debounce
+let resizeTimeout;
 window.addEventListener('resize', () => {
-  if (window.innerWidth < 768) perPage = 6;
-  else if (window.innerWidth < 1400) perPage = 15;
-  else perPage = 20;
-  currentPage = 1;
-  renderPage(currentPage);
-  renderPagination();
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    if (window.innerWidth < 768) perPage = 6;
+    else if (window.innerWidth < 1400) perPage = 15;
+    else perPage = 20;
+    currentPage = 1;
+    renderPage(currentPage);
+    renderPagination();
+  }, 200);
 });
