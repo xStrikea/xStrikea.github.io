@@ -1,0 +1,31 @@
+{
+	"folders": [
+		{
+			"name": "xStrikea.github.io",
+			"path": "."
+		},
+		{
+			"name": "css",
+			"path": "../../Downloads/css"
+		},
+		{
+			"name": "img",
+			"path": "../../Downloads/img"
+		},
+		{
+			"name": "Rufus",
+			"path": "../../Downloads/Rufus"
+		},
+		{
+			"name": "js",
+			"path": "../../Downloads/js"
+		},
+		{
+			"name": "pages",
+			"path": "../../Downloads/pages"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "xStrikea.github.io"
+	}
+}
